@@ -20,10 +20,5 @@ dimensions:
     L2_camera_motion: [static, pan, tilt, zoom, tracking, handheld]
     L3_viewpoint: [eye_level, aerial, high_angle, low_angle, pov]
 
-# Seed terms used by discovery to build YouTube search queries.
-# Queries = combinations of these, so coverage of attribute combinations is driven from here.
-search_seeds:
-  actions: [children dancing, people running, street protest, press conference, cooking demonstration]
-  places: [street, park, city centre]
-  locations: [Belfast, Dublin, London]
-  styles: [news report, drone footage, local news]
+# Search terms for discovery live in configs/search_pools.yaml (kept separate on purpose:
+# the taxonomy is the fixed label schema; search pools can change between collection runs).

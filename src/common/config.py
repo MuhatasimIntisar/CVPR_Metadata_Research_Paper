@@ -20,10 +20,6 @@ class Paths:
         return self.root / "manifest" / "videos.parquet"
 
     @property
-    def candidates(self) -> Path:
-        return self.root / "discovery" / "candidates.parquet"
-
-    @property
     def tmp(self) -> Path:
         return self.root / "tmp"
 
@@ -46,8 +42,9 @@ class Paths:
 def load_config(env: str) -> dict:
     if env not in ENVS:
         raise ValueError(f"Unknown env '{env}'. Choose from {ENVS}.")
-    cfg = yaml.safe_load((CONFIG_DIR / f"{env}.yaml").read_text())
-    cfg["taxonomy"] = yaml.safe_load((CONFIG_DIR / "taxonomy.yaml").read_text())
+    cfg = yaml.safe_load((CONFIG_DIR / f"{env}.yaml").read_text(encoding="utf-8"))
+    cfg["taxonomy"] = yaml.safe_load((CONFIG_DIR / "taxonomy.yaml").read_text(encoding="utf-8"))
+    cfg["search_pools"] = yaml.safe_load((CONFIG_DIR / "search_pools.yaml").read_text(encoding="utf-8"))
     root = Path(cfg["data_root"])
     if not root.is_absolute():
         root = REPO_ROOT / root

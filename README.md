@@ -6,9 +6,9 @@ Short clips are annotated with 12 structured fields (location, time, action, cin
 ## Layout
 
 ```
-configs/      taxonomy.yaml (the 12 fields + search seeds) and one config per machine
+configs/      taxonomy.yaml (fixed 12-field label schema), search_pools.yaml (search terms), one config per machine
 src/
-  discovery/  (1) taxonomy -> search queries -> candidate video IDs (no downloads)
+  discovery/  (1) coverage-balanced random queries -> candidate video IDs (no downloads)
   ingest/     (2) download -> shot segmentation -> cheap filters -> clips -> shard; raw video deleted
   annotate/   (3) one module per dimension + fuse.py (currently stubs that print + cite references)
   common/     config, manifest, shard I/O
@@ -30,7 +30,7 @@ Code is identical everywhere; only `configs/<env>.yaml` (mainly `data_root`) dif
 
 ```
 manifest/videos.parquet      one row per video ID: status (candidate/ingested/failed), shard, counts
-discovery/candidates.parquet search results from the last discovery run
+discovery/query_log.parquet  every search result: batch, seed, query, combo, channel, added or not
 shards/shard-00000/          immutable once _SUCCESS exists
     clips.tar                kept shots, 480p H.264 + mono AAC
     keyframes.tar            one 384px JPEG per kept shot
@@ -49,10 +49,24 @@ pip install -r requirements.txt
 ffmpeg -version                   # must be on PATH
 ```
 
+## Discovery (query generation)
+
+Search terms live in `configs/search_pools.yaml`, not the taxonomy. Each slot maps a canonical key
+(e.g. `protesting`) to several phrasings (`protest`, `march`, `rally`). Discovery runs in batches:
+
+1. Sample `action x place x location` combos, weighted toward combos with few videos so far
+   (`1/(1+count)`; combos at `max_per_combo` are skipped) -> even coverage.
+2. Pick random phrasings + a random style, search YouTube.
+3. Apply caps: `results_per_query`, `max_per_channel`, `max_per_combo`; skip known IDs.
+4. Append to the manifest and `query_log.parquet` (with batch id + seed, so it's reproducible).
+
+Repeat until `--n-videos x oversample` new candidates. Interrupting is safe.
+`--report` prints coverage without searching.
+
 ## Test run
 
 ```
-python scripts/run_discovery.py --env test_env
+python scripts/run_discovery.py --env test_env --n-videos 10
 python scripts/run_ingest.py    --env test_env
 python scripts/run_annotate.py  --env test_env
 python scripts/inspect_shard.py --env test_env --extract 5

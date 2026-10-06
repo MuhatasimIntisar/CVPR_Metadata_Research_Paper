@@ -3,10 +3,18 @@ env_name: test_env
 data_root: data/test_env          # relative paths are resolved from the repo root
 
 discovery:
-  results_per_query: 3
-  max_queries: 3
-  min_duration_s: 60              # skip very short videos
-  max_duration_s: 1500            # skip very long videos (25 min)
+  n_videos: 10                  # default target if --n-videos is not given
+  oversample: 1.4                # search for 40% extra: some videos fail ingest
+  queries_per_batch: 4
+  results_per_query: 3           # cap per query
+  max_per_channel: 3            # cap per YouTube channel (avoid one broadcaster dominating)
+  max_per_combo: 2              # ceiling per action|place|location combo (even coverage)
+  alpha: 1.0                     # how strongly to favour under-filled combos
+  max_batches: 10
+  seed: 0
+  sleep_between_searches_s: 1
+  min_duration_s: 60
+  max_duration_s: 1500
 
 ingest:
   videos_per_shard: 3

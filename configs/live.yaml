@@ -4,8 +4,16 @@ env_name: live
 data_root: /mnt/scratch2/users/CHANGE_ME/cvpr_metadata_data   # TODO: set Kelvin scratch path
 
 discovery:
-  results_per_query: 50
-  max_queries: 200
+  n_videos: 1000                  # default target if --n-videos is not given
+  oversample: 1.4                # search for 40% extra: some videos fail ingest
+  queries_per_batch: 40
+  results_per_query: 8           # cap per query
+  max_per_channel: 15            # cap per YouTube channel (avoid one broadcaster dominating)
+  max_per_combo: 12              # ceiling per action|place|location combo (even coverage)
+  alpha: 1.0                     # how strongly to favour under-filled combos
+  max_batches: 200
+  seed: 0
+  sleep_between_searches_s: 2
   min_duration_s: 60
   max_duration_s: 3600
 

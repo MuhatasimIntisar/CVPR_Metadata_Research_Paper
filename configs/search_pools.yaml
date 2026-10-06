@@ -1,0 +1,36 @@
+# Search pools for discovery. NOT the label taxonomy (configs/taxonomy.yaml) — this only
+# controls what we search YouTube for.
+#
+# Each slot maps a canonical key -> phrasings. Coverage is counted on the canonical keys of
+# the `coverage_slots`; the phrasings just vary the wording so batches never repeat exactly.
+# Other slots (e.g. style) are sampled uniformly and not balanced.
+
+coverage_slots: [action, place, location]
+
+slots:
+  action:
+    dancing:       [children dancing, people dancing, street dancing, folk dancing]
+    running:       [people running, marathon runners, joggers]
+    protesting:    [protest, march, rally, demonstration]
+    presenting:    [press conference, speech, reporter on location]
+    cooking:       [street food cooking, market food stall, cooking outdoors]
+    playing_sport: [kids playing football, sports match, people playing hurling]
+    celebrating:   [parade, festival crowd, celebration]
+    walking:       [people walking, shoppers, commuters]
+
+  place:
+    street:     [street, high street, city centre]
+    park:       [park, botanic gardens, playground]
+    venue:      [stadium, arena, concert venue]
+    waterfront: [harbour, riverside, waterfront]
+
+  location:
+    # City-level only: landmark phrasings clash with the place slot ("park O'Connell Street").
+    Belfast:   [Belfast, Belfast Northern Ireland, Belfast city]
+    Dublin:    [Dublin, Dublin Ireland, Dublin city]
+    London:    [London, London UK, central London]
+    Glasgow:   [Glasgow, Glasgow Scotland, Glasgow city]
+
+  style:
+    news:   [news, news report, local news]
+    footage: [footage, video, drone footage]

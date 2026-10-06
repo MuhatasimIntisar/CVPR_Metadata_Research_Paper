@@ -15,7 +15,8 @@ def search(query: str, n: int, min_s: int, max_s: int) -> list[dict]:
             continue
         if e.get("live_status") in ("is_live", "is_upcoming"):
             continue
-        out.append({"video_id": e["id"], "query": query, "title": e.get("title"), "duration_s": float(dur)})
+        out.append({"video_id": e["id"], "query": query, "title": e.get("title"), "duration_s": float(dur),
+                    "channel": e.get("channel_id") or e.get("channel") or e.get("uploader")})
         if len(out) >= n:
             break
     return out
