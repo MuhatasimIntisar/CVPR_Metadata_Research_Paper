@@ -1,0 +1,60 @@
+"""Config loading. Every script takes --env {test_env, storage_env, live}."""
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+
+import yaml
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+CONFIG_DIR = REPO_ROOT / "configs"
+ENVS = ("test_env", "storage_env", "live")
+
+
+@dataclass
+class Paths:
+    root: Path
+
+    @property
+    def manifest(self) -> Path:
+        return self.root / "manifest" / "videos.parquet"
+
+    @property
+    def candidates(self) -> Path:
+        return self.root / "discovery" / "candidates.parquet"
+
+    @property
+    def tmp(self) -> Path:
+        return self.root / "tmp"
+
+    @property
+    def shards(self) -> Path:
+        return self.root / "shards"
+
+    @property
+    def annotations(self) -> Path:
+        return self.root / "annotations"
+
+    @property
+    def embeddings(self) -> Path:
+        return self.root / "embeddings"
+
+    def shard_dir(self, shard_id: str) -> Path:
+        return self.shards / shard_id
+
+
+def load_config(env: str) -> dict:
+    if env not in ENVS:
+        raise ValueError(f"Unknown env '{env}'. Choose from {ENVS}.")
+    cfg = yaml.safe_load((CONFIG_DIR / f"{env}.yaml").read_text())
+    cfg["taxonomy"] = yaml.safe_load((CONFIG_DIR / "taxonomy.yaml").read_text())
+    root = Path(cfg["data_root"])
+    if not root.is_absolute():
+        root = REPO_ROOT / root
+    cfg["paths"] = Paths(root)
+    return cfg
+
+
+def add_env_arg(parser) -> None:
+    parser.add_argument("--env", default="test_env", choices=ENVS,
+                        help="Which machine config to use (default: test_env)")

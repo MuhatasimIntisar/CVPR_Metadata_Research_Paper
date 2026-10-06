@@ -1,0 +1,33 @@
+# storage_env: professor's PC. Full download + ingest, long-term home of the shards.
+env_name: storage_env
+data_root: D:/cvpr_metadata_data   # TODO: set to the real storage drive
+
+discovery:
+  results_per_query: 50
+  max_queries: 200
+  min_duration_s: 60
+  max_duration_s: 3600
+
+ingest:
+  videos_per_shard: 100
+  max_height: 480
+  keep_audio: true
+  delete_raw: true
+  sleep_between_downloads_s: 5
+
+segmentation:
+  detector: pyscenedetect
+  threshold: 27.0
+  min_shot_s: 1.5
+  max_shot_s: 20.0
+
+filters:
+  phash_max_distance: 6
+
+keyframes:
+  per_shot: 1
+  max_side: 384
+  jpeg_quality: 85
+
+annotation:
+  device: cpu
