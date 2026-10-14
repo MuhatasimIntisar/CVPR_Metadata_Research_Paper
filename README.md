@@ -63,6 +63,22 @@ Search terms live in `configs/search_pools.yaml`, not the taxonomy. Each slot ma
 Repeat until `--n-videos x oversample` new candidates. Interrupting is safe.
 `--report` prints coverage without searching.
 
+## Expanding search terms with a local model
+
+`scripts/expand_search_pools.py` asks a local Ollama model for extra phrasings of each value in
+`search_pools.yaml` (actions, place types, styles; cities are fixed and not expanded). It only adds
+phrasings to existing keys, never new keys, and drops suggestions that mention other slots (e.g. a
+city inside an action phrasing).
+
+```
+ollama pull qwen2.5:7b                       # or qwen2.5:3b if memory is tight
+python scripts/expand_search_pools.py --dry-run
+python scripts/expand_search_pools.py        # writes configs/search_pools.expanded.yaml
+```
+
+Review the output, delete bad phrasings, set `_provenance.reviewed: true`, then set
+`search_pools: search_pools.expanded.yaml` in the env config. The baseline file is never modified.
+
 ## Test run
 
 ```

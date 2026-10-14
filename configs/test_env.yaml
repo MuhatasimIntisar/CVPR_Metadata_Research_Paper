@@ -2,6 +2,9 @@
 env_name: test_env
 data_root: data/test_env          # relative paths are resolved from the repo root
 
+# Search terms file in configs/. Switch to search_pools.expanded.yaml once reviewed.
+search_pools: search_pools.yaml
+
 discovery:
   n_videos: 10                  # default target if --n-videos is not given
   oversample: 1.4                # search for 40% extra: some videos fail ingest

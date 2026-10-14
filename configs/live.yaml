@@ -3,6 +3,9 @@
 env_name: live
 data_root: /mnt/scratch2/users/CHANGE_ME/cvpr_metadata_data   # TODO: set Kelvin scratch path
 
+# Search terms file in configs/. Switch to search_pools.expanded.yaml once reviewed.
+search_pools: search_pools.yaml
+
 discovery:
   n_videos: 1000                  # default target if --n-videos is not given
   oversample: 1.4                # search for 40% extra: some videos fail ingest

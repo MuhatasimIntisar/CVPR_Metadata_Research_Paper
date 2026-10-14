@@ -44,7 +44,13 @@ def load_config(env: str) -> dict:
         raise ValueError(f"Unknown env '{env}'. Choose from {ENVS}.")
     cfg = yaml.safe_load((CONFIG_DIR / f"{env}.yaml").read_text(encoding="utf-8"))
     cfg["taxonomy"] = yaml.safe_load((CONFIG_DIR / "taxonomy.yaml").read_text(encoding="utf-8"))
-    cfg["search_pools"] = yaml.safe_load((CONFIG_DIR / "search_pools.yaml").read_text(encoding="utf-8"))
+    pools_file = cfg.get("search_pools", "search_pools.yaml")
+    cfg["search_pools"] = yaml.safe_load((CONFIG_DIR / pools_file).read_text(encoding="utf-8"))
+    prov = cfg["search_pools"].pop("_provenance", None)
+    if prov and not prov.get("reviewed"):
+        print(f"WARNING: {pools_file} was model-generated and is not marked reviewed "
+              f"(set _provenance.reviewed: true after checking it).")
+    cfg["search_pools_file"] = pools_file
     root = Path(cfg["data_root"])
     if not root.is_absolute():
         root = REPO_ROOT / root

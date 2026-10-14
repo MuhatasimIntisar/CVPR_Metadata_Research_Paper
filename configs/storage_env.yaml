@@ -2,6 +2,9 @@
 env_name: storage_env
 data_root: D:/cvpr_metadata_data   # TODO: set to the real storage drive
 
+# Search terms file in configs/. Switch to search_pools.expanded.yaml once reviewed.
+search_pools: search_pools.yaml
+
 discovery:
   n_videos: 1000                  # default target if --n-videos is not given
   oversample: 1.4                # search for 40% extra: some videos fail ingest
