@@ -65,13 +65,13 @@ Repeat until `--n-videos x oversample` new candidates. Interrupting is safe.
 
 ## Expanding search terms with a local model
 
-`scripts/expand_search_pools.py` asks a local Ollama model for extra phrasings of each value in
+`scripts/expand_search_pools.py` asks a local model (llama.cpp `llama-server`) for extra phrasings of each value in
 `search_pools.yaml` (actions, place types, styles; cities are fixed and not expanded). It only adds
 phrasings to existing keys, never new keys, and drops suggestions that mention other slots (e.g. a
 city inside an action phrasing).
 
 ```
-ollama pull qwen2.5:7b                       # or qwen2.5:3b if memory is tight
+scripts\windows\start_llm_server.bat       # separate terminal; edit model/llama.cpp paths inside
 python scripts/expand_search_pools.py --dry-run
 python scripts/expand_search_pools.py        # writes configs/search_pools.expanded.yaml
 ```

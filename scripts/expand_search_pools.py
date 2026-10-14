@@ -1,13 +1,16 @@
-"""Expand the baseline search pools with extra phrasings from a local LLM (Ollama).
+"""Expand the baseline search pools with extra phrasings from a local LLM (llama.cpp server).
 
 Only adds PHRASINGS to existing canonical keys; never adds keys (keys map to the taxonomy and
 to coverage balancing). Output is written to a separate file with provenance; review it, then
 point `search_pools:` in your env config at it.
 
-    ollama pull qwen2.5:7b
-    python scripts/expand_search_pools.py                          # action, place, style
-    python scripts/expand_search_pools.py --model qwen2.5:3b --n 6 --slots action
+Start llama.cpp's server first (OpenAI-compatible API, default port 8080):
+    scripts\\windows\\start_llm_server.bat          (laptop: paths set inside the .bat)
+    llama-server -m path/to/model.gguf --port 8080 -c 4096 -ngl 99 --jinja
+
     python scripts/expand_search_pools.py --dry-run                # print, don't write
+    python scripts/expand_search_pools.py                          # action, place, style
+    python scripts/expand_search_pools.py --n 6 --slots action
 
 Cleaning applied to every model suggestion:
   - lowercase, strip quotes/punctuation, 1-5 words, no duplicates (incl. existing phrasings)
@@ -49,13 +52,37 @@ specific sub-types. Do NOT mention any city, country, or place name. Do NOT repe
 Return JSON only: {{"phrasings": ["...", "..."]}}"""
 
 
-def ollama_chat(url: str, model: str, prompt: str, temperature: float) -> str:
-    body = json.dumps({"model": model, "stream": False, "format": "json",
-                       "options": {"temperature": temperature},
-                       "messages": [{"role": "user", "content": prompt}]}).encode()
-    req = urllib.request.Request(f"{url}/api/chat", data=body, headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=300) as r:
-        return json.loads(r.read())["message"]["content"]
+SCHEMA = {"type": "object", "properties": {"phrasings": {"type": "array", "items": {"type": "string"}}},
+          "required": ["phrasings"]}
+
+
+def _post(url: str, body: dict) -> dict:
+    req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=600) as r:
+        return json.loads(r.read())
+
+
+def server_model(url: str) -> str:
+    """Name/path of the GGUF loaded in llama-server, for provenance."""
+    try:
+        with urllib.request.urlopen(f"{url}/v1/models", timeout=10) as r:
+            return json.loads(r.read())["data"][0]["id"]
+    except Exception as e:  # noqa: BLE001
+        raise SystemExit(f"Cannot reach llama-server at {url} ({type(e).__name__}). Is it running?") from e
+
+
+def chat(url: str, prompt: str, temperature: float) -> list:
+    """Call llama-server's OpenAI-compatible endpoint, constraining output to the JSON schema."""
+    body = {"messages": [{"role": "user", "content": prompt}], "temperature": temperature,
+            "response_format": {"type": "json_schema", "json_schema": {"name": "phrasings", "schema": SCHEMA}},
+            "chat_template_kwargs": {"enable_thinking": False}}  # Qwen3: skip <think> (ignored by other models)
+    text = _post(f"{url}/v1/chat/completions", body)["choices"][0]["message"]["content"] or ""
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.S)
+    try:
+        return json.loads(text).get("phrasings", [])
+    except json.JSONDecodeError:  # older builds may ignore the schema: pull the first {...} block
+        m = re.search(r"\{.*\}", text, re.S)
+        return json.loads(m.group(0)).get("phrasings", []) if m else []
 
 
 def tokens(text: str) -> set[str]:
@@ -95,8 +122,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--base", default="search_pools.yaml", help="baseline pools file in configs/")
     ap.add_argument("--out", default="search_pools.expanded.yaml", help="output file in configs/")
-    ap.add_argument("--model", default="qwen2.5:7b", help="Ollama model name")
-    ap.add_argument("--url", default="http://localhost:11434", help="Ollama server URL")
+    ap.add_argument("--url", default="http://localhost:8080", help="llama-server URL")
     ap.add_argument("--n", type=int, default=8, help="phrasings to request per value")
     ap.add_argument("--slots", nargs="*", default=["action", "place", "style"],
                     help="slots to expand (location excluded by default: city-level only)")
@@ -104,6 +130,8 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
+    model = server_model(args.url)
+    print(f"llama-server at {args.url}, model: {model}")
     pools = yaml.safe_load((CONFIG_DIR / args.base).read_text(encoding="utf-8"))
     out = json.loads(json.dumps(pools))  # deep copy
     report = {}
@@ -118,7 +146,7 @@ def main():
             prompt = PROMPT.format(slot=slot, hint=SLOT_HINTS.get(slot, slot), key=key,
                                    existing=", ".join(existing), n=args.n)
             try:
-                raw = json.loads(ollama_chat(args.url, args.model, prompt, args.temperature)).get("phrasings", [])
+                raw = chat(args.url, prompt, args.temperature)
             except Exception as e:  # noqa: BLE001
                 print(f"  ! {key}: model call failed ({type(e).__name__}: {e})")
                 continue
@@ -137,7 +165,7 @@ def main():
 
     out["_provenance"] = {
         "generated_by": "scripts/expand_search_pools.py",
-        "base_file": args.base, "model": args.model, "temperature": args.temperature,
+        "base_file": args.base, "backend": "llama.cpp llama-server", "model": model, "temperature": args.temperature,
         "n_requested_per_value": args.n, "slots_expanded": args.slots,
         "created_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "prompt_template": PROMPT, "reviewed": False,
