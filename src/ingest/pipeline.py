@@ -76,7 +76,10 @@ def ingest_shard(cfg: dict, max_videos: int | None = None) -> str | None:
         out = paths.shard_dir(shard_id)
         out.mkdir(parents=True, exist_ok=True)
         shard_io.write_tar(out / "clips.tar", sorted(clip_dir.glob("*.mp4")))
-        shard_io.write_tar(out / "keyframes.tar", sorted(kf_dir.glob("*.jpg")))
+        # Only keyframes of KEPT shots: frames of shots dropped by filters (e.g. near-duplicates)
+        # were extracted for hashing but have no clip, so they stay out of the shard.
+        kept_ids = sorted(r["shot_id"] for r in shot_rows if r["kept"])
+        shard_io.write_tar(out / "keyframes.tar", [p for p in (kf_dir / f"{sid}.jpg" for sid in kept_ids) if p.exists()])
         pd.DataFrame(shot_rows, columns=SHOT_COLUMNS).to_parquet(out / "shots.parquet", index=False)
         pd.DataFrame(info_rows).to_parquet(out / "info.parquet", index=False)
         shard_io.mark_complete(out)

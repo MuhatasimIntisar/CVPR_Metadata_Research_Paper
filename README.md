@@ -12,6 +12,7 @@ src/
   ingest/     (2) download -> shot segmentation -> cheap filters -> clips -> shard; raw video deleted
   annotate/   (3) one module per dimension + fuse.py (currently stubs that print + cite references)
   common/     config, manifest, shard I/O
+  segmenters/ raw moment-boundary segmenters, one JSON per segmenter (scripts/run_segmenters.py)
 scripts/      entry points; slurm/ for Kelvin
 data/         gitignored; test_env data lives here
 ```
@@ -89,6 +90,36 @@ python scripts/inspect_shard.py --env test_env --extract 5
 ```
 
 Re-running is safe: ingest only takes `candidate` videos, annotation skips outputs that already exist (`--force` to redo).
+
+## Segmenters (moment boundaries, one video)
+
+Step 1 of the moment pipeline: run every boundary segmenter on one video and keep each one's **raw**
+output as JSON. No snapping, merging or hard/soft fusion yet; that comes after inspecting these.
+
+| Segmenter | What it finds | Model | Output |
+|---|---|---|---|
+| `shots` | cuts, fades | PySceneDetect Adaptive + Threshold | `shots.json` |
+| `scenes` | shots grouped by setting | CLIP ViT-B/32 | `scenes.json` |
+| `asr` | words + sentences (input for speakers/topic) | Whisper large-v3-turbo | `asr.json` |
+| `speakers` | speaker runs, every turn | ECAPA-TDNN + agglomerative clustering | `speakers.json` |
+| `silence` | silent spans | ffmpeg silencedetect | `silence.json` |
+| `audio_events` | speech/music/applause/cheering/laughter/whistle on-off | AST (AudioSet) | `audio_events.json` |
+| `ocr` | on-screen text appearing / changing / disappearing | EasyOCR | `ocr.json` |
+| `topic` | topic shifts in the transcript | multilingual-e5-small + TextTiling | `topic.json` |
+| `camera_motion` | static/pan/tilt/zoom/handheld changes | Farneback optical flow | `camera_motion.json` |
+
+Every boundary is `{"t", "kind", "conf", ...}`. `all_boundaries.json` lists all of them in time order
+(unmerged); `summary.json` gives status, runtime and counts per segmenter. No Hugging Face token needed.
+
+```
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements-segmenters.txt
+python ia_pilot_download.py download data/pilot/demo_video.csv            # Good Morning Delaware only
+python scripts/run_segmenters.py --item-dir data/pilot/interview/<identifier>
+python scripts/run_segmenters.py --item-dir ... --only ocr --force         # re-run one segmenter
+```
+
+Models load one at a time and are freed after each step (fits 6 GB VRAM). First run downloads ~3 GB of weights.
 
 ## Troubleshooting
 
