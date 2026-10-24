@@ -1,0 +1,16 @@
+# Kelvin2 (or any Linux/SLURM machine). Run every command from the code folder; all paths are relative to it:
+#   <scratch>/vmp/code      this package            <scratch>/vmp/data/pilot     the Internet Archive folders
+#   <scratch>/vmp/models    model cache             <scratch>/vmp/data/segments  earlier detector outputs (optional reuse)
+#   <scratch>/vmp/outputs   results                 <scratch>/vmp/data/level1    earlier YOLO/CLIP/X-CLIP/VAD outputs (optional)
+paths:
+  corpus_root: ../data/pilot
+  manifest: ../outputs/corpus_manifest.json
+  outputs_root: ../outputs
+  model_cache: ../models
+  legacy_segments_dir: ../data/segments
+  legacy_level1_dir: ../data/level1
+runtime:
+  device: cuda
+  offline: true            # compute nodes: models must already be in ../models (download-models on a login node)
+level1:
+  yolo: {detect_model: ../models/ultralytics/yolo11s.pt, pose_model: ../models/ultralytics/yolo11n-pose.pt}

@@ -1,0 +1,15 @@
+# Pretrained models used by the pipeline (all public; downloaded on first use unless runtime.offline: true).
+# Pre-download on a machine with internet, then point paths.model_cache at the same folder.
+level1:
+  yolo_detect: yolo11s.pt                       # ultralytics, GitHub release assets (~19 MB)
+  yolo_pose: yolo11n-pose.pt                    # (~6 MB)
+  clip: openai/clip-vit-base-patch32            # Hugging Face (~600 MB)
+  xclip: microsoft/xclip-base-patch32           # Hugging Face (~600 MB)
+  vad: silero-vad (bundled in the pip package)
+  speaker_embeddings: speechbrain/spkrec-ecapa-voxceleb   # Hugging Face (~80 MB)
+  audio_events: MIT/ast-finetuned-audioset-10-10-0.4593  # Hugging Face (~350 MB)
+  ocr: EasyOCR detector + recogniser (downloaded by easyocr, ~100 MB)
+  shots: PySceneDetect (no weights)
+  asr_optional: openai/whisper-large-v3-turbo   # only if no adequate transcript and fallback_asr: run
+level2:
+  vlm: Qwen/Qwen3.5-4B          # Hugging Face, image+video input, ~10 GB in bf16 (needs a >= 20 GB GPU slice)

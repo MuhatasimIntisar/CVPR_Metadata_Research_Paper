@@ -1,0 +1,77 @@
+# Default configuration. Every path may be absolute or relative to the current working directory.
+# Override with --config my.yaml (deep-merged) or VMP_* environment variables (see config.py).
+paths:
+  corpus_root: data/corpus            # folder that contains the downloaded Internet Archive item folders
+  manifest: data/corpus_manifest.json
+  outputs_root: outputs
+  model_cache: null                   # e.g. /scratch/$USER/hf_cache ; null = library defaults
+  legacy_segments_dir: null           # optional: reuse earlier per-video detector outputs (<dir>/<video_id>/*.json)
+  legacy_level1_dir: null             # optional: reuse earlier YOLO/CLIP/X-CLIP/VAD outputs (<dir>/<video_id>/...)
+
+runtime:
+  device: auto                        # auto | cuda | cuda:0 | cpu
+  offline: false                      # true on compute nodes without internet (HF_HUB_OFFLINE=1)
+
+ingestion:
+  video_extensions: [.mp4, .mkv, .webm, .mov, .avi]
+  hash_full_max_mb: 50                # files above this size get a fast partial hash (head+tail+size)
+  primary_transcript:
+    prefer_original_language: true    # the item's own language beats auto-translated tracks
+    min_coverage_ratio: 0.2           # speech-covered seconds / duration below this -> inadequate
+  fallback_asr: legacy                # legacy (reuse earlier Whisper output) | run | none
+
+level1:
+  window_s: 15.0                      # summary windows (an observation mechanism, not final intervals)
+  step_s: 2.0                         # fine-grained observation grid (= one X-CLIP clip)
+  steps: [silence, shots, camera_motion, audio_events, ocr, vad, transcript_words, speakers, yolo, vision_language]
+  run_whisper: false                  # only used when no adequate transcript exists and fallback_asr: run
+  yolo: {detect_model: yolo11s.pt, pose_model: yolo11n-pose.pt, fps: 2.0, conf: 0.25}
+  vision_language:
+    clip_model: openai/clip-vit-base-patch32
+    xclip_model: microsoft/xclip-base-patch32
+    base_fps: 4.0
+    clip_every_s: 5.0
+    xclip_frames: 8
+  ocr: {every_s: 1.0, langs: auto}    # auto = from source language (en/es supported by default)
+  person_conf: 0.4
+  object_conf: 0.4
+  black_luma: 20.0
+  black_std: 8.0
+  ast_on: 0.3
+
+correction:
+  dominant_rel: 2.0                   # top-1 activity score must be >= 2x uniform ...
+  top1_margin_ratio: 1.15             # ... and >= 1.15x the second label, else 'uncertain'
+  persist_alone_s: 6.0                # activity-only boundary: new state must hold 6 s
+  persist_supported_s: 4.0            # activity change + environment/visual support: 4 s
+  min_event_s: 4.0                    # shortest activity run kept as a sub-event
+  weights: {activity: 1.0, activity_short: 0.6, activity_family: 0.5, environment: 0.6, visual_transition: 0.4,
+            people: 0.4, people_at_cut: 0.2, audio: 0.3, observability: 1.0}
+  boundary_threshold: 1.0
+  pool_s: 2.0
+  env_persist_frames: 2
+  visual_cos: 0.80
+  people_window_s: 6.0
+  people_bin_edges: [0, 1, 2, 3, 6]
+  people_bin_jump: 2
+  audio_window_s: 6.0
+  audio_jump: 0.67
+  black_min_s: 4.0                    # black/blank spans shorter than this do not create boundaries
+  label_families:                     # activities treated as variants of one activity (taxonomy-level)
+    - [talking while seated, talking to the camera, talking while standing]
+
+level2:
+  model_id: Qwen/Qwen3.5-4B
+  dtype: bfloat16
+  prompt_version: l2-v1
+  frame_max_side: 448
+  frames_per_interval: 4          # boundary windows: frames per candidate interval (>= 2 even for short ones)
+  window_intervals: 3             # consecutive candidate intervals per merge call; windows overlap by 2
+  max_frames_moment: 16           # metadata call: frames spread over the moment
+  min_frames_moment: 4
+  seconds_per_frame_moment: 10
+  transcript_chars: 1500
+  max_new_tokens_merge: 700
+  max_new_tokens_metadata: 1000
+  retries: 2                      # bounded re-asks when the output is not valid JSON / schema
+  use_video_context: true         # title/description as context only, never as proof

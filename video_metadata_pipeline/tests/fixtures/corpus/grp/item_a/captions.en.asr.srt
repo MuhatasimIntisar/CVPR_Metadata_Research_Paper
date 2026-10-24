@@ -1,0 +1,16 @@
+1
+00:00:01,000 --> 00:00:03,000
+Hello<00:00:01.500> there<00:00:02.000> friends.
+
+2
+00:00:03,000 --> 00:00:03,010
+Hello there friends.
+
+3
+00:00:03,010 --> 00:00:05,000
+Hello there friends.
+&gt;&gt; Welcome<00:00:03.600> back.
+
+4
+00:00:99,000 --> broken
+bad cue

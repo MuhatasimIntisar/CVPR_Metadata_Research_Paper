@@ -1,0 +1,11 @@
+outputs/*
+!outputs/.gitkeep
+*.mp4
+*.avi
+*.wav
+*.pt
+*.npz
+__pycache__/
+*.egg-info/
+.venv/
+models/

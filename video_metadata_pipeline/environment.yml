@@ -1,0 +1,8 @@
+name: vmp
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - ffmpeg
+  - pip
+  - pip:
+      - -e .[level1,dev]
