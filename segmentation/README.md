@@ -43,3 +43,20 @@ embedding chunk length (`text_chunk_s`, `text_chunk_hop_s`; CLIP 1 fps; CLAP win
 `evaluation/experiment_A/`: `predictions.jsonl`, `per_video.csv`, `summary.csv`, `summary.md`,
 `heatmap_<dataset>.png`, `params.json`. Each score has a chance F1 (same number of random boundaries) and the
 number of reference boundaries reachable under that minimum segment.
+
+## Experiment A analysis and Experiment B: boundary selection and held-out evaluation
+
+```powershell
+python -m segmentation.analyse_experiment_a     # eligibility audit, trends, ranking quality (AP) -> sensitivity figure
+python -m segmentation.experiment_b             # prominence x smoothing sweep, PR curves, leave-one-out, comparison
+```
+
+Cached embeddings only; Experiment A outputs are read, never written. Outputs in `evaluation/experiment_B/`:
+`experiment_a_eligibility.csv`, `experiment_a_reference_audit.csv`, `experiment_a_ranking.csv`,
+`experiment_a_sensitivity.png`, `experiment_a_tables.md`, `experiment_b_threshold_sweep.csv`,
+`experiment_b_precision_recall.png`, `experiment_b_heldout.csv`, `experiment_b_comparison.csv/.md`,
+`experiment_b_params.json`. `experiment_a_analysis.md` is the written analysis of these files.
+
+Because `find_peaks` applies the spacing rule before prominence, filtering one candidate list by prominence
+reproduces the detector exactly, so precision-recall curves and AP are exact. Held-out runs select context,
+minimum segment, smoothing and prominence on the training fold only (one global setting per fold).
