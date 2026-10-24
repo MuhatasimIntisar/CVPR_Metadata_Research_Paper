@@ -60,3 +60,18 @@ Cached embeddings only; Experiment A outputs are read, never written. Outputs in
 Because `find_peaks` applies the spacing rule before prominence, filtering one candidate list by prominence
 reproduces the detector exactly, so precision-recall curves and AP are exact. Held-out runs select context,
 minimum segment, smoothing and prominence on the training fold only (one global setting per fold).
+
+## Experiment C: modality-specific context and reliability-aware fusion
+
+```powershell
+python -m segmentation.experiment_c
+```
+
+Cached embeddings only, plus frame RMS loudness in `cache/experiment_C_audio_energy/<id>_rms.csv` (ffmpeg
+decode, 0.5 s frames; used only for the audio-activity reliability cue). Each modality has its own context
+(`CONTEXT`); boundary selection is fixed per dataset (`FIXED_SEL`) and identical across variants. Reliability
+weights (coverage, within-window stability, audio activity) come from the input only; a time-shifted copy of the
+weights is the control. Held-out runs choose method/prominence on training recordings only. Outputs in
+`evaluation/experiment_C/`: `asynchronous_context_results.csv`, `reliability_fusion_results.csv`,
+`heldout_comparison.csv`, `per_video_results.csv`, `failure_cases.csv`, `moviechat_fusion_diagnostics.png`,
+`ami_fusion_diagnostics.png`, `experiment_c_params.json`, `REPORT.md` (written analysis and decision).
