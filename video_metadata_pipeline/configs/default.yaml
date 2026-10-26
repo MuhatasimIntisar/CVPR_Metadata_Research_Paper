@@ -23,7 +23,7 @@ ingestion:
 level1:
   window_s: 15.0                      # summary windows (an observation mechanism, not final intervals)
   step_s: 2.0                         # fine-grained observation grid (= one X-CLIP clip)
-  steps: [silence, shots, camera_motion, audio_events, ocr, vad, transcript_words, speakers, yolo, vision_language]
+  steps: [silence, shots, camera_motion, audio_events, ocr, vad, transcript_words, transcript_topics, speakers, yolo, vision_language]
   run_whisper: false                  # only used when no adequate transcript exists and fallback_asr: run
   yolo: {detect_model: yolo11s.pt, pose_model: yolo11n-pose.pt, fps: 2.0, conf: 0.25}
   vision_language:
@@ -33,8 +33,16 @@ level1:
     clip_every_s: 5.0
     xclip_frames: 8
   ocr: {every_s: 1.0, langs: auto}    # auto = from source language (en/es supported by default)
+  topics:                             # transcript topic-change evidence (Sentence-BERT)
+    model: sentence-transformers/all-MiniLM-L6-v2
+    model_non_english: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+    chunk_s: 10.0
+    hop_s: 5.0
+    context_s: 60.0                   # Experiment C: best transcript context for speech-led footage
+    min_words: 8
   person_conf: 0.4
   object_conf: 0.4
+  shot_scale: {person_conf: 0.5, kpt_conf: 0.5, min_box_h: 0.08, extreme_wide_h: 0.2}  # pose-based framing heuristic
   black_luma: 20.0
   black_std: 8.0
   ast_on: 0.3
@@ -45,7 +53,7 @@ correction:
   persist_alone_s: 6.0                # activity-only boundary: new state must hold 6 s
   persist_supported_s: 4.0            # activity change + environment/visual support: 4 s
   min_event_s: 4.0                    # shortest activity run kept as a sub-event
-  weights: {activity: 1.0, activity_short: 0.6, activity_family: 0.5, environment: 0.6, visual_transition: 0.4,
+  weights: {topic: 1.0, activity: 1.0, activity_short: 0.6, activity_family: 0.5, environment: 0.6, visual_transition: 0.4,
             people: 0.4, people_at_cut: 0.2, audio: 0.3, observability: 1.0}
   boundary_threshold: 1.0
   pool_s: 2.0
@@ -56,22 +64,44 @@ correction:
   people_bin_jump: 2
   audio_window_s: 6.0
   audio_jump: 0.67
+  topic_prominence: 1.0             # Experiment C fixed setting (robust-z units, smoothing 3)
+  topic_min_gap_s: 60.0             # topic peaks at least 60 s apart and 60 s from the video ends
   black_min_s: 4.0                    # black/blank spans shorter than this do not create boundaries
+  min_interval_s: 5.0                 # candidate intervals shorter than this are absorbed into the more similar neighbour
+  absorb_context_s: 6.0               # ... compared over this much of each neighbour next to the short interval
   label_families:                     # activities treated as variants of one activity (taxonomy-level)
     - [talking while seated, talking to the camera, talking while standing]
 
 level2:
   model_id: Qwen/Qwen3.5-4B
   dtype: bfloat16
-  prompt_version: l2-v1
+  backend: auto                   # vllm (batched) | transformers (one call at a time) | auto = vllm if installed and on GPU
+  batch_size: 64                  # requests per batch sent to the backend (frames of one batch are held in memory)
+  vllm:                           # passed to vllm.LLM(...) (any other engine argument can be added here)
+    max_model_len: 16384          # longest call: ~16 frames + ~2.5k text tokens + 2k output tokens
+    gpu_memory_utilization: 0.85  # of the visible GPU / MIG slice
+    max_num_seqs: 32              # sequences decoded together
+    enable_prefix_caching: true   # shared prompt prefixes (rules/schema); turned off automatically if the engine fails to start
+    max_images_per_prompt: 24
+  prompt_version: l2-v2           # boundary (merge/keep) prompt
+  metadata_prompt_version: meta-v4  # moment metadata prompt (schema v2.1: names, relation direction, camera vocab)
   frame_max_side: 448
-  frames_per_interval: 4          # boundary windows: frames per candidate interval (>= 2 even for short ones)
-  window_intervals: 3             # consecutive candidate intervals per merge call; windows overlap by 2
+  boundary_frames_each_side: 3    # one call per boundary: frames on each side, concentrated near the cut
+  boundary_focus_s: 12.0          # ... within this many seconds of the boundary
+  context_frames: 1               # frames from the interval before LEFT and after RIGHT (context only)
   max_frames_moment: 16           # metadata call: frames spread over the moment
   min_frames_moment: 4
   seconds_per_frame_moment: 10
   transcript_chars: 1500
-  max_new_tokens_merge: 700
-  max_new_tokens_metadata: 1000
+  max_new_tokens_merge: 300
+  max_new_tokens_metadata: 2000
   retries: 2                      # bounded re-asks when the output is not valid JSON / schema
   use_video_context: true         # title/description as context only, never as proof
+  max_moment_s: 180.0             # events longer than this get child moments (two-level structure)
+  min_child_s: 20.0               # child moments shorter than this are joined to a neighbour
+  review:                         # deterministic needs_review rules (annotation.review_reasons)
+    min_moment_s: 5.0             # moments shorter than this
+    people_excess: 1              # VLM people count > detector max + this
+    shot_min_person_share: 0.5    # compare shot scale only if >= this share of frames show a person
+    shot_min_label_share: 0.2     # ... VLM label agrees if the detector saw it in >= this share of person frames
+    shot_max_distance: 1          # ... or the detector's dominant scale is within this many steps of it

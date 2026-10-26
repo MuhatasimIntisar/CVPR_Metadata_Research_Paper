@@ -7,7 +7,7 @@ import pytest
 
 from video_metadata.config import load_config
 from video_metadata.level2.output_validator import ask, check_metadata, extract_json
-from video_metadata.level2.semantic_merging import consolidate, decide, windows
+from video_metadata.level2.semantic_merging import consolidate, decide, reconcile
 from video_metadata.level2.vlm_backend import CachedVLM
 
 cv2 = pytest.importorskip("cv2")
@@ -51,34 +51,30 @@ def test_extract_json_repairs_fences_and_commas():
     assert extract_json('Sure!\n```json\n{"a": [1, 2,],}\n```') == {"a": [1, 2]}
 
 
-def test_windows_overlap():
-    assert windows(5, 3) == [[0, 1, 2], [1, 2, 3], [2, 3, 4]] and windows(2, 3) == [[0, 1]] and windows(1, 3) == []
-
-
-def test_reconciliation_conflict_becomes_uncertain(tmp_path, video):
+def test_one_call_per_boundary_and_consolidation(tmp_path, video):
     cfg = load_config()
     cands = [cand(0, 0, 10), cand(1, 10, 20), cand(2, 20, 30), cand(3, 30, 40)]
-    state = {"n": 0}
 
     def fn(text):
-        state["n"] += 1
-        ids = [b for b in ("B1", "B2", "B3") if "Decide boundaries:" in text and b in text.split("Decide boundaries:")[1]]
-        # window 0 says B2 merge, window 1 says B2 keep -> conflict
-        d = {"B1": "merge", "B2": "merge" if state["n"] == 1 else "keep", "B3": "keep"}
-        return json.dumps({"decisions": [{"boundary": b, "decision": d[b], "explanation": "frames at 9 s and 11 s"} for b in ids]})
+        t = float(text.split("THE CUT IS AT ")[1].split(" s")[0])
+        return json.dumps({"explanation": f"frames around {t:g} s", "decision": "merge" if t == 10 else "keep"})
 
     vlm = CachedVLM(cfg, "cpu", tmp_path / "cache", "h", Scripted(fn))
     D, audit = decide(vlm, cfg, video, cands, {"segments": []}, {}, LOG)
-    by = {d["boundary"]: d for d in D}
-    assert by["B1"]["decision"] == "merge" and not by["B1"]["conflict"]
-    assert by["B2"]["decision"] == "uncertain" and by["B2"]["conflict"] and by["B2"]["needs_review"]
-    assert len(by["B2"]["votes"]) == 2 and by["B3"]["decision"] == "keep"
+    assert vlm.backend.calls == 3 and len(audit) == 3
+    assert [d["decision"] for d in D] == ["merge", "keep", "keep"] and not any(d["conflict"] for d in D)
     M = consolidate("v", cands, D)
     assert [m["source_intervals"] for m in M] == [["c000", "c001"], ["c002"], ["c003"]]
-    assert M[0]["end_s"] == 20 and M[1]["start_boundary"]["decision"] == "uncertain"
-    calls = vlm.backend.calls
+    assert M[0]["end_s"] == 20 and M[1]["start_boundary"]["decision"] == "keep"
     decide(vlm, cfg, video, cands, {"segments": []}, {}, LOG)  # cached: no new model calls
-    assert vlm.backend.calls == calls
+    assert vlm.backend.calls == 3
+
+
+def test_reconcile_disagreement_becomes_uncertain():
+    b = {1: {"id": "B1", "t": 10, "left": "c000", "right": "c001", "evidence": {}}}
+    v = {1: [{"decision": "merge", "explanation": "a"}, {"decision": "keep", "explanation": "b"}]}
+    d = reconcile(b, v)[0]
+    assert d["decision"] == "uncertain" and d["conflict"] and d["needs_review"] and len(d["votes"]) == 2
 
 
 def test_human_boundary_never_sent_to_vlm(tmp_path, video):
@@ -97,9 +93,23 @@ def test_invalid_output_bounded_retries_never_invents(tmp_path):
     assert obj is None and len(attempts) == 3 and vlm.backend.calls == 3
 
 
-def test_metadata_schema_checks_entity_references():
-    ok = {"description": "d", "tags": [], "entities": [{"id": "p1", "type": "person"}], "relationships": [], "context": {},
-          "events": [{"type": "dance", "participants": ["p1"]}]}
+def test_metadata_v2_checks_and_normalisation():
+    from video_metadata.level2.metadata_generator import normalise
+    ok = {"description": "d", "tags": ["Ballet", "ballet", "stage_performance"], "context": {"setting": "stage", "location": "unknown"},
+          "attributes": {"action": "dance", "time_of_day": "morning"},
+          "entities": [{"id": "p1", "type": "person", "name": "Ann", "name_source": None, "evidence": "visual"},
+                       {"id": "p2", "type": "person_group", "count": "6-10", "evidence": "visual"}],
+          "actions": [{"type": "performing_ballet", "participants": ["p1", "p2"]}],
+          "relationships": [{"subject": "p1", "predicate": "dances with", "object": "p2"},
+                            {"subject": "p1", "predicate": "is", "object": "p2"},
+                            {"subject": "p1", "predicate": "wears", "object": "white tutu"},
+                            {"subject": "p1", "predicate": "watches", "object": "p1"}]}
     assert check_metadata(ok) == []
-    bad = dict(ok, events=[{"type": "dance", "participants": ["ghost"]}])
-    assert check_metadata(bad)
+    n, rep = normalise(ok)
+    assert n["tags"] == ["ballet", "stage performance"] and n["context"]["location"] is None
+    assert "time_of_day" not in n["attributes"] and n["entities"][0]["name"] is None  # name without a source removed
+    assert n["actions"][0]["type"] == "perform_ballet"
+    assert n["relationships"] == [{"subject": "p1", "predicate": "dances_with", "object": "p2"}]
+    assert len(rep) >= 6
+    assert check_metadata(dict(ok, actions=[{"type": "x", "participants": ["ghost"]}]))
+    assert check_metadata(dict(ok, entities=[{"id": "p1", "type": "robot", "evidence": "visual"}]))

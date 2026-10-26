@@ -21,6 +21,7 @@ Evidence and weights (pooled within 2 s; each type counted once; boundary if sum
 | visual_transition | 0.4 | CLIP frame cosine < 0.80; a shot cut alone = 0.2; cut + CLIP jump count once (rule E) |
 | people | 0.4 | person-count bin jump >= 2 between 6 s windows; 0.2 if a cut is within one step (rule C) |
 | audio | 0.3 | music or speech onset/offset |
+| topic | 1.0 | transcript topic-change peak (Sentence-BERT, 60 s context each side; robust z, prominence >= 1, peaks >= 60 s apart): can propose a boundary alone, since in meetings/cooking/talk the picture barely changes |
 
 Consequences: a cut, a reframing (people + visual = 0.8) or audio alone never ends a moment; continuing speech
 never blocks a new visual activity. Short certain activities (>= 4 s) inside a moment are kept as `sub_events`
@@ -28,3 +29,8 @@ never blocks a new visual activity. Short certain activities (>= 4 s) inside a m
 
 Human overrides (`review/overrides.json`): activity overrides, forced and removed boundaries. They are applied first
 and win over every automatic rule.
+
+Minimum interval (v0.2): after pooling, an accepted boundary that leaves a candidate interval shorter than
+`min_interval_s` (5 s) is removed, so the short interval joins the neighbour whose adjacent `absorb_context_s` (6 s)
+is more similar (cosine of summed X-CLIP top-5 activity scores plus the CLIP setting label). Reviewer boundaries are
+never removed. Each removal is logged (`min_interval`) with both similarities.

@@ -5,7 +5,8 @@ import urllib.request
 from pathlib import Path
 
 HF_MODELS = {"level1": ["openai/clip-vit-base-patch32", "microsoft/xclip-base-patch32", "speechbrain/spkrec-ecapa-voxceleb",
-                        "MIT/ast-finetuned-audioset-10-10-0.4593"],
+                        "MIT/ast-finetuned-audioset-10-10-0.4593",
+                        "sentence-transformers/all-MiniLM-L6-v2", "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"],
              "vlm": ["Qwen/Qwen3.5-4B"]}
 YOLO_URL = "https://github.com/ultralytics/assets/releases/download/v8.3.0/{}"
 

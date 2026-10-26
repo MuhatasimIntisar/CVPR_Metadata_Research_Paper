@@ -12,6 +12,8 @@ counted once, by its strongest item); a boundary needs pooled weight >= boundary
   people              0.4  person-count bin jump >= people_bin_jump between 6 s windows, away from cuts;
                       0.2  when a shot cut is within one step (tracker identity unreliable)          (rule C)
   audio               0.3  music or speech onset/offset
+  topic               1.0  transcript topic-change peak (Sentence-BERT, 60 s context; Experiment C setting): can
+                           propose a boundary on its own, because in meetings/cooking/talk the picture barely changes
 Uncertain spans never create boundaries (rule D); short certain runs survive as sub-events (rule F); activity
 changes inside one moment are kept as evidence for Level 2 (rule G). Human overrides are applied first and
 forced/removed boundaries take precedence over automatic decisions.
@@ -132,6 +134,33 @@ def people_audio_evidence(obs, c, step, cuts):
     return ev
 
 
+def topic_evidence(obs, c, step, dur):
+    """Transcript topic-change peaks (Experiment C fixed setting): robust z per video (clipped +-5), 3-step
+    smoothing, prominence >= topic_prominence, peaks >= topic_min_gap_s apart and from the video ends."""
+    from scipy.signal import find_peaks
+    x = np.array([np.nan if o.get("topic", {}).get("change") is None else o["topic"]["change"] for o in obs], float)
+    ok = np.isfinite(x)
+    if ok.sum() < 5:
+        return []
+    med = np.median(x[ok])
+    mad = 1.4826 * np.median(np.abs(x[ok] - med)) or (x[ok].std() or 1.0)
+    z = np.clip((x - med) / mad, -5, 5)
+    zz = np.where(ok, z, 0.0)
+    sm = np.convolve(zz, np.ones(3), "same") / np.maximum(np.convolve(ok.astype(float), np.ones(3), "same"), 1e-9)
+    sm[~ok] = np.nan
+    filled = np.where(np.isfinite(sm), sm, np.nanmin(sm))
+    gap = c["topic_min_gap_s"]
+    peaks, props = find_peaks(filled, prominence=c["topic_prominence"], distance=max(1, int(math.ceil(gap / step))))
+    ev = []
+    for p, prom in zip(peaks, props["prominences"]):
+        t = obs[p]["t"] - step / 2
+        if np.isfinite(sm[p]) and gap <= t <= dur - gap:
+            ev.append({"t": r(t), "type": "topic", "weight": c["weights"]["topic"], "z": r(sm[p]), "prominence": r(prom),
+                       "words_before": obs[p]["topic"]["words_before"], "words_after": obs[p]["topic"]["words_after"],
+                       "note": "transcript topic change (Sentence-BERT, 60 s context)"})
+    return ev
+
+
 def pool(ev, c, overrides, step):
     """Group evidence within pool_s; one item per type; human forced/removed boundaries override the decision."""
     groups = []
@@ -170,6 +199,55 @@ def pool(ev, c, overrides, step):
             out.append({"t": r(fb["t"]), "score": None, "accepted": True, "decided_by": "human", "types": ["human"],
                         "evidence": [], "reason": f"added by reviewer (edit {fb.get('edit_id')})"})
     return sorted(out, key=lambda g: g["t"])
+
+
+def _profile(obs, a, b):
+    """Unit vector of summed X-CLIP top-5 activity scores plus the CLIP setting label over [a, b)."""
+    v = Counter()
+    for o in obs:
+        if a <= o["t"] < b:
+            for lab, sc in o["activity"]["scores_top5"]:
+                v[lab] += sc
+            v["setting:" + o["environment"]["top3"][0][0]] += 0.3
+    n = math.sqrt(sum(x * x for x in v.values())) or 1.0
+    return {k: x / n for k, x in v.items()}
+
+
+def absorb_short(groups, obs, dur, c, clog):
+    """Remove accepted boundaries that leave an interval shorter than min_interval_s: the short interval joins the
+    neighbour whose adjacent absorb_context_s is more similar (activity scores + setting); reviewer boundaries stay."""
+    mn, ctx = c.get("min_interval_s", 0), c.get("absorb_context_s", 6.0)
+    if not mn:
+        return groups
+    while True:
+        acc = sorted((g for g in groups if g["accepted"]), key=lambda g: g["t"])
+        cuts = [0.0] + [g["t"] for g in acc] + [r(dur)]
+        short = [(cuts[i + 1] - cuts[i], i) for i in range(len(cuts) - 1) if cuts[i + 1] - cuts[i] < mn]
+        drop, sims = None, None
+        for _, i in sorted(short):
+            left = acc[i - 1] if i > 0 else None          # boundary at the short interval's start
+            right = acc[i] if i < len(acc) else None      # boundary at its end
+            opts = [g for g in (left, right) if g is not None and g["decided_by"] != "human"]
+            if not opts:
+                continue
+            a, b = cuts[i], cuts[i + 1]
+            me = _profile(obs, a, b)
+            sl = sum(me[k] * x for k, x in _profile(obs, max(cuts[i - 1], a - ctx), a).items() if k in me) if left else -1
+            sr = sum(me[k] * x for k, x in _profile(obs, b, min(cuts[i + 2], b + ctx)).items() if k in me) if right else -1
+            pick = left if sl >= sr else right
+            if pick not in opts:
+                pick = opts[0]
+            drop, sims = pick, (a, b, sl, sr)
+            break
+        if drop is None:
+            return groups
+        a, b, sl, sr = sims
+        side = "previous" if drop["t"] == a else "next"
+        drop["accepted"] = False
+        drop["reason"] = (f"{drop['reason']}; then dropped: interval {a:g}-{b:g} s is shorter than min_interval_s "
+                          f"{mn:g} s and joins the {side} interval (similarity previous {sl:.2f} / next {sr:.2f})")
+        clog.append({"rule": "min_interval", "t": drop["t"], "interval": [a, b], "joined": side,
+                     "similarity_previous": r(sl), "similarity_next": r(sr)})
 
 
 def build_moments(vid, obs, states, groups, dur, c, step):
@@ -237,9 +315,10 @@ def run(cfg, entry, vdir: Path, log):
     states = denoise(states, math.ceil(c["min_event_s"] / step), clog, times)
     states = manual_overrides.apply_activity(states, times, overrides, clog)  # human edits win over denoising
     cuts = [cu for o in obs for cu in o["shot_cuts"]]
-    ev = activity_evidence(states, times, c, step) + environment_evidence(obs, c, raw) + people_audio_evidence(obs, c, step, cuts)
-    groups = pool(ev, c, overrides, step)
     dur = float((read_json(vdir / "source" / "source_metadata.json") or {}).get("duration_s") or obs[-1]["end"])
+    ev = (activity_evidence(states, times, c, step) + environment_evidence(obs, c, raw) + people_audio_evidence(obs, c, step, cuts)
+          + topic_evidence(obs, c, step, dur))
+    groups = absorb_short(pool(ev, c, overrides, step), obs, dur, c, clog)
     moments = build_moments(vid, obs, states, groups, dur, c, step)
     write_jsonl(out / "corrected_observations.jsonl", [
         {"step": o["step"], "t": o["t"], "start": o["start"], "end": o["end"], "rule_state": s0, "rule_reason": why,

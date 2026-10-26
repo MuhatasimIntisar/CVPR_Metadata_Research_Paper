@@ -40,6 +40,57 @@ class Raw:
         self.motion = (read_json(raw / "camera_motion.json") or {}).get("samples", [])
         self.sil = (read_json(raw / "silence.json") or {}).get("silences", [])
         self.pt = np.array([fr["t"] for fr in self.track["frames"]]) if self.track else np.array([])
+        self.topic = topic_curve(raw, self.xt, self.cfg["topics"])
+
+
+def topic_curve(raw: Path, grid, tc):
+    """1 - cos between word-weighted mean chunk embeddings in [t-C, t) and [t, t+C); None without enough words."""
+    p = raw / "transcript_topics.npz"
+    out = [(None, 0, 0)] * len(grid)
+    if not p.exists():
+        return out
+    z = np.load(p)
+    ct, nw, E = z["times"].astype(float), z["n_words"].astype(float), z["emb"]
+    if not len(ct):
+        return out
+    C, mw = tc["context_s"], tc["min_words"]
+    res = []
+    for t in grid:
+        L = (ct >= t - C) & (ct < t)
+        R = (ct >= t) & (ct < t + C)
+        wl, wr = nw[L].sum(), nw[R].sum()
+        if wl < mw or wr < mw:
+            res.append((None, int(wl), int(wr)))
+            continue
+        a, b = nw[L] @ E[L], nw[R] @ E[R]
+        res.append((float(1 - a @ b / (np.linalg.norm(a) * np.linalg.norm(b))), int(wl), int(wr)))
+    return res
+
+
+SHOT_PROV = ("YOLO11n-pose, largest person per frame: ankles visible -> wide (extreme_wide if the person is < "
+             "extreme_wide_h of frame height), knees -> medium_wide, hips -> medium, shoulders -> close_up, face only -> "
+             "extreme_close_up; heuristic, people only (posters/screens showing people count)")
+
+
+def shot_scale(persons, sc) -> tuple[str, float | None]:
+    """Framing of the main (largest) person in one frame, from which COCO keypoints are visible."""
+    ps = [p for p in persons if p["conf"] >= sc["person_conf"] and p["box"][3] - p["box"][1] >= sc["min_box_h"]]
+    if not ps:
+        return "no_person", None
+    p = max(ps, key=lambda q: (q["box"][3] - q["box"][1]) * (q["box"][2] - q["box"][0]))
+    k, h = p["kpts"], p["box"][3] - p["box"][1]
+
+    def vis(*ids):
+        return any(k[i][2] >= sc["kpt_conf"] and 0 <= k[i][0] <= 1 and 0 <= k[i][1] <= 1 for i in ids)
+    if vis(15, 16):
+        return ("extreme_wide" if h < sc["extreme_wide_h"] else "wide"), h
+    if vis(13, 14):
+        return "medium_wide", h
+    if vis(11, 12):
+        return "medium", h
+    if vis(5, 6):
+        return "close_up", h
+    return "extreme_close_up", h
 
 
 def overlap(a, b, s, e):
@@ -72,10 +123,14 @@ def step_record(R: Raw, k: int, t: float, words) -> dict:
                 counts.append(len(ps))
                 tids |= {d[2] for d in ps if d[2] >= 0}
                 objs.update({d[0] for d in fr["dets"] if d[0] != "person" and d[1] >= cfg["object_conf"]})
-    hand = False
+    hand, scales, heights = False, [], []
     if R.pose:
         for fr in R.pose["frames"]:
             if a <= fr["t"] < b:
+                lab, hh = shot_scale(fr["persons"], cfg["shot_scale"])
+                scales.append(lab)
+                if hh is not None:
+                    heights.append(hh)
                 for p in fr["persons"]:
                     kp = p["kpts"]
                     hand |= any(kp[w][2] >= .5 and kp[sh][2] >= .5 and kp[w][1] < kp[sh][1] - .02 for w, sh in ((9, 5), (10, 6)))
@@ -101,11 +156,16 @@ def step_record(R: Raw, k: int, t: float, words) -> dict:
         "people": {"count_median": r(np.median(counts)) if counts else None, "count_max": max(counts) if counts else None,
                    "track_ids": sorted(tids), "n_frames": len(counts), "provenance": "YOLO11s + ByteTrack, 2 fps"},
         "objects": dict(objs), "hand_raised": hand,
+        "shot_scale": {"label": Counter(scales).most_common(1)[0][0] if scales else None,
+                       "frames": dict(Counter(scales)), "subject_height_median": r(np.median(heights)) if heights else None,
+                       "provenance": SHOT_PROV},
         "motion": {"local_resid_mean": r(np.mean([m["resid"] for m in mv]), 5) if mv else None,
                    "camera": Counter(m["label"] for m in mv).most_common(1)[0][0] if mv else None},
         "audio": {"speech_share": r(sum(overlap(a, b, x["start"], x["end"]) for x in R.vad) / (b - a)),
                   "speakers": {k_: r(v) for k_, v in talk.items()},
                   "silence_share": r(sum(overlap(a, b, x["start"], x["end"]) for x in R.sil) / (b - a)), "events": ev},
+        "topic": {"change": r(R.topic[k][0], 4), "words_before": R.topic[k][1], "words_after": R.topic[k][2],
+                  "provenance": "Sentence-BERT transcript chunks, 60 s context each side (1 - cosine)"},
         "shot_cuts": [r(c) for c in R.cuts if a <= c < b],
         "ocr_text": texts[:10],
         "transcript": " ".join(w["w"] for w in words if a <= (w["start"] + w["end"]) / 2 < b),
@@ -130,6 +190,8 @@ def window_record(steps, i, a, b, ACT, ENV):
             "speakers": {k: r(v) for k, v in spk.items()}, "shot_cuts": [c for s in st for c in s["shot_cuts"]],
             "black_share": r(np.mean([s["black_frame"] for s in st])) if st else None,
             "hand_raised_steps": sum(s["hand_raised"] for s in st),
+            "shot_scale_counts": dict(Counter(s["shot_scale"]["label"] for s in st if s["shot_scale"]["label"]).most_common()),
+            "camera_motion_counts": dict(Counter(s["motion"]["camera"] for s in st if s["motion"]["camera"]).most_common()),
             "ocr_text": list(dict.fromkeys(x for s in st for x in s["ocr_text"]))[:10],
             "transcript": " ".join(s["transcript"] for s in st if s["transcript"]),
             "note": "15 s summary = observation mechanism, not a final retrieval interval"}

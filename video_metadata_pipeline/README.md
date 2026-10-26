@@ -7,7 +7,7 @@ structured metadata, for a video corpus moment retrieval (VCMR) dataset.
 IA item folders -> ingest -> Level 1 (detectors) -> correction (moment candidates) -> Level 2 (VLM) -> review -> gold
 ```
 
-**Status:** ingest, level1, correction and level2 are implemented (level2 = Qwen3.5-4B semantic merging + metadata; control flow tested with a scripted stand-in, real inference runs on the GPU). The review CLI, feedback loop and gold export are checkpoint 3.
+**Status:** ingest, level1, correction and level2 are implemented (level2 = Qwen3.5-4B semantic merging + metadata, batched with vLLM; control flow tested with a scripted stand-in, real inference runs on the GPU). The review CLI, feedback loop and gold export are checkpoint 3.
 
 ## 1. Install
 

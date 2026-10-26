@@ -65,15 +65,15 @@ def run(cfg, manifest_path, stages, video_ids=None, force=False):
     manifest = read_json(manifest_path)
     if manifest is None:
         raise SystemExit(f"manifest not found: {manifest_path} (run `ingest` first)")
-    results = {}
-    for e in manifest["videos"]:
-        if e["status"] != "ok" or (video_ids and e["video_id"] not in video_ids):
-            continue
-        for s in stages:
-            r = run_stage(cfg, manifest, e, s, force)
-            results.setdefault(e["video_id"], {})[s] = r
-            if r == "failed":
-                break  # later stages of this video depend on it; other videos continue
+    videos = [e for e in manifest["videos"] if e["status"] == "ok" and not (video_ids and e["video_id"] not in video_ids)]
+    results = {e["video_id"]: {} for e in videos}
+    # stage-major: every video finishes a stage before the next stage starts, so each stage's models are loaded once
+    # per job (the Level-2 engine stays on the GPU for all videos and never competes with Level-1 detectors)
+    for s in [x for x in STAGES if x in stages]:
+        for e in videos:
+            if "failed" in results[e["video_id"]].values():
+                continue  # later stages of this video depend on the failed one; other videos continue
+            results[e["video_id"]][s] = run_stage(cfg, manifest, e, s, force)
     return results
 
 

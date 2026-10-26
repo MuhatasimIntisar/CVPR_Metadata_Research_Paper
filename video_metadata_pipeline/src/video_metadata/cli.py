@@ -4,6 +4,7 @@
     python -m video_metadata.cli run    --manifest data/corpus_manifest.json [--stages level1 correction] [--video-id ID]
     python -m video_metadata.cli status --manifest data/corpus_manifest.json
     python -m video_metadata.cli resume --manifest data/corpus_manifest.json
+    python -m video_metadata.cli check-vlm --config configs/cluster.yaml   (GPU: start the Level-2 engine, 4 test calls)
 """
 from __future__ import annotations
 
@@ -47,6 +48,9 @@ def main(argv=None):
     _common(p)
     p.add_argument("--include-vlm", action="store_true", help="also download the Level-2 VLM (~10 GB)")
 
+    p = sub.add_parser("check-vlm", help="start the Level-2 backend and run a small batch of image prompts (GPU)")
+    _common(p)
+
     a = ap.parse_args(argv)
     cfg = load_config(*a.config)
     manifest = Path(a.manifest or cfg["paths"]["manifest"])
@@ -70,6 +74,8 @@ def main(argv=None):
         from .pipeline import run
         res = run(cfg, manifest, a.stages, getattr(a, "video_id", None), getattr(a, "force", False))
         _print_results(res)
+    elif a.cmd == "check-vlm":
+        return _check_vlm(cfg)
     elif a.cmd == "download-models":
         from .models import download
         for x in download(cfg, a.include_vlm):
@@ -83,6 +89,44 @@ def main(argv=None):
             for s, e in errs.items():
                 print(f"    {s}: {e[:150]}")
     return 0
+
+
+def _check_vlm(cfg):
+    """Smoke test before a long job: engine start, batching, image placeholders, JSON answers, throughput."""
+    import time
+    from PIL import Image, ImageDraw
+    from .level1.pipeline import device_of
+    from .level2.output_validator import extract_json
+    from .level2.vlm_backend import get_backend
+    dev = device_of(cfg)
+    t0 = time.time()
+    be = get_backend(cfg, dev)
+    print(f"backend {be.name} ({cfg['level2']['model_id']}) on {dev}: loaded in {time.time() - t0:.0f} s")
+    imgs = []
+    for col in ("red", "blue", "green", "white"):
+        im = Image.new("RGB", (448, 252), col)
+        ImageDraw.Draw(im).rectangle([150, 60, 300, 190], fill="black")
+        imgs.append(im)
+    reqs = []
+    for k in range(4):
+        content = [{"type": "text", "text": "Two frames from a video follow."}]
+        for j in (k, (k + 1) % 4):
+            content += [{"type": "text", "text": f"Frame at {j}.0 s:"}, {"type": "image", "image": imgs[j]}]
+        content.append({"type": "text", "text": 'Answer with ONLY JSON on one line: {"first_colour": "...", "second_colour": "..."}'})
+        reqs.append(content)
+    t0 = time.time()
+    outs = be.generate_batch(reqs, [60] * 4) if hasattr(be, "generate_batch") else [be.generate(r, 60) for r in reqs]
+    dt = time.time() - t0
+    ok = 0
+    for k, o in enumerate(outs):
+        try:
+            extract_json(o)
+            ok += 1
+        except Exception:  # noqa: BLE001
+            pass
+        print(f"  request {k} (expect {('red', 'blue', 'green', 'white')[k]}, {('blue', 'green', 'white', 'red')[k]}): {o[:120]}")
+    print(f"4 requests in {dt:.1f} s; valid JSON {ok}/4; GPU peak {be.gpu_memory_gb()} GB")
+    return 0 if ok == 4 else 1
 
 
 def _print_results(res):

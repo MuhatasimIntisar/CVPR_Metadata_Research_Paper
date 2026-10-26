@@ -29,6 +29,8 @@ def outputs_of(step):
         return [SEGMENTER_FILES[step]]
     if step == "transcript_words":
         return ["asr.json"]
+    if step == "transcript_topics":
+        return ["transcript_topics.npz"]
     return [Path(f).name for f in L1_FILES[step]]
 
 
@@ -94,6 +96,9 @@ def run(cfg, manifest, entry, vdir: Path, log):
         if step == "transcript_words":
             from .adapters.visual import transcript_words
             meta = transcript_words(raw, transcript)
+        elif step == "transcript_topics":
+            from .adapters.topics import run as run_topics
+            meta = run_topics(raw, transcript, cfg, device)
         elif step == "yolo":
             from .adapters.visual import run_yolo
             meta = run_yolo(video, raw, cfg, device)
