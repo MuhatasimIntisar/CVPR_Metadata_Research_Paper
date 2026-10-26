@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
 """
-TVM pilot: find Internet Archive community-media candidates per category, let a human pick,
+TVM collection: find Internet Archive community-media candidates per category, let a human pick,
 then download only the picked videos with full metadata and captions.
 
-Categories: interview, meeting, event, guide, museum
+Categories, their search terms and the collections searched are set in collection/categories.json
+(edit it to add categories or terms; the category name becomes the corpus/<category>/ folder).
 
 Step 1  search (no downloads)
-  python collection/ia_download.py search
-  python collection/ia_download.py search --candidates 40 --spanish-candidates 15 --max-min 20
-  -> collection/rounds/candidates.csv  (25 English + 10 Spanish per category by default)
+  python collection/ia_download.py search --seed 2
+  python collection/ia_download.py search --seed 3 --candidates 80 --per-station 5 --pool 1000 --categories meeting events
+  python collection/ia_download.py search --stations detvde --from-date 2026-03 --to-date 2026-04 --min-minutes 10 --max-minutes 30
+  -> collection/rounds/candidates.csv  (--candidates per category, default 25)
+  Videos already downloaded in earlier rounds (identifiers in collection/rounds/*manifest*.csv) are skipped.
 
-Step 2  pick
-  Open candidates.csv (Excel is fine), put an x in the 'select' column for the videos you want,
-  e.g. 4 per category, and save as CSV.
+Step 2  look, refine, pick
+  python collection/ia_download.py report collection/rounds/candidates.csv
+      length, channels, dates, same-channel series (videos on consecutive days), title words, which terms hit
+  python collection/ia_download.py around collection/rounds/candidates.csv --days 2
+      for the rows marked x: more videos from the same channel within +-2 days -> candidates_around.csv
+  Open candidates.csv (Excel is fine), put an x in the 'select' column for the videos you want, save as CSV.
+  Columns: title, duration_min, station (channel), creator, date, weekday, neighbours_1d (other listed videos
+  from the same channel within a day), matched_terms (which search terms hit), subjects (the item's IA tags).
 
 Step 3  download (only the rows marked x; asks for confirmation)
   python collection/ia_download.py download collection/rounds/candidates.csv
@@ -27,17 +35,21 @@ Output of step 3
   collection/rounds/manifest.csv  the selected rows (next to the candidates csv; rename both to roundN_*.csv)
 
 Candidate rules
-  * collection:community_media, movies only, youtube-* mirror IDs excluded
+  * the configured collections, movies only, youtube-* mirror IDs and excluded title words left out; any language
   * not access-restricted, has an MP4 under --max-mb, duration within [--min-min, --max-min]
-  * dated within [--from-year, --to-year] (default 2024-2026); uses the item's date field,
+  * dated within [--from-date, --to-date] (default 2024-2026); uses the item's date field,
     falling back to its upload date when no date is given (see the date_source column)
-  * at most --per-station items per station prefix (e.g. "cctv17vt-") per category, for variety
+  * at most --per-station items per channel (identifier prefix, e.g. "cctv17vt-") per category, for variety;
+    --stations picks specific channels (then no cap); length/date/channel can also be set per category
+  * an item is listed under the first category it matches (no duplicates across categories)
   * shuffled with --seed, so reruns with the same seed give the same list
 
 Stdlib only (Python 3.8+).
 """
 import argparse
+import calendar
 import csv
+import datetime as dt
 import hashlib
 import json
 import os
@@ -45,58 +57,64 @@ import random
 import re
 import sys
 import time
+from collections import Counter, defaultdict
+from types import SimpleNamespace
 import urllib.error
 import urllib.parse
 import urllib.request
 
-UA = "tvm-pilot/0.1 (academic research; small pilot download)"
+UA = "tvm-collection/0.2 (academic research dataset; metadata + selected downloads)"
 SEARCH = "https://archive.org/advancedsearch.php"
 META = "https://archive.org/metadata/"
 DL = "https://archive.org/download/"
 DELAY_S = 0.5
 
-BASE_Q = "collection:community_media AND mediatype:movies AND NOT identifier:youtube-*"
-EXCLUDE = 'NOT title:(trailer OR promo OR teaser OR "full schedule" OR "bulletin board")'
-# The IA language field is sparse here, so Spanish is detected from the language field, Spanish
-# title words, or a "Spanish"/"en Español" marker in the title. Phrases where "Spanish" is the topic
-# rather than the language are excluded.
-SPANISH_MARK = '(spanish OR "español" OR espanol OR "en español" OR "en espanol")'
-SPANISH_TOPIC = ('("spanish flu" OR "spanish immersion" OR "spanish american" OR "spanish class" '
-                 'OR "learn spanish" OR "spanish speaking" OR "spanish club" OR "spanish 1" OR "spanish 2" '
-                 'OR "spanish fork" OR "spanish springs" OR "spanish trail")')
-SPANISH_HINTS = ("spanish", "español", "espanol")
+HERE = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_CONFIG = os.path.join(HERE, "categories.json")
+DEFAULT_ROUNDS = os.path.join(HERE, "rounds")
 
-# en: English title/subject terms. es: Spanish title terms (also count as a Spanish signal).
-CATEGORIES = {
-    "interview": {
-        "en": ['interview', '"talk show"', '"conversation with"', '"in conversation"', '"sits down"'],
-        "es": ['entrevista', 'conversando', 'platica', 'charla'],
-    },
-    "meeting": {
-        "en": ['"city council"', '"council meeting"', 'selectboard', '"board of supervisors"',
-               '"planning commission"', '"committee meeting"', '"school board"', '"town meeting"'],
-        "es": ['concejo', '"consejo municipal"', '"cabildo"', '"sesión"', '"reunión"', '"junta"'],
-    },
-    "event": {
-        "en": ['parade', 'festival', 'concert', 'tournament', 'football', 'basketball', 'hockey',
-               'soccer', 'baseball', '"live music"'],
-        "es": ['desfile', 'concierto', 'fútbol', 'futbol', 'fiesta', 'festival', 'torneo', 'baile'],
-    },
-    "guide": {
-        "en": ['"how to"', 'tips', 'guide', 'tutorial', 'safety', 'cooking', 'recipe', '"what to know"'],
-        "es": ['cómo', 'como', 'consejos', 'receta', 'guía', 'seguridad', 'cocina'],
-    },
-    "museum": {
-        "en": ['museum', 'exhibit', 'exhibition', 'gallery', '"art show"', 'curator', 'sculpture'],
-        "es": ['museo', 'exposición', 'exhibición', 'galería', 'arte'],
-    },
-}
+
+def as_date(s, end=False):
+    """'2025' / '2025-03' / '2025-03-31' -> a date (first or last day of the period)."""
+    m = re.fullmatch(r"(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?", str(s).strip())
+    if not m:
+        raise SystemExit(f"bad date {s!r} (use YYYY, YYYY-MM or YYYY-MM-DD)")
+    y, mo = int(m.group(1)), int(m.group(2) or (12 if end else 1))
+    d = int(m.group(3)) if m.group(3) else (calendar.monthrange(y, mo)[1] if end else 1)
+    return dt.date(y, mo, d)
+
+
+def full_date(s):
+    try:
+        return dt.date.fromisoformat(str(s)[:10]) if re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(s)[:10]) else None
+    except ValueError:
+        return None
+
+
+def rules_for(c, args):
+    """Per-category settings from categories.json, falling back to the command-line values.
+    --stations on the command line wins over a category's own list."""
+    stations = [x.lower() for x in (args.stations or c.get("stations") or [])]
+    return SimpleNamespace(
+        min_s=60 * float(c.get("min_minutes", args.min_minutes)), max_s=60 * float(c.get("max_minutes", args.max_minutes)),
+        from_d=as_date(c.get("from_date", args.from_date)), to_d=as_date(c.get("to_date", args.to_date), end=True),
+        stations=stations, max_mb=int(c.get("max_mb", args.max_mb)))
+
+
+def load_categories(path):
+    with open(path, encoding="utf-8") as f:
+        cfg = json.load(f)
+    for name, c in cfg["categories"].items():
+        if not c.get("terms") and not c.get("subject_tags"):
+            raise SystemExit(f"{path}: category {name!r} needs 'terms' or 'subject_tags'")
+    return cfg
+
 
 MP4_PREF = ["h.264", "MPEG4", "h.264 IA", "512Kb MPEG4"]
 CAPTION_EXT = (".srt", ".vtt")
-CANDIDATE_FIELDS = ["select", "category", "lang_group", "title", "duration_min", "video_mb", "has_captions",
-                    "station", "date", "date_source", "description", "details_url", "identifier", "video_file", "video_md5",
-                    "captions"]
+CANDIDATE_FIELDS = ["select", "category", "title", "duration_min", "station", "creator", "date", "weekday",
+                    "neighbours_1d", "date_source", "video_mb", "has_captions", "language", "matched_terms", "subjects",
+                    "found_via", "description", "details_url", "identifier", "video_file", "video_md5", "captions"]
 
 
 # ---------------------------------------------------------------- http
@@ -185,19 +203,6 @@ def first(v):
     return v[0] if isinstance(v, list) and v else (v or "")
 
 
-def is_spanish(meta, cat):
-    langs = meta.get("language", [])
-    lang = " ".join(map(str, langs if isinstance(langs, list) else [langs])).lower()
-    title = str(first(meta.get("title"))).lower()
-    if any(k in lang for k in ("spa", "span", "esp")):
-        return True
-    topic = [p.strip('"') for p in re.findall(r'"[^"]+"', SPANISH_TOPIC)]
-    if any(k in title for k in SPANISH_HINTS) and not any(p in title for p in topic):
-        return True
-    es_words = [t.strip('"') for t in CATEGORIES[cat]["es"]]
-    return any(re.search(rf"\b{re.escape(w)}\b", title) for w in es_words if w not in ("festival", "como"))
-
-
 def pick_video(files, max_mb):
     mp4s = [f for f in files if f.get("name", "").lower().endswith(".mp4") and f.get("size")]
     def rank(f):
@@ -219,27 +224,59 @@ def duration_of(meta, files, video):
 
 
 # ---------------------------------------------------------------- selection
-def candidates(cat, spanish, pool, y0, y1):
-    en = " OR ".join(CATEGORIES[cat]["en"])
-    es = " OR ".join(CATEGORIES[cat]["es"])
-    if spanish:
-        match = (f"(title:({es}) OR (title:({en}) AND title:{SPANISH_MARK}) "
-                 f"OR ((title:({en}) OR subject:({en})) AND language:(spa OR spanish))) "
-                 f"AND NOT title:{SPANISH_TOPIC}")
-    else:
-        match = (f"(title:({en}) OR subject:({en})) "
-                 f"AND NOT title:{SPANISH_MARK} AND NOT language:(spa OR spanish)")
-    years = f"[{y0}-01-01 TO {y1}-12-31]"
+def base_query(cfg, rules):
+    q = f"collection:({' OR '.join(cfg['collections'])}) AND mediatype:movies AND NOT identifier:youtube-*"
+    if rules.stations:
+        q += f" AND identifier:({' OR '.join(st + '*' for st in rules.stations)})"
+    span = f"[{rules.from_d.isoformat()} TO {rules.to_d.isoformat()}]"
     # date = content/air date; publicdate = upload date, used when an item has no date
-    q = f"({BASE_Q}) AND {match} AND {EXCLUDE} AND (date:{years} OR publicdate:{years})"
-    data = get(SEARCH, {"q": q, "fl[]": ["identifier"], "rows": pool, "sort[]": "downloads desc",
-                        "output": "json"})
+    return f"({q}) AND (date:{span} OR publicdate:{span})"
+
+
+def candidates(cfg, cat, rules, pool):
+    c = cfg["categories"][cat]
+    terms, tags = c.get("terms", []), c.get("subject_tags", [])
+    parts = []
+    if terms:
+        parts.append(f"title:({' OR '.join(terms)})")
+    if terms or tags:
+        parts.append(f"subject:({' OR '.join(terms + tags)})")
+    q = f"{base_query(cfg, rules)} AND ({' OR '.join(parts)})"
+    excl = cfg.get("exclude_title", []) + c.get("exclude", [])
+    if excl:
+        q += f" AND NOT title:({' OR '.join(excl)})"
+    return run_query(q, pool)
+
+
+def run_query(q, pool):
+    data = get(SEARCH, {"q": q, "fl[]": ["identifier"], "rows": pool, "sort[]": "downloads desc", "output": "json"})
     docs = (data or {}).get("response", {}).get("docs", [])
-    total = (data or {}).get("response", {}).get("numFound", 0)
-    return [d["identifier"] for d in docs], total
+    return [d["identifier"] for d in docs], (data or {}).get("response", {}).get("numFound", 0)
 
 
-def evaluate(identifier, args):
+def matched(meta, c):
+    """Which configured terms/tags actually occur in the title or the IA subject tags (shown to the picker)."""
+    title = str(first(meta.get("title"))).lower()
+    subj = meta.get("subject", [])
+    subj = " | ".join(map(str, subj if isinstance(subj, list) else [subj])).lower()
+    hits = [t.strip('"') for t in c.get("terms", []) if t.strip('"').lower() in title or t.strip('"').lower() in subj]
+    hits += [t.strip('"') for t in c.get("subject_tags", []) if t.strip('"').lower() in subj]
+    return "; ".join(dict.fromkeys(hits))
+
+
+def previous_ids(rounds_dir):
+    ids = set()
+    if os.path.isdir(rounds_dir):
+        for n in os.listdir(rounds_dir):
+            if "manifest" in n and n.endswith(".csv"):
+                with open(os.path.join(rounds_dir, n), encoding="utf-8-sig") as f:
+                    ids |= {r["identifier"] for r in csv.DictReader(f) if r.get("identifier")}
+    return ids
+
+
+def evaluate(identifier, rules):
+    if rules.stations and station_of(identifier) not in rules.stations:
+        return None, "other station"
     item = get(META + urllib.parse.quote(identifier))
     if not item or "metadata" not in item:
         return None, "no metadata"
@@ -247,18 +284,60 @@ def evaluate(identifier, args):
     if str(meta.get("access-restricted-item", "")).lower() == "true" or item.get("is_dark"):
         return None, "restricted"
     date, date_src = item_date(meta)
-    if not date or not (args.from_year <= int(date[:4]) <= args.to_year):
-        return None, f"year {date[:4] or 'unknown'}"
-    video = pick_video(files, args.max_mb)
+    fd = full_date(date)
+    if not date or (fd and not rules.from_d <= fd <= rules.to_d) or \
+            (not fd and not rules.from_d.year <= int(date[:4]) <= rules.to_d.year):
+        return None, f"date {date or 'unknown'}"
+    video = pick_video(files, rules.max_mb)
     if not video:
-        return None, f"no mp4 under {args.max_mb} MB"
+        return None, f"no mp4 under {rules.max_mb} MB"
     sec = duration_of(meta, files, video)
     if sec is None:
         return None, "unknown duration"
-    if not (args.min_min * 60 <= sec <= args.max_min * 60):
+    if not (rules.min_s <= sec <= rules.max_s):
         return None, f"duration {sec / 60:.1f} min"
     return {"item": item, "meta": meta, "files": files, "video": video, "seconds": sec,
             "date": date, "date_src": date_src}, "ok"
+
+
+def make_row(ident, cat, c, res, found_via=""):
+    v, meta = res["video"], res["meta"]
+    caps = [f["name"] for f in res["files"] if f.get("name", "").lower().endswith(CAPTION_EXT)]
+    subj = meta.get("subject", [])
+    subj = subj if isinstance(subj, list) else [subj]
+    lang = meta.get("language", [])
+    fd = full_date(res["date"])
+    return {
+        "select": "", "category": cat,
+        "title": str(first(meta.get("title")))[:150],
+        "duration_min": f"{res['seconds'] / 60:.1f}",
+        "station": station_of(ident), "creator": str(first(meta.get("creator")))[:60],
+        "date": res["date"], "weekday": fd.strftime("%a") if fd else "", "neighbours_1d": "",
+        "date_source": res["date_src"],
+        "video_mb": f"{int(v['size']) / 1048576:.1f}",
+        "has_captions": "yes" if caps else "",
+        "language": "; ".join(map(str, lang if isinstance(lang, list) else [lang])),
+        "matched_terms": matched(meta, c) if c else "",
+        "subjects": "; ".join(map(str, subj[:10]))[:200],
+        "found_via": found_via,
+        "description": clean_text(meta.get("description"), 300),
+        "details_url": f"https://archive.org/details/{ident}",
+        "identifier": ident, "video_file": v["name"], "video_md5": v.get("md5", ""),
+        "captions": "|".join(caps),
+    }
+
+
+def mark_neighbours(rows, days=1):
+    """neighbours_1d = other listed videos from the same channel dated within +-days (series / consecutive days)."""
+    by = defaultdict(list)
+    for r in rows:
+        fd = full_date(r.get("date"))
+        if fd:
+            by[r.get("station")].append((fd, r))
+    for lst in by.values():
+        for fd, r in lst:
+            r["neighbours_1d"] = str(sum(1 for g, x in lst if x is not r and abs((g - fd).days) <= days))
+    return rows
 
 
 def item_date(meta):
@@ -271,55 +350,158 @@ def item_date(meta):
 
 
 def search(args):
-    """Collect a large, varied candidate pool per category and language group (no downloads)."""
+    """Collect a varied candidate pool per category (no downloads)."""
+    cfg = load_categories(args.config)
+    cats = args.categories or list(cfg["categories"])
+    unknown = [c for c in cats if c not in cfg["categories"]]
+    if unknown:
+        raise SystemExit(f"unknown categories {unknown}; defined in {args.config}: {list(cfg['categories'])}")
     rng = random.Random(args.seed)
-    used_ids, rows = set(), []
-    for cat in args.categories:
-        print(f"\n=== {cat}", flush=True)
+    used_ids = set() if args.allow_repeats else previous_ids(args.out)
+    if used_ids:
+        print(f"skipping {len(used_ids)} videos already downloaded in earlier rounds")
+    rows = []
+    for cat in cats:
+        c = cfg["categories"][cat]
+        rules = rules_for(c, args)
+        need = int(c.get("candidates", args.candidates))
+        cap = need if rules.stations else args.per_station  # a chosen channel is not capped
+        print(f"\n=== {cat}  ({rules.min_s / 60:g}-{rules.max_s / 60:g} min, {rules.from_d} to {rules.to_d}"
+              + (f", channels {', '.join(rules.stations)}" if rules.stations else "") + ")", flush=True)
         per_station = {}
-        quotas = [("en", False, args.candidates), ("es", True, args.spanish_candidates)]
-        for group, spanish, need in quotas:
-            if need <= 0:
+        ids, total = candidates(cfg, cat, rules, args.pool)
+        rng.shuffle(ids)
+        print(f"  {total:,} matches, checking up to {len(ids)} for {need} candidates", flush=True)
+        got = 0
+        for ident in ids:
+            if got >= need:
+                break
+            st = station_of(ident)
+            if ident in used_ids or per_station.get(st, 0) >= cap:
                 continue
-            ids, total = candidates(cat, spanish, args.pool, args.from_year, args.to_year)
-            rng.shuffle(ids)
-            print(f"  [{group}] {total:,} matches, checking up to {len(ids)} for {need} candidates", flush=True)
-            got = 0
-            for ident in ids:
-                if got >= need:
-                    break
-                st = station_of(ident)
-                if ident in used_ids or per_station.get(st, 0) >= args.per_station:
-                    continue
-                res, why = evaluate(ident, args)
-                if not res:
-                    if args.verbose:
-                        print(f"     skip {ident[:70]}: {why}")
-                    continue
-                if spanish != is_spanish(res["meta"], cat):
-                    continue
-                used_ids.add(ident)
-                per_station[st] = per_station.get(st, 0) + 1
-                got += 1
-                v = res["video"]
-                caps = [f["name"] for f in res["files"] if f.get("name", "").lower().endswith(CAPTION_EXT)]
-                rows.append({
-                    "select": "", "category": cat, "lang_group": group,
-                    "title": str(first(res["meta"].get("title")))[:150],
-                    "duration_min": f"{res['seconds'] / 60:.1f}",
-                    "video_mb": f"{int(v['size']) / 1048576:.1f}",
-                    "has_captions": "yes" if caps else "",
-                    "station": st, "date": res["date"], "date_source": res["date_src"],
-                    "description": clean_text(res["meta"].get("description"), 300),
-                    "details_url": f"https://archive.org/details/{ident}",
-                    "identifier": ident, "video_file": v["name"], "video_md5": v.get("md5", ""),
-                    "captions": "|".join(caps),
-                })
-                print(f"     {got:>3}. {rows[-1]['title'][:70]}  ({rows[-1]['duration_min']} min)", flush=True)
-            if got < need:
-                print(f"  ! only {got}/{need} {group} candidates for {cat}; "
-                      f"raise --pool or --max-min, or edit CATEGORIES")
-    return rows
+            res, why = evaluate(ident, rules)
+            if not res:
+                if args.verbose:
+                    print(f"     skip {ident[:70]}: {why}")
+                continue
+            used_ids.add(ident)
+            per_station[st] = per_station.get(st, 0) + 1
+            got += 1
+            rows.append(make_row(ident, cat, c, res))
+            print(f"     {got:>3}. {rows[-1]['title'][:62]}  ({rows[-1]['duration_min']} min, {st}, {rows[-1]['date']})", flush=True)
+        if got < need:
+            print(f"  ! only {got}/{need} candidates for {cat}; raise --pool or --per-station, widen the length or "
+                  f"date range, or add terms in {os.path.basename(args.config)}")
+    return mark_neighbours(rows)
+
+
+def around(args):
+    """For every picked row: more videos from the same channel dated within +-days (series, consecutive days)."""
+    with open(args.csv, encoding="utf-8-sig") as f:
+        listed = list(csv.DictReader(f))
+    seeds = [r for r in listed if (r.get("select") or "").strip().lower() in CHOSEN]
+    if not seeds:
+        raise SystemExit("No rows selected. Put an x in the 'select' column of the videos to expand from.")
+    cfg = load_categories(args.config)
+    used = {r["identifier"] for r in listed} | (set() if args.allow_repeats else previous_ids(os.path.dirname(os.path.abspath(args.csv))))
+    rows = []
+    for sd in seeds:
+        d = full_date(sd.get("date"))
+        st = sd.get("station") or station_of(sd["identifier"])
+        if not d:
+            print(f"  - {sd['identifier'][:60]}: no exact date, skipped")
+            continue
+        rules = SimpleNamespace(min_s=60 * args.min_minutes, max_s=60 * args.max_minutes, max_mb=args.max_mb,
+                                from_d=d - dt.timedelta(days=args.days), to_d=d + dt.timedelta(days=args.days), stations=[st])
+        ids, total = run_query(base_query(cfg, rules), args.pool)
+        print(f"\n=== {st} around {d} (+-{args.days} d), from {sd['title'][:50]}: {total} items", flush=True)
+        got = 0
+        for ident in sorted(ids):
+            if got >= args.per_item:
+                break
+            if ident in used:
+                continue
+            res, why = evaluate(ident, rules)
+            if not res:
+                if args.verbose:
+                    print(f"     skip {ident[:70]}: {why}")
+                continue
+            used.add(ident)
+            got += 1
+            rows.append(make_row(ident, sd.get("category", ""), cfg["categories"].get(sd.get("category", "")), res,
+                                 found_via=sd["identifier"]))
+            print(f"     {got:>3}. {rows[-1]['date']} {rows[-1]['title'][:60]}  ({rows[-1]['duration_min']} min)", flush=True)
+    return mark_neighbours(rows)
+
+
+STOP = set("the a an and or of in on at to for with from by is are be this that it its as - & | live new part ep episode "
+           "video show 2023 2024 2025 2026 de la el y en los las del".split())
+
+
+def report(args):
+    """Summary of candidate/manifest CSVs to steer the next search: length, channels, dates, series, title words."""
+    rows = []
+    for p in args.csv:
+        with open(p, encoding="utf-8-sig") as f:
+            rows += list(csv.DictReader(f))
+    if args.selected:
+        rows = [r for r in rows if (r.get("select") or "").strip().lower() in CHOSEN]
+    if not rows:
+        raise SystemExit("no rows")
+    cfg = load_categories(args.config) if os.path.exists(args.config) else {"categories": {}}
+    groups = [("ALL", rows)] + [(c, [r for r in rows if r.get("category") == c]) for c in dict.fromkeys(r.get("category") for r in rows)]
+    for name, rs in groups:
+        mins = sorted(float(r["duration_min"]) for r in rs if r.get("duration_min"))
+        print(f"\n=== {name}: {len(rs)} videos")
+        if mins:
+            b = Counter("<10" if m < 10 else "10-20" if m < 20 else "20-30" if m < 30 else "30-60" if m < 60 else "60+" for m in mins)
+            print(f"  length   min {mins[0]:.0f} / median {mins[len(mins) // 2]:.0f} / max {mins[-1]:.0f} min;  "
+                  + ", ".join(f"{k} min: {b[k]}" for k in ("<10", "10-20", "20-30", "30-60", "60+") if b[k]))
+        ch = Counter(r.get("station") or station_of(r["identifier"]) for r in rs)
+        cr = {r.get("station"): r.get("creator") for r in rs if r.get("creator")}
+        print("  channels " + ", ".join(f"{k}{' (' + cr[k][:25] + ')' if cr.get(k) else ''}: {n}" for k, n in ch.most_common(10))
+              + (f"  (+{len(ch) - 10} more)" if len(ch) > 10 else ""))
+        ds = sorted(d for d in (full_date(r.get("date")) for r in rs) if d)
+        if ds:
+            ym = Counter(d.strftime("%Y-%m") for d in ds)
+            print(f"  dates    {ds[0]} to {ds[-1]};  busiest months " + ", ".join(f"{k}: {n}" for k, n in ym.most_common(6)))
+        if name == "ALL":
+            by = defaultdict(list)
+            for r in rs:
+                d = full_date(r.get("date"))
+                if d:
+                    by[r.get("station") or station_of(r["identifier"])].append(d)
+            runs = []
+            for st, lst in by.items():
+                lst = sorted(set(lst))
+                cur = [lst[0]]
+                for d in lst[1:]:
+                    if (d - cur[-1]).days <= args.days:
+                        cur.append(d)
+                    else:
+                        runs.append((st, cur)) if len(cur) > 1 else None
+                        cur = [d]
+                runs.append((st, cur)) if len(cur) > 1 else None
+            runs.sort(key=lambda x: -len(x[1]))
+            print(f"  series   same channel, dates <= {args.days} day(s) apart: "
+                  + ("; ".join(f"{st} {r[0]}..{r[-1]} ({len(r)})" for st, r in runs[:10]) or "none"))
+        words = Counter(w for r in rs for w in set(re.findall(r"[a-záéíóúñ]+", r.get("title", "").lower()))
+                        if w not in STOP and len(w) > 2)
+        print("  title    " + ", ".join(f"{w} {n}" for w, n in words.most_common(15)))
+        mt = Counter(t.strip() for r in rs for t in (r.get("matched_terms") or "").split(";") if t.strip())
+        if mt:
+            print("  matched  " + ", ".join(f"{t} {n}" for t, n in mt.most_common(12)))
+        c = cfg["categories"].get(name)
+        if c and mt:  # only csvs written by this version record matched terms
+            unused = [t.strip('"') for t in c.get("terms", []) if t.strip('"') not in mt]
+            if unused:
+                print(f"  unused terms (matched nothing here): {', '.join(unused)}")
+    top = [k for k, _ in Counter(r.get("station") for r in rows).most_common(3) if k]
+    print("\nNext-search ideas:")
+    if top:
+        print(f"  more from the top channels:   python collection/ia_download.py search --stations {' '.join(top)} --seed <n>")
+    print(f"  series around picked videos:  python collection/ia_download.py around <csv with x marks> --days 2")
+    print(f"  other lengths / dates:        --min-minutes 10 --max-minutes 30 --from-date 2025-01 --to-date 2025-06")
 
 
 def clean_text(v, limit):
@@ -392,14 +574,22 @@ def write_candidates(rows, out):
 def cmd_search(args):
     rows = search(args)
     path = write_candidates(rows, args.out)
-    print("\nCandidates per category (en / es):")
-    for cat in args.categories:
-        en = sum(1 for r in rows if r["category"] == cat and r["lang_group"] == "en")
-        es = sum(1 for r in rows if r["category"] == cat and r["lang_group"] == "es")
-        print(f"  {cat:10} {en:>3} / {es:>3}")
+    print("\nCandidates per category:")
+    for cat in dict.fromkeys(r["category"] for r in rows):
+        print(f"  {cat:12} {sum(1 for r in rows if r['category'] == cat):>4}")
     print(f"\nWrote {len(rows)} candidates to {path}")
     print("Next: open it, put an x in the 'select' column for the videos you want, save, then run:")
     print(f"  python {os.path.basename(sys.argv[0])} download {path}")
+
+
+def cmd_around(args):
+    rows = around(args)
+    out = os.path.join(os.path.dirname(os.path.abspath(args.csv)), "candidates_around.csv")
+    with open(out, "w", newline="", encoding="utf-8-sig") as f:
+        w = csv.DictWriter(f, fieldnames=CANDIDATE_FIELDS)
+        w.writeheader()
+        w.writerows(rows)
+    print(f"\nWrote {len(rows)} candidates to {out} (found_via = the picked video they came from)")
 
 
 def cmd_download(args):
@@ -409,7 +599,7 @@ def cmd_download(args):
         print("No rows selected. Put an x in the 'select' column first.")
         return
     print("Selected per category:")
-    for cat in CATEGORIES:
+    for cat in dict.fromkeys(r["category"] for r in rows):
         k = sum(1 for r in rows if r["category"] == cat)
         print(f"  {cat:10} {k}{'' if k == args.expect else f'   (expected {args.expect})'}")
     total_mb = sum(float(r.get("video_mb") or 0) for r in rows)
@@ -438,30 +628,48 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
 
+    def rules_args(p, per_category=True):
+        note = " (a category in the config can override it)" if per_category else ""
+        p.add_argument("--min-minutes", "--min-min", type=float, default=1.0, help="shortest video, minutes" + note)
+        p.add_argument("--max-minutes", "--max-min", type=float, default=30.0, help="longest video, minutes" + note)
+        p.add_argument("--max-mb", type=int, default=300, help="largest video file, MB" + note)
+        p.add_argument("--pool", type=int, default=200, help="search hits to check per category / per picked video")
+        p.add_argument("--config", default=DEFAULT_CONFIG, help="categories, search terms and collections (JSON)")
+        p.add_argument("--allow-repeats", action="store_true", help="do not skip videos downloaded in earlier rounds")
+        p.add_argument("-v", "--verbose", action="store_true", help="show why candidates were skipped")
+
     s = sub.add_parser("search", help="find candidates and write candidates.csv (no downloads)")
-    s.add_argument("-o", "--out", default=os.path.join("collection", "rounds"), help="where candidates.csv is written")
-    s.add_argument("--candidates", type=int, default=25, help="English candidates per category")
-    s.add_argument("--spanish-candidates", type=int, default=10, help="Spanish candidates per category")
-    s.add_argument("--per-station", type=int, default=3, help="max candidates per station per category")
-    s.add_argument("--min-min", type=float, default=1.0, help="min duration (minutes)")
-    s.add_argument("--max-min", type=float, default=30.0, help="max duration (minutes)")
-    s.add_argument("--max-mb", type=int, default=300, help="max video file size (MB)")
-    s.add_argument("--pool", type=int, default=200, help="search hits to check per category/language")
-    s.add_argument("--categories", nargs="+", choices=list(CATEGORIES), default=list(CATEGORIES),
-                   help="only search these categories")
-    s.add_argument("--from-year", type=int, default=2024, help="earliest year (inclusive)")
-    s.add_argument("--to-year", type=int, default=2026, help="latest year (inclusive)")
+    rules_args(s)
+    s.add_argument("-o", "--out", default=DEFAULT_ROUNDS, help="where candidates.csv is written")
+    s.add_argument("--candidates", type=int, default=25, help="candidates per category (a category can override it)")
+    s.add_argument("--per-station", type=int, default=3, help="max candidates per channel per category (not applied with --stations)")
+    s.add_argument("--categories", nargs="+", help="only search these categories (default: all in the config)")
+    s.add_argument("--stations", nargs="+", help="only these channels (identifier prefix, e.g. detvde cctv17vt)")
+    s.add_argument("--from-date", default="2024", help="earliest date: YYYY, YYYY-MM or YYYY-MM-DD")
+    s.add_argument("--to-date", default="2026", help="latest date: YYYY, YYYY-MM or YYYY-MM-DD")
     s.add_argument("--seed", type=int, default=42)
-    s.add_argument("-v", "--verbose", action="store_true", help="show why candidates were skipped")
+
+    a = sub.add_parser("around", help="more videos from the same channel within +-N days of each picked row")
+    a.add_argument("csv", help="a candidates/manifest csv with x marks on the videos to expand from")
+    rules_args(a, per_category=False)
+    a.add_argument("--days", type=int, default=2, help="+- days around each picked video's date")
+    a.add_argument("--per-item", type=int, default=10, help="max new candidates per picked video")
+
+    r = sub.add_parser("report", help="summarise candidate/manifest csvs (length, channel, date, series, title words)")
+    r.add_argument("csv", nargs="+")
+    r.add_argument("--selected", action="store_true", help="only rows marked x")
+    r.add_argument("--days", type=int, default=1, help="max gap for a 'series' of same-channel videos")
+    r.add_argument("--config", default=DEFAULT_CONFIG)
 
     d = sub.add_parser("download", help="download rows marked in the 'select' column")
     d.add_argument("csv", help="candidates.csv with your selections")
-    d.add_argument("-o", "--out", default="corpus", help="where the videos go (default: corpus/)")
+    d.add_argument("-o", "--out", default=os.path.join(os.path.dirname(HERE), "corpus"),
+                   help="where the videos go (default: corpus/ at the repository root)")
     d.add_argument("--expect", type=int, default=4, help="expected picks per category (warning only)")
     d.add_argument("-y", "--yes", action="store_true", help="skip the confirmation prompt")
 
     args = ap.parse_args()
-    (cmd_search if args.cmd == "search" else cmd_download)(args)
+    {"search": cmd_search, "around": cmd_around, "report": report, "download": cmd_download}[args.cmd](args)
 
 
 if __name__ == "__main__":

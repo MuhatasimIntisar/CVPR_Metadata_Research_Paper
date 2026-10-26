@@ -1,5 +1,0 @@
-# Level-1 detectors (python -m level1.detect). Install on top of requirements-segmenters.txt.
-ultralytics>=8.3
-silero-vad>=5.1
-soundfile>=0.12
-scipy>=1.10
