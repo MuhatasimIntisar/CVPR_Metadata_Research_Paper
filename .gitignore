@@ -1,18 +1,27 @@
-# Data never goes in git: it lives under each env's data_root
+# Data never goes in git (videos, working outputs, models, archived data)
+corpus/
+outputs/
+models/
+archive/data/
 data/
 *.mp4
 *.webm
 *.mkv
-*.vtt
+*.avi
+*.wav
 *.tar
+*.tgz
+*.zip
 *.parquet
+*.pt
+*.npz
 
-# Python
+# Python / tools
 __pycache__/
 *.pyc
+*.egg-info/
 .venv/
 venv/
+.pytest_cache/
 .ipynb_checkpoints/
-
-# Cluster logs
 logs/

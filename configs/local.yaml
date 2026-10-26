@@ -1,0 +1,9 @@
+# Laptop (run from the repository root). Videos in corpus/, YOLO weights in models/.
+paths:
+  corpus_root: corpus
+  manifest: outputs/corpus_manifest.json
+  outputs_root: outputs
+  review_root: review
+  metadata_root: metadata
+level1:
+  yolo: {detect_model: models/yolo11s.pt, pose_model: models/yolo11n-pose.pt}

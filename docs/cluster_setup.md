@@ -3,22 +3,26 @@
 Layout on scratch (all config paths are relative to `code/`, nothing machine-specific is hard-coded):
 ```
 /mnt/scratch2/users/<user>/vmp/
-  code/            this package
-  data/pilot/      Internet Archive item folders (videos)
-  data/segments/   earlier detector outputs (reused if present)
-  data/level1/     earlier YOLO/CLIP/X-CLIP/VAD outputs (reused if present)
+  code/            git clone of the repository (branch metadata-phase)
+  data/pilot/      Internet Archive item folders (videos), copied from the laptop's corpus/
   models/          model cache (filled by download-models)
-  outputs/         results, manifest, SLURM logs
+  outputs/         per-video working outputs, manifest, SLURM logs
+  metadata/        dataset copies <video>_metadata.json (+ .md); bring these back to the laptop
 ```
 
-## 1. Copy from the laptop (PowerShell, from C:\msc_ds_ai\CVPR_Metadata_Research_Paper)
-Use your usual Kelvin2 ssh login (host/port as you normally connect):
+## 1. Code: git, not copying
+First time (login node):
 ```
-ssh <kelvin-login> "mkdir -p /mnt/scratch2/users/<user>/vmp/data"
-scp -r video_metadata_pipeline <kelvin-login>:/mnt/scratch2/users/<user>/vmp/code
-scp -r data/pilot data/segments data/level1 <kelvin-login>:/mnt/scratch2/users/<user>/vmp/data/
+cd /mnt/scratch2/users/<user>/vmp
+git clone -b metadata-phase https://github.com/MuhatasimIntisar/CVPR_Metadata_Research_Paper.git code
 ```
-(~1.5 GB; `outputs/` from the laptop is not needed.)
+Every update afterwards: `cd /mnt/scratch2/users/<user>/vmp/code && git pull`.
+(Private repo: use a GitHub personal access token as the password, or an SSH key added to GitHub.)
+
+Videos (PowerShell on the laptop, from the repository root; downloads must happen off the university network):
+```
+scp -r corpus/* <kelvin-login>:/mnt/scratch2/users/<user>/vmp/data/pilot/
+```
 
 ## 2. One-time setup on a LOGIN node (internet available)
 ```
@@ -62,4 +66,6 @@ Resume after a time-out/interruption: submit again; completed stages are cached 
 GPU memory: Level 1 < 6 GB (any slice); Level 2 (Qwen3.5-4B, bf16) >= 20 GB.
 
 ## 4. Bring results back
-`scp -r <kelvin-login>:/mnt/scratch2/users/<user>/vmp/outputs ./video_metadata_pipeline/outputs_kelvin`
+The dataset files only (small):
+`scp <kelvin-login>:/mnt/scratch2/users/<user>/vmp/metadata/* metadata/`
+Full per-video outputs stay on Kelvin (~35 MB per video); copy single videos into `outputs/` only to inspect them.

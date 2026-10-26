@@ -120,6 +120,12 @@ def run(cfg, manifest, entry, vdir: Path, log, backend=None):
     write_json(out / "run_stats.json", stats)
     write_json(out / "semantic_metadata.json", doc)
     report(doc, decisions, stats, out / "level2_report.md")
+    if cfg["paths"].get("metadata_root"):  # the dataset copy: metadata/<original video name>_metadata.json (+ .md)
+        stem = Path((man["inputs"].get("original_names") or {}).get(man["inputs"]["video"]) or vid).stem
+        md = Path(cfg["paths"]["metadata_root"])
+        md.mkdir(parents=True, exist_ok=True)
+        write_json(md / f"{stem}_metadata.json", doc)
+        report(doc, decisions, stats, md / f"{stem}_metadata.md")
     try:
         plot(cands, decisions, segments, moments, src.get("duration_s") or events[-1]["end_s"], vdir / "reports" / "semantic_timeline.png")
     except Exception as e:  # noqa: BLE001

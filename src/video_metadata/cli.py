@@ -1,9 +1,9 @@
 """Command-line interface.
 
     python -m video_metadata.cli ingest --input <corpus_dir> [--config cfg.yaml]
-    python -m video_metadata.cli run    --manifest data/corpus_manifest.json [--stages level1 correction] [--video-id ID]
-    python -m video_metadata.cli status --manifest data/corpus_manifest.json
-    python -m video_metadata.cli resume --manifest data/corpus_manifest.json
+    python -m video_metadata.cli run    --config configs/local.yaml [--stages level1 correction] [--video-id ID]
+    python -m video_metadata.cli status --config configs/local.yaml
+    python -m video_metadata.cli resume --config configs/local.yaml
     python -m video_metadata.cli check-vlm --config configs/cluster.yaml   (GPU: start the Level-2 engine, 4 test calls)
 """
 from __future__ import annotations

@@ -1,127 +1,55 @@
-# CVPR_Metadata_Research_Paper
+# TVM metadata pipeline
 
-Pipeline for building a compositional, metadata-based video retrieval dataset from real-world YouTube footage.
-Short clips are annotated with 12 structured fields (location, time, action, cinematography × 3 levels).
-
-## Layout
+Turns Internet Archive community-TV videos into timestamped moments with structured, evidence-checked metadata,
+for a video corpus moment retrieval (VCMR) dataset.
 
 ```
-configs/      taxonomy.yaml (fixed 12-field label schema), search_pools.yaml (search terms), one config per machine
-src/
-  discovery/  (1) coverage-balanced random queries -> candidate video IDs (no downloads)
-  ingest/     (2) download -> shot segmentation -> cheap filters -> clips -> shard; raw video deleted
-  annotate/   (3) one module per dimension + fuse.py (currently stubs that print + cite references)
-  common/     config, manifest, shard I/O
-  segmenters/ raw moment-boundary segmenters, one JSON per segmenter (scripts/run_segmenters.py)
-scripts/      entry points; slurm/ for Kelvin
-data/         gitignored; test_env data lives here
+collection (pick + download) -> ingest -> Level 1 (detectors) -> correction (candidate moments)
+  -> Level 2 (Qwen3.5-4B: merge decisions + moment metadata) -> review -> gold
 ```
+Status: everything up to Level 2 is implemented (schema `vmp-2.1`, `docs/metadata_schema.md`); review / gold export
+is the next checkpoint.
 
-## Environments
+## Repository layout
 
-| `--env`       | Machine            | Role                                          |
-|---------------|--------------------|-----------------------------------------------|
-| `test_env`    | laptop             | tiny batches to debug the full chain           |
-| `storage_env` | professor's PC     | full download + ingest, long-term shard store  |
-| `live`        | Kelvin cluster     | annotation + embeddings (SLURM array per shard)|
+| Folder | What it holds | In git |
+|---|---|---|
+| `src/video_metadata/` | the pipeline: `ingestion/`, `level1/`, `correction/`, `level2/`, `utils/`, `cli.py` | yes |
+| `configs/` | `default.yaml` (every parameter), `local.yaml` (laptop), `cluster.yaml` (Kelvin2), `models.yaml` | yes |
+| `scripts/` | Kelvin2: `prepare_cluster.sh`, `prepare_vllm.sh`, `check_vlm.sh`, `submit_cluster.sh` | yes |
+| `tests/` | unit + integration tests (synthetic fixtures, no models): `python -m pytest -q` | yes |
+| `docs/` | `architecture.md`, `correction_rules.md`, `metadata_schema.md`, `cluster_setup.md` | yes |
+| `collection/` | `ia_download.py` (search -> pick -> download) and `rounds/` (candidate, pick and manifest CSVs per round) | yes |
+| `corpus/` | downloaded videos, `<category>/<item>/`; laptop staging before copying to Kelvin | no |
+| `outputs/` | per-video working outputs (full set lives on Kelvin; only inspected videos here) | no |
+| `review/` | human edits per video, `<video_id>/overrides.json`; the input to gold | yes |
+| `metadata/` | **the dataset**: `<original video name>_metadata.json` (+ readable `.md`) per video | yes |
+| `models/` | YOLO weights for laptop runs | no |
+| `archive/` | earlier phases (segmentation experiments, Level-1 prototypes, discovery tools, reference datasets, old runs); not used by the pipeline | code yes, data no |
 
-Code is identical everywhere; only `configs/<env>.yaml` (mainly `data_root`) differs.
+## Workflow
+1. **Pick + download** (laptop, off the university network - it blocks archive.org storage):
+   `python collection/ia_download.py search` -> mark `x` in `collection/rounds/candidates.csv` ->
+   `python collection/ia_download.py download collection/rounds/candidates.csv` (videos land in `corpus/`).
+   Keep each round's CSVs in `collection/rounds/` (`roundN_*.csv`): they document how the corpus was chosen.
+2. **Copy videos to Kelvin**: `scp -r corpus/* <kelvin>:/mnt/scratch2/users/<user>/vmp/data/pilot/`
+3. **Code on Kelvin**: `git pull` in `vmp/code` (see `docs/cluster_setup.md`; first time: `git clone`).
+4. **Run**: `sbatch scripts/check_vlm.sh` once after setup changes, then `sbatch scripts/submit_cluster.sh`.
+5. **Bring back the dataset files**: `scp <kelvin>:/mnt/scratch2/users/<user>/vmp/metadata/* metadata/`, commit.
+6. **Review**: human edits go to `review/<video_id>/`; re-running correction/Level 2 applies them (they always win).
 
-## Data layout (under `data_root`)
+## Branches
+- `metadata-phase`: the working pipeline (what Kelvin runs).
+- `scratch`: Claude's changes are pushed here; pull it, test, then merge into `metadata-phase`.
 
+## Local use (laptop)
+```bash
+pip install -e ".[level1,dev]"     # PyTorch for your CUDA first; FFmpeg on PATH
+python -m video_metadata.cli ingest --config configs/local.yaml
+python -m video_metadata.cli run --config configs/local.yaml --stages level1 correction --video-id <id>
+python -m video_metadata.cli status --config configs/local.yaml
 ```
-manifest/videos.parquet      one row per video ID: status (candidate/ingested/failed), shard, counts
-discovery/query_log.parquet  every search result: batch, seed, query, combo, channel, added or not
-shards/shard-00000/          immutable once _SUCCESS exists
-    clips.tar                kept shots, 480p H.264 + mono AAC
-    keyframes.tar            one 384px JPEG per kept shot
-    shots.parquet            every detected shot, kept or discarded (with reason), caption text
-    info.parquet             trimmed YouTube metadata (title, description, upload date, channel ...)
-annotations/<annotator>/<version>/shard-00000.parquet
-annotations/fused/<version>/shard-00000.parquet
-```
+Completed stages are cached per video (`outputs/<id>/pipeline_state.json`); `--force` recomputes; rerunning a stage
+marks later stages stale. Stages run stage by stage over all videos; a failed video never stops the others.
 
-## Setup
-
-```
-python -m venv .venv
-.venv\Scripts\activate            # Windows   (Linux: source .venv/bin/activate)
-pip install -r requirements.txt
-ffmpeg -version                   # must be on PATH
-```
-
-## Discovery (query generation)
-
-Search terms live in `configs/search_pools.yaml`, not the taxonomy. Each slot maps a canonical key
-(e.g. `protesting`) to several phrasings (`protest`, `march`, `rally`). Discovery runs in batches:
-
-1. Sample `action x place x location` combos, weighted toward combos with few videos so far
-   (`1/(1+count)`; combos at `max_per_combo` are skipped) -> even coverage.
-2. Pick random phrasings + a random style, search YouTube.
-3. Apply caps: `results_per_query`, `max_per_channel`, `max_per_combo`; skip known IDs.
-4. Append to the manifest and `query_log.parquet` (with batch id + seed, so it's reproducible).
-
-Repeat until `--n-videos x oversample` new candidates. Interrupting is safe.
-`--report` prints coverage without searching.
-
-## Expanding search terms with a local model
-
-`scripts/expand_search_pools.py` asks a local model (llama.cpp `llama-server`) for extra phrasings of each value in
-`search_pools.yaml` (actions, place types, styles; cities are fixed and not expanded). It only adds
-phrasings to existing keys, never new keys, and drops suggestions that mention other slots (e.g. a
-city inside an action phrasing).
-
-```
-scripts\windows\start_llm_server.bat       # separate terminal; edit model/llama.cpp paths inside
-python scripts/expand_search_pools.py --dry-run
-python scripts/expand_search_pools.py        # writes configs/search_pools.expanded.yaml
-```
-
-Review the output, delete bad phrasings, set `_provenance.reviewed: true`, then set
-`search_pools: search_pools.expanded.yaml` in the env config. The baseline file is never modified.
-
-## Test run
-
-```
-python scripts/run_discovery.py --env test_env --n-videos 10
-python scripts/run_ingest.py    --env test_env
-python scripts/run_annotate.py  --env test_env
-python scripts/inspect_shard.py --env test_env --extract 5
-```
-
-Re-running is safe: ingest only takes `candidate` videos, annotation skips outputs that already exist (`--force` to redo).
-
-## Segmenters (moment boundaries, one video)
-
-Step 1 of the moment pipeline: run every boundary segmenter on one video and keep each one's **raw**
-output as JSON. No snapping, merging or hard/soft fusion yet; that comes after inspecting these.
-
-| Segmenter | What it finds | Model | Output |
-|---|---|---|---|
-| `shots` | cuts, fades | PySceneDetect Adaptive + Threshold | `shots.json` |
-| `scenes` | shots grouped by setting | CLIP ViT-B/32 | `scenes.json` |
-| `asr` | words + sentences (input for speakers/topic) | Whisper large-v3-turbo | `asr.json` |
-| `speakers` | speaker runs, every turn | ECAPA-TDNN + agglomerative clustering | `speakers.json` |
-| `silence` | silent spans | ffmpeg silencedetect | `silence.json` |
-| `audio_events` | speech/music/applause/cheering/laughter/whistle on-off | AST (AudioSet) | `audio_events.json` |
-| `ocr` | on-screen text appearing / changing / disappearing | EasyOCR | `ocr.json` |
-| `topic` | topic shifts in the transcript | multilingual-e5-small + TextTiling | `topic.json` |
-| `camera_motion` | static/pan/tilt/zoom/handheld changes | Farneback optical flow | `camera_motion.json` |
-
-Every boundary is `{"t", "kind", "conf", ...}`. `all_boundaries.json` lists all of them in time order
-(unmerged); `summary.json` gives status, runtime and counts per segmenter. No Hugging Face token needed.
-
-```
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-pip install -r requirements-segmenters.txt
-python ia_pilot_download.py download data/pilot/demo_video.csv            # Good Morning Delaware only
-python scripts/run_segmenters.py --item-dir data/pilot/interview/<identifier>
-python scripts/run_segmenters.py --item-dir ... --only ocr --force         # re-run one segmenter
-```
-
-Models load one at a time and are freed after each step (fits 6 GB VRAM). First run downloads ~3 GB of weights.
-
-## Troubleshooting
-
-- **YouTube download errors / missing formats:** update yt-dlp (`pip install -U "yt-dlp[default]"`). Recent yt-dlp versions need a JavaScript runtime (e.g. Deno) for full YouTube support.
-- **HTTP 429 / bot checks:** increase `sleep_between_downloads_s`; captions are fetched separately so caption rate-limits don't fail the video.
+Videos are never redistributed: the dataset is the metadata plus Internet Archive identifiers and URLs.

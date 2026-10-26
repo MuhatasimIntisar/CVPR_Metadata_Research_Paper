@@ -1,0 +1,5510 @@
+{
+ "schema_version": "vmp-2.1",
+ "video": {
+  "video_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44",
+  "source": {
+   "provider": "Internet Archive",
+   "url": "https://archive.org/details/detvde-Chocolate_Ballerina_Founder_Chanel_Holland-Pierre_Shares_Inspiring_Business_Journey_GMD",
+   "archive_identifier": "detvde-Chocolate_Ballerina_Founder_Chanel_Holland-Pierre_Shares_Inspiring_Business_Journey_GMD",
+   "title": "Chocolate Ballerina Founder Chanel Holland-Pierre Shares Inspiring Business Journey - #GMD",
+   "description": "Ivan and Vincenza host a brand-new LIVE episode of Good Morning Delaware, featuring Chanel Holland-Pierre, CEO & Founder of Chocolate Ballerina Company.<br /><br />In this inspiring interview, Chanel shares the story behind building Chocolate Ballerina Company, the mission driving the brand, and what motivated her to turn her vision into a growing business. From entrepreneurship to purpose-driven success, this conversation highlights what it takes to build something meaningful from the ground up.<br /><br />Plus, get an inside look at what’s next for Chocolate Ballerina Company and how the brand continues to evolve.<br /><br />👉 If you’re interested in entrepreneurship, small business success, and inspiring founder stories, this episode is a must-watch.<br /><br />🔔 Subscribe for more local stories, business features, and community highlights from Delaware.<br /><br />Subscribe to DETV: https://bit.ly/3pkKdxQ<br /><br />FOLLOW DETV<br />Facebook: https://www.facebook.com/DeTv302/<br />Instagram: https://www.instagram.com/detv28/?hl=en<br />Twitter: https://twitter.com/DeTvch<br />TikTok: https://www.tiktok.com/@detv28?lang=en<br /><br />WWW.DETVCH.COM<br /><br />DETV is dedicated to changing the narrative of the wonderful state of Delaware! We are focusing on nothing but positive stories that highlight people, organizations & communities!",
+   "creator": "DETV",
+   "publication_date": "2026-03-31",
+   "languages": [
+    "en"
+   ],
+   "source_tags": [
+    "Delaware",
+    "Wilmington",
+    "DETV",
+    "DETV",
+    "Government Access TV",
+    "Community Media",
+    "PEG",
+    "Youtube",
+    "detv",
+    "detvch",
+    "wilmington delaware",
+    "comcast channel 28",
+    "kent county",
+    "netde",
+    "tv media",
+    "wilmington de",
+    "visitwilm",
+    "newark de",
+    "wilmington",
+    "inwilmde",
+    "breaking news",
+    "Talk Show",
+    "NCCDE",
+    "Good Morning Delaware",
+    "Delaware business",
+    "Chocolate Ballerina Company",
+    "Chanel Holland Pierre",
+    "small business spotlight",
+    "black owned business",
+    "entrepreneur interview",
+    "founder story",
+    "business inspiration",
+    "women in business",
+    "local Delaware",
+    "startup success",
+    "motivational interview",
+    "CEO story",
+    "live interview",
+    "2026"
+   ],
+   "original_platform": {
+    "platform": "YouTube",
+    "url": "https://www.youtube.com/watch?v=R7hIzze7T1I",
+    "uploader": "DETV",
+    "id": "R7hIzze7T1I"
+   },
+   "role": "video-level context only; never moment-level ground truth"
+  },
+  "media": {
+   "duration_s": 946.491995,
+   "fps": 29.97,
+   "width": 854,
+   "height": 480
+  }
+ },
+ "annotation_set": {
+  "pipeline_version": "0.1.0",
+  "model": "Qwen/Qwen3.5-4B",
+  "merge_prompt_version": "l2-v2",
+  "metadata_prompt_version": "meta-v3",
+  "generated_at": "2026-10-25T17:02:06+00:00",
+  "status": "automatic (not gold)",
+  "post_processing": {
+   "pipeline_version": "0.2.0",
+   "applied": "deterministic v0.2 rules applied to this Kelvin run (no model re-run): min-interval absorption of candidate intervals < 5 s, name rules, closed camera vocabularies mapped from the model's own words, name_source checked against the span and the whole video, OCR branding filter, detector shot scale and camera motion in 'observed', review_reasons",
+   "absorbed_boundaries_s": [
+    188.0,
+    482.0,
+    488.0,
+    602.0,
+    878.0,
+    884.0
+   ],
+   "not_applied": "meta-v4 prompt changes (relationship direction, camera fields asked directly, one-name-per-entity instruction) take effect only when the model is run with the new code"
+  }
+ },
+ "segments": [
+  {
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s000",
+   "start_s": 0.0,
+   "end_s": 6.0,
+   "description": "A 'Good Morning Delaware' live broadcast graphic is displayed over a city skyline before transitioning to a studio setting where a man and a woman are standing and talking to each other.",
+   "children": [
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s000_m01"
+   ],
+   "source_intervals": [
+    "c000"
+   ],
+   "merged_boundaries": [],
+   "boundary": {
+    "start": {
+     "decision": "video start"
+    },
+    "end": {
+     "boundary": "B1",
+     "t": 6.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The LEFT interval displays the 'Good Morning Delaware' logo and transitions to the hosts, whereas the RIGHT interval begins the interview with Chanel Holland-Pierre, discussing her background as a former ballerina.",
+     "automatic_evidence": {
+      "types": [
+       "audio",
+       "environment",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.5,
+      "reason": "accepted: pooled evidence 1.50 >= 1 (audio 0.3 + environment 0.6 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "long_unsplit": false,
+   "needs_review": false,
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "generation_status": "ok"
+   }
+  },
+  {
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s001",
+   "start_s": 6.0,
+   "end_s": 186.0,
+   "description": "Chanel Holland-Pierre, CEO and founder of Chocolate Ballerina Company, sits on a television studio set with two hosts and discusses her business journey and the inspiration behind her company. The conversation includes a discussion about the symbolism of the black swan in ballet, specifically referencing the story of Swan Lake.",
+   "children": [
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s001_m01"
+   ],
+   "source_intervals": [
+    "c001",
+    "c002",
+    "c003",
+    "c004",
+    "c005",
+    "c006"
+   ],
+   "merged_boundaries": [
+    "B2",
+    "B3",
+    "B4",
+    "B5",
+    "B6"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B1",
+     "t": 6.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The LEFT interval displays the 'Good Morning Delaware' logo and transitions to the hosts, whereas the RIGHT interval begins the interview with Chanel Holland-Pierre, discussing her background as a former ballerina.",
+     "automatic_evidence": {
+      "types": [
+       "audio",
+       "environment",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.5,
+      "reason": "accepted: pooled evidence 1.50 >= 1 (audio 0.3 + environment 0.6 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B7",
+     "t": 186.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from a close-up interview with Chanel Holland-Pierre in a studio setting to a full-screen clip of a ballet performance on a stage, indicating a change in setting and activity.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "long_unsplit": false,
+   "needs_review": false,
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "generation_status": "ok"
+   }
+  },
+  {
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s002",
+   "start_s": 186.0,
+   "end_s": 206.0,
+   "description": "A ballet performance featuring a male and female lead dancer in white and pink costumes performing on a stage with a painted backdrop, followed by a close-up of a woman speaking.",
+   "children": [
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s002_m01"
+   ],
+   "source_intervals": [
+    "c007",
+    "c008",
+    "c009"
+   ],
+   "merged_boundaries": [
+    "B9"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B7",
+     "t": 186.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from a close-up interview with Chanel Holland-Pierre in a studio setting to a full-screen clip of a ballet performance on a stage, indicating a change in setting and activity.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B10",
+     "t": 206.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from a stage performance of 'The Black Swan' to a television studio interview with the speaker discussing her business journey.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "people",
+       "visual_transition"
+      ],
+      "score": 2.2,
+      "reason": "accepted: pooled evidence 2.20 >= 1 (activity 1 + environment 0.6 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "long_unsplit": false,
+   "needs_review": true,
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "generation_status": "ok"
+   }
+  },
+  {
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003",
+   "start_s": 206.0,
+   "end_s": 454.0,
+   "description": "Chanel Holland-Pierre, CEO of Chocolate Ballerina, speaks about her mission to provide ballet training to Black and Brown dancers in her communities. She discusses the benefits of ballet, such as building character and discipline, and explains how she invests in her dancers to help them succeed professionally.",
+   "children": [
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m01",
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m02",
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m03",
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m04"
+   ],
+   "source_intervals": [
+    "c010",
+    "c011",
+    "c012",
+    "c013"
+   ],
+   "merged_boundaries": [
+    "B11",
+    "B12",
+    "B13"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B10",
+     "t": 206.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from a stage performance of 'The Black Swan' to a television studio interview with the speaker discussing her business journey.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "people",
+       "visual_transition"
+      ],
+      "score": 2.2,
+      "reason": "accepted: pooled evidence 2.20 >= 1 (activity 1 + environment 0.6 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B14",
+     "t": 454.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from an interview setting to a stage performance of a ballet.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "visual_transition"
+      ],
+      "score": 2.0,
+      "reason": "accepted: pooled evidence 2.00 >= 1 (activity 1 + environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "long_unsplit": false,
+   "needs_review": true,
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "generation_status": "ok"
+   }
+  },
+  {
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s004",
+   "start_s": 454.0,
+   "end_s": 486.0,
+   "description": "Chanel Holland-Pierre, CEO of Chocolate Ballerina, sits on a television studio stage with two hosts and discusses the company's mission to provide free professional ballet lessons to underserved communities. The video cuts to a performance of Swan Lake on a stage, showing a group of dancers in tutus performing a ballet routine.",
+   "children": [
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s004_m01"
+   ],
+   "source_intervals": [
+    "c014",
+    "c015",
+    "c016"
+   ],
+   "merged_boundaries": [
+    "B15",
+    "B16"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B14",
+     "t": 454.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from an interview setting to a stage performance of a ballet.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "visual_transition"
+      ],
+      "score": 2.0,
+      "reason": "accepted: pooled evidence 2.00 >= 1 (activity 1 + environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B17",
+     "t": 486.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video transitions from a ballet performance on a stage to a television studio interview, representing a distinct change in setting and activity.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "long_unsplit": false,
+   "needs_review": true,
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "generation_status": "ok"
+   }
+  },
+  {
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s005",
+   "start_s": 486.0,
+   "end_s": 596.0,
+   "description": "Chanel Holland-Pierre, CEO of Chocolate Ballerina Company, sits with two hosts in a television studio and discusses the impact of her classes on students, particularly those with autism. She explains how the program helps students build confidence and influence their community.",
+   "children": [
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s005_m01"
+   ],
+   "source_intervals": [
+    "c017",
+    "c018",
+    "c019"
+   ],
+   "merged_boundaries": [
+    "B19"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B17",
+     "t": 486.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video transitions from a ballet performance on a stage to a television studio interview, representing a distinct change in setting and activity.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B20",
+     "t": 596.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video transitions from an interview setting to a stage performance clip, indicating a change in activity and setting.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "visual_transition"
+      ],
+      "score": 2.0,
+      "reason": "accepted: pooled evidence 2.00 >= 1 (activity 1 + environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "long_unsplit": false,
+   "needs_review": false,
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "generation_status": "ok"
+   }
+  },
+  {
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s006",
+   "start_s": 596.0,
+   "end_s": 606.0,
+   "description": "Two dancers in white tutus perform a ballet routine on a stage with a backdrop depicting a lake. The dancers execute synchronized movements, including leaps and turns, while a lower-third graphic promotes the show 'The Chocolate Ballerina'.",
+   "children": [
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s006_m01"
+   ],
+   "source_intervals": [
+    "c020",
+    "c021"
+   ],
+   "merged_boundaries": [],
+   "boundary": {
+    "start": {
+     "boundary": "B20",
+     "t": 596.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video transitions from an interview setting to a stage performance clip, indicating a change in activity and setting.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "visual_transition"
+      ],
+      "score": 2.0,
+      "reason": "accepted: pooled evidence 2.00 >= 1 (activity 1 + environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B22",
+     "t": 606.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from a ballet performance on stage to a studio interview with three people seated in front of a backdrop.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.6,
+      "reason": "accepted: pooled evidence 1.60 >= 1 (activity 1 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "long_unsplit": false,
+   "needs_review": false,
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "generation_status": "ok"
+   }
+  },
+  {
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s007",
+   "start_s": 606.0,
+   "end_s": 660.0,
+   "description": "The video shows a television studio interview with three people discussing the company Chocolate Ballerina. The interview is interspersed with clips of ballet dancers performing on a stage.",
+   "children": [
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s007_m01"
+   ],
+   "source_intervals": [
+    "c022",
+    "c023"
+   ],
+   "merged_boundaries": [
+    "B23"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B22",
+     "t": 606.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from a ballet performance on stage to a studio interview with three people seated in front of a backdrop.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.6,
+      "reason": "accepted: pooled evidence 1.60 >= 1 (activity 1 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B24",
+     "t": 660.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video transitions from a full-screen clip of a ballet performance on a stage to a close-up shot of the host speaking in the studio, marking a clear change in setting and visual content.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.2,
+      "reason": "accepted: pooled evidence 1.20 >= 1 (environment 0.6 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "long_unsplit": false,
+   "needs_review": false,
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "generation_status": "ok"
+   }
+  },
+  {
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008",
+   "start_s": 660.0,
+   "end_s": 880.0,
+   "description": "Chanel Holland-Pierre, the founder of Chocolate Ballerina, discusses the physical demands of ballet and the unity between male and female dancers. She then leads a demonstration where she and two hosts perform a synchronized dance routine, including a bow and curtsy.",
+   "children": [
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m01",
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m02",
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m03",
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m04",
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m05",
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m06"
+   ],
+   "source_intervals": [
+    "c024",
+    "c025",
+    "c026",
+    "c027",
+    "c028",
+    "c029",
+    "c030",
+    "c031"
+   ],
+   "merged_boundaries": [
+    "B25",
+    "B26",
+    "B27",
+    "B28",
+    "B29",
+    "B30",
+    "B31"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B24",
+     "t": 660.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video transitions from a full-screen clip of a ballet performance on a stage to a close-up shot of the host speaking in the studio, marking a clear change in setting and visual content.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.2,
+      "reason": "accepted: pooled evidence 1.20 >= 1 (environment 0.6 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B32",
+     "t": 880.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The frames show the hosts introducing the guest and the event, followed immediately by a graphic overlay displaying the promotional poster for 'The Return of the Black Swan' ballet performance.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "long_unsplit": false,
+   "needs_review": true,
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "generation_status": "ok"
+   }
+  },
+  {
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s009",
+   "start_s": 880.0,
+   "end_s": 906.0,
+   "description": "A static graphic displays a promotional poster for the ballet production 'The Return of the Black Swan' featuring a ballerina and a male dancer. The poster includes the date April 19th and the location Delaware State University. A lower third banner appears with the website www.chocolateballerinacompany.com. The scene then cuts to a television studio where three people are standing in front of a city backdrop.",
+   "children": [
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s009_m01"
+   ],
+   "source_intervals": [
+    "c032",
+    "c033",
+    "c034"
+   ],
+   "merged_boundaries": [
+    "B34"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B32",
+     "t": 880.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The frames show the hosts introducing the guest and the event, followed immediately by a graphic overlay displaying the promotional poster for 'The Return of the Black Swan' ballet performance.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B35",
+     "t": 906.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The LEFT interval displays a static poster for 'The Return of the Black Swan' with a website banner, while the RIGHT interval cuts to a live studio shot of three people discussing the event. The change from a static graphic to a live interview setting indicates a new segment.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "visual_transition"
+      ],
+      "score": 2.0,
+      "reason": "accepted: pooled evidence 2.00 >= 1 (activity 1 + environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "long_unsplit": false,
+   "needs_review": false,
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "generation_status": "ok"
+   }
+  },
+  {
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s010",
+   "start_s": 906.0,
+   "end_s": 946.492,
+   "description": "Chanel Holland-Pierre, CEO of Chocolate Ballerina Company, stands between two hosts in a television studio and shares her social media handle. The hosts thank her for the information and express their appreciation for the segment.",
+   "children": [
+    "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s010_m01"
+   ],
+   "source_intervals": [
+    "c035"
+   ],
+   "merged_boundaries": [],
+   "boundary": {
+    "start": {
+     "boundary": "B35",
+     "t": 906.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The LEFT interval displays a static poster for 'The Return of the Black Swan' with a website banner, while the RIGHT interval cuts to a live studio shot of three people discussing the event. The change from a static graphic to a live interview setting indicates a new segment.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "visual_transition"
+      ],
+      "score": 2.0,
+      "reason": "accepted: pooled evidence 2.00 >= 1 (activity 1 + environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "decision": "video end"
+    }
+   },
+   "long_unsplit": false,
+   "needs_review": false,
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "generation_status": "ok"
+   }
+  }
+ ],
+ "moments": [
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s000_m01",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s000",
+   "start_s": 0.0,
+   "end_s": 6.0,
+   "source_intervals": [
+    "c000"
+   ],
+   "boundary": {
+    "start": {
+     "decision": "video start"
+    },
+    "end": {
+     "boundary": "B1",
+     "t": 6.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The LEFT interval displays the 'Good Morning Delaware' logo and transitions to the hosts, whereas the RIGHT interval begins the interview with Chanel Holland-Pierre, discussing her background as a former ballerina.",
+     "automatic_evidence": {
+      "types": [
+       "audio",
+       "environment",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.5,
+      "reason": "accepted: pooled evidence 1.50 >= 1 (audio 0.3 + environment 0.6 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "description": "A 'Good Morning Delaware' live broadcast graphic is displayed over a city skyline before transitioning to a studio setting where a man and a woman are standing and talking to each other.",
+   "tags": [
+    "good morning delaware",
+    "live broadcast",
+    "interview",
+    "studio",
+    "city skyline",
+    "talking"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "woman with long dark hair wearing a dark top",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "man with glasses wearing a light grey suit jacket",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "text_1",
+     "type": "text",
+     "name": "Good Morning Delaware",
+     "name_source": "on_screen_text",
+     "count": null,
+     "description": "logo with sun graphic",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e03"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "talks_to",
+     "description": "person_1 and person_2 are conversing",
+     "participants": [
+      "person_1",
+      "person_2"
+     ],
+     "evidence": "both"
+    },
+    {
+     "id": "a2",
+     "type": "perform_for",
+     "description": "person_1 and person_2 are performing for the camera",
+     "participants": [
+      "person_1",
+      "person_2"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_1",
+     "predicate": "talks_to",
+     "object": "person_2",
+     "evidence": "both"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "business journey",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "medium shot",
+    "shot_scale": "medium",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 0.5,
+    "people_count_max": 2,
+    "speech_share": 0.1,
+    "music_share": 1.0,
+    "speakers": [
+     "S0"
+    ],
+    "setting_detector": [
+     {
+      "label": "a stage or auditorium",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "uncertain",
+      "share": 0.667
+     },
+     {
+      "state": "talking to the camera",
+      "share": 0.333
+     }
+    ],
+    "detector_sub_events": [],
+    "on_screen_text": [
+     "GOOD"
+    ],
+    "shot_cuts": 2,
+    "shot_scale_detector": [
+     {
+      "label": "no_person",
+      "share": 0.5
+     },
+     {
+      "label": "medium_wide",
+      "share": 0.25
+     },
+     {
+      "label": "wide",
+      "share": 0.167
+     },
+     {
+      "label": "close_up",
+      "share": 0.083
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": false,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "attributes.shot_scale: None -> 'medium' (from cinematography note)",
+     "entity person_1 name 'Chanel Holland-Pierre': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      0.5,
+      2.17,
+      3.83,
+      5.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c000"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s001_m01",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s001",
+   "start_s": 6.0,
+   "end_s": 186.0,
+   "source_intervals": [
+    "c001",
+    "c002",
+    "c003",
+    "c004",
+    "c005",
+    "c006"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B1",
+     "t": 6.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The LEFT interval displays the 'Good Morning Delaware' logo and transitions to the hosts, whereas the RIGHT interval begins the interview with Chanel Holland-Pierre, discussing her background as a former ballerina.",
+     "automatic_evidence": {
+      "types": [
+       "audio",
+       "environment",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.5,
+      "reason": "accepted: pooled evidence 1.50 >= 1 (audio 0.3 + environment 0.6 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B7",
+     "t": 186.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from a close-up interview with Chanel Holland-Pierre in a studio setting to a full-screen clip of a ballet performance on a stage, indicating a change in setting and activity.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "description": "Chanel Holland-Pierre, CEO and founder of Chocolate Ballerina Company, sits on a television studio set with two hosts and discusses her business journey and the inspiration behind her company. The conversation includes a discussion about the symbolism of the black swan in ballet, specifically referencing the story of Swan Lake.",
+   "tags": [
+    "interview",
+    "business",
+    "ballet",
+    "entrepreneurship",
+    "swan lake",
+    "good morning delaware"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "transcript",
+     "count": null,
+     "description": "woman wearing a white button-down shirt, black pants, and a patterned headband",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "transcript",
+     "count": null,
+     "description": "man wearing a grey blazer and glasses",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing a black top",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "give_interview",
+     "description": "Chanel Holland-Pierre answers questions from the hosts",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "both"
+    },
+    {
+     "id": "a2",
+     "type": "talks_to",
+     "description": "The hosts converse with Chanel Holland-Pierre",
+     "participants": [
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a3",
+     "type": "listens_to",
+     "description": "The hosts listen to Chanel Holland-Pierre speak",
+     "participants": [
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_2",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_3",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_2",
+     "predicate": "talks_to",
+     "object": "person_1",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_3",
+     "predicate": "talks_to",
+     "object": "person_1",
+     "evidence": "both"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "Chocolate Ballerina Company and the symbolism of the black swan in ballet",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "medium shot",
+    "shot_scale": "medium",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 2.0,
+    "people_count_max": 4,
+    "speech_share": 0.962,
+    "music_share": 0.15,
+    "speakers": [
+     "S0",
+     "S1",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 0.967
+     },
+     {
+      "label": "a stage or auditorium",
+      "share": 0.033
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "talking to the camera",
+      "share": 0.489
+     },
+     {
+      "state": "uncertain",
+      "share": 0.4
+     },
+     {
+      "state": "eating or drinking",
+      "share": 0.044
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "talking to the camera",
+      "start_s": 6.0,
+      "end_s": 10.0
+     },
+     {
+      "state": "eating or drinking",
+      "start_s": 18.0,
+      "end_s": 24.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 24.0,
+      "end_s": 30.0
+     },
+     {
+      "state": "applauding",
+      "start_s": 36.0,
+      "end_s": 40.0
+     },
+     {
+      "state": "talking while seated",
+      "start_s": 54.0,
+      "end_s": 58.0
+     },
+     {
+      "state": "applauding",
+      "start_s": 66.0,
+      "end_s": 70.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 74.0,
+      "end_s": 84.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 86.0,
+      "end_s": 92.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 94.0,
+      "end_s": 98.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 100.0,
+      "end_s": 104.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 110.0,
+      "end_s": 114.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 124.0,
+      "end_s": 152.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 158.0,
+      "end_s": 168.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 170.0,
+      "end_s": 176.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 178.0,
+      "end_s": 182.0
+     }
+    ],
+    "on_screen_text": [
+     "GOOD",
+     "COOD",
+     "GOODD",
+     "Da8ke",
+     "CHANEL HOLLAND-PIERRE",
+     "CEO & FOUNDER OF CHOCOLATE BALLERINA COMPANY"
+    ],
+    "shot_cuts": 9,
+    "shot_scale_detector": [
+     {
+      "label": "close_up",
+      "share": 0.642
+     },
+     {
+      "label": "wide",
+      "share": 0.183
+     },
+     {
+      "label": "medium_wide",
+      "share": 0.175
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 0.989
+     },
+     {
+      "label": "pan",
+      "share": 0.011
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": false,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "action type interview -> give_interview",
+     "attributes.shot_scale: None -> 'medium' (from cinematography note)",
+     "entity person_1 name 'Chanel Holland-Pierre': name_source 'on_screen_text' -> 'transcript' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      6.5,
+      18.43,
+      30.37,
+      42.3,
+      54.23,
+      66.17,
+      78.1,
+      90.03,
+      101.97,
+      113.9,
+      125.83,
+      137.77,
+      149.7,
+      161.63,
+      173.57,
+      185.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c001",
+      "c002",
+      "c003",
+      "c004",
+      "c005",
+      "c006"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s002_m01",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s002",
+   "start_s": 186.0,
+   "end_s": 206.0,
+   "source_intervals": [
+    "c007",
+    "c008",
+    "c009"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B7",
+     "t": 186.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from a close-up interview with Chanel Holland-Pierre in a studio setting to a full-screen clip of a ballet performance on a stage, indicating a change in setting and activity.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B10",
+     "t": 206.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from a stage performance of 'The Black Swan' to a television studio interview with the speaker discussing her business journey.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "people",
+       "visual_transition"
+      ],
+      "score": 2.2,
+      "reason": "accepted: pooled evidence 2.20 >= 1 (activity 1 + environment 0.6 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "description": "A ballet performance featuring a male and female lead dancer in white and pink costumes performing on a stage with a painted backdrop, followed by a close-up of a woman speaking.",
+   "tags": [
+    "ballet",
+    "stage",
+    "performance",
+    "interview",
+    "dancers",
+    "theater"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman with braided hair and glasses wearing a white shirt",
+     "evidence": "visual"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "male dancer in a white costume",
+     "evidence": "visual"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "female dancer in a pink ballgown",
+     "evidence": "visual"
+    },
+    {
+     "id": "person_4",
+     "type": "person_group",
+     "name": null,
+     "name_source": null,
+     "count": "10+",
+     "description": "group of dancers in white costumes",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "perform_ballet",
+     "description": "male and female dancers perform on stage",
+     "participants": [
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a2",
+     "type": "perform_ballet",
+     "description": "group of dancers performs on stage",
+     "participants": [
+      "person_4"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a3",
+     "type": "speak",
+     "description": "woman speaks to camera",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_2",
+     "predicate": "dances_with",
+     "object": "person_3",
+     "evidence": "visual"
+    },
+    {
+     "subject": "person_4",
+     "predicate": "dances_with",
+     "object": "person_2",
+     "evidence": "visual"
+    },
+    {
+     "subject": "person_4",
+     "predicate": "dances_with",
+     "object": "person_3",
+     "evidence": "visual"
+    }
+   ],
+   "context": {
+    "setting": "theatre stage",
+    "topic": "ballet",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "ballet performance",
+    "cinematography": "stage lighting",
+    "shot_scale": null,
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 3.75,
+    "people_count_max": 9,
+    "speech_share": 0.965,
+    "music_share": 0.0,
+    "speakers": [
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a stage or auditorium",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "uncertain",
+      "share": 0.7
+     },
+     {
+      "state": "dancing",
+      "share": 0.3
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "dancing",
+      "start_s": 198.0,
+      "end_s": 204.0
+     }
+    ],
+    "on_screen_text": [],
+    "shot_cuts": 7,
+    "shot_scale_detector": [
+     {
+      "label": "wide",
+      "share": 0.525
+     },
+     {
+      "label": "no_person",
+      "share": 0.375
+     },
+     {
+      "label": "close_up",
+      "share": 0.1
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": true,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "span extended: 186-188 s absorbed (interval shorter than 5 s, min_interval rule, similarity previous 0.091 / next 0.818); metadata of the longer part kept",
+     "name removed: entity person_1 name 'Chanel Holland-Pierre' was given to 3 entities",
+     "name removed: entity person_2 name 'Chanel Holland-Pierre' was given to 3 entities",
+     "name removed: entity person_3 name 'Chanel Holland-Pierre' was given to 3 entities",
+     "name removed: entity person_4 name 'ballet dancers' name_source 'visual' is not on_screen_text/transcript"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      188.5,
+      194.17,
+      199.83,
+      205.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c008",
+      "c009"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [
+     "name removed: entity person_1 name 'Chanel Holland-Pierre' was given to 3 entities",
+     "name removed: entity person_2 name 'Chanel Holland-Pierre' was given to 3 entities",
+     "name removed: entity person_3 name 'Chanel Holland-Pierre' was given to 3 entities",
+     "people: metadata describes 13, detector saw at most 9"
+    ],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m01",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003",
+   "start_s": 206.0,
+   "end_s": 342.0,
+   "source_intervals": [
+    "c010"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B10",
+     "t": 206.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from a stage performance of 'The Black Swan' to a television studio interview with the speaker discussing her business journey.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "people",
+       "visual_transition"
+      ],
+      "score": 2.2,
+      "reason": "accepted: pooled evidence 2.20 >= 1 (activity 1 + environment 0.6 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "decision": "next child"
+    }
+   },
+   "description": "Chanel Holland-Pierre, CEO of Chocolate Ballerina Company, speaks about her mission to create a platform for ballet dancers from diverse backgrounds. She discusses how she erased the idea of a specific household income for ballerinas and aims to make ballet accessible to everyone, regardless of race or physical attributes. The interview takes place in a television studio with a cityscape backdrop.",
+   "tags": [
+    "interview",
+    "ballet",
+    "entrepreneurship",
+    "diversity",
+    "delaware",
+    "good morning delaware"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "transcript",
+     "count": null,
+     "description": "woman with braided hair, glasses, and a white collared shirt",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "man in a grey suit",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman in a black top and grey pants",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "give_interview",
+     "description": "Chanel Holland-Pierre speaks about her business and mission",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "both"
+    },
+    {
+     "id": "a2",
+     "type": "listen_to",
+     "description": "Ivan and Vincenza listen to Chanel Holland-Pierre",
+     "participants": [
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_2",
+     "evidence": "visual"
+    },
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_3",
+     "evidence": "visual"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "entrepreneurship and ballet diversity",
+    "location": "Delaware",
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "medium shot alternating with wide shot",
+    "shot_scale": "medium",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 1.0,
+    "people_count_max": 3,
+    "speech_share": 0.965,
+    "music_share": 0.243,
+    "speakers": [
+     "S1",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "talking to the camera",
+      "share": 0.941
+     },
+     {
+      "state": "uncertain",
+      "share": 0.059
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "talking to the camera",
+      "start_s": 206.0,
+      "end_s": 220.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 222.0,
+      "end_s": 226.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 228.0,
+      "end_s": 240.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 242.0,
+      "end_s": 276.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 278.0,
+      "end_s": 342.0
+     }
+    ],
+    "on_screen_text": [],
+    "shot_cuts": 5,
+    "shot_scale_detector": [
+     {
+      "label": "close_up",
+      "share": 0.882
+     },
+     {
+      "label": "medium_wide",
+      "share": 0.118
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": false,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "attributes.shot_scale: None -> 'medium' (from cinematography note)",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      206.5,
+      216.88,
+      227.27,
+      237.65,
+      248.04,
+      258.42,
+      268.81,
+      279.19,
+      289.58,
+      299.96,
+      310.35,
+      320.73,
+      331.12,
+      341.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c010"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m02",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003",
+   "start_s": 342.0,
+   "end_s": 406.0,
+   "source_intervals": [
+    "c011"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B11",
+     "t": 342.0,
+     "decision": "child split inside segment (VLM said merge)",
+     "explanation": "The cut at 342 s changes the camera framing from a close-up to a wide shot of the interview panel, but the setting, people, and ongoing conversation remain consistent.",
+     "automatic_evidence": {
+      "types": [
+       "people",
+       "topic",
+       "visual_transition"
+      ],
+      "score": 1.6,
+      "reason": "accepted: pooled evidence 1.60 >= 1 (people 0.2 + topic 1 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "decision": "next child"
+    }
+   },
+   "description": "Chanel Holland-Pierre, wearing a white shirt and black pants, sits on a television studio set with two hosts and discusses her business journey. She gestures with her hands while speaking about meeting Misty Copeland and their shared mission to support diverse dancers.",
+   "tags": [
+    "interview",
+    "television studio",
+    "business",
+    "dance",
+    "chanel holland-pierre",
+    "misty copeland",
+    "good morning delaware",
+    "entrepreneurship"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "transcript",
+     "count": null,
+     "description": "Black woman wearing a white button-down shirt, black pants, and glasses",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "Black man wearing a grey suit",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "Black woman wearing a black top and grey pants",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "speak",
+     "description": "Chanel Holland-Pierre speaks about meeting Misty Copeland",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "both"
+    },
+    {
+     "id": "a2",
+     "type": "sit",
+     "description": "Chanel Holland-Pierre sits on a chair",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a3",
+     "type": "sit",
+     "description": "Ivan sits on a chair",
+     "participants": [
+      "person_2"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a4",
+     "type": "sit",
+     "description": "Vincenza sits on a chair",
+     "participants": [
+      "person_3"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a5",
+     "type": "interviews",
+     "description": "Ivan interviews Chanel Holland-Pierre",
+     "participants": [
+      "person_2",
+      "person_1"
+     ],
+     "evidence": "both"
+    },
+    {
+     "id": "a6",
+     "type": "listens_to",
+     "description": "Vincenza listens to Chanel Holland-Pierre",
+     "participants": [
+      "person_3",
+      "person_1"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_2",
+     "predicate": "interviews",
+     "object": "person_1",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_3",
+     "predicate": "listens_to",
+     "object": "person_1",
+     "evidence": "visual"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "building Chocolate Ballerina Company and meeting Misty Copeland",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "medium shot",
+    "shot_scale": "medium",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 3.0,
+    "people_count_max": 4,
+    "speech_share": 0.989,
+    "music_share": 0.328,
+    "speakers": [
+     "S1",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "talking to the camera",
+      "share": 0.781
+     },
+     {
+      "state": "uncertain",
+      "share": 0.219
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "talking to the camera",
+      "start_s": 342.0,
+      "end_s": 350.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 362.0,
+      "end_s": 376.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 378.0,
+      "end_s": 406.0
+     }
+    ],
+    "on_screen_text": [
+     "THE CHOCOLATE BALLERINA: .4 S VAM LAKE COMING APRIL 19TH",
+     "THE CHOCOLATE BALLERINA: .4 S.VAM LAKE COMING APRIL 19TH",
+     "THE CHOCOLATE BALLERINA: . S.VAM LAKE COMING APRIL 19TH",
+     "THE CHOCOLATE BALLERINA: A SWAN LAKE COMING APRIL 19TH"
+    ],
+    "shot_cuts": 2,
+    "shot_scale_detector": [
+     {
+      "label": "medium_wide",
+      "share": 0.398
+     },
+     {
+      "label": "close_up",
+      "share": 0.391
+     },
+     {
+      "label": "wide",
+      "share": 0.211
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": false,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "attributes.shot_scale: None -> 'medium' (from cinematography note)",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      342.5,
+      355.1,
+      367.7,
+      380.3,
+      392.9,
+      405.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c011"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m03",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003",
+   "start_s": 406.0,
+   "end_s": 430.0,
+   "source_intervals": [
+    "c012"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B12",
+     "t": 406.0,
+     "decision": "child split inside segment (VLM said merge)",
+     "explanation": "The cut occurs during a continuous interview segment where the guest discusses the benefits of ballet; the visual setting remains a television studio with the same participants and lower-third graphic throughout.",
+     "automatic_evidence": {
+      "types": [
+       "people",
+       "topic",
+       "visual_transition"
+      ],
+      "score": 1.6,
+      "reason": "accepted: pooled evidence 1.60 >= 1 (people 0.2 + topic 1 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "decision": "next child"
+    }
+   },
+   "description": "Chanel Holland-Pierre sits on a television stage with two hosts and discusses the character-building benefits of ballet. The hosts listen attentively while Chanel speaks about discipline and feeling exceptional. The video cuts to a still image of a ballerina in a white tutu, followed by a promotional poster for the ballet production 'The Return of the Black Swan'.",
+   "tags": [
+    "interview",
+    "ballet",
+    "television studio",
+    "chanel holland-pierre",
+    "good morning delaware",
+    "dance",
+    "swan lake",
+    "business"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing a white long-sleeved shirt, black vest, and sunglasses",
+     "evidence": "visual"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "man wearing a grey suit jacket and glasses",
+     "evidence": "transcript",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing a black top",
+     "evidence": "transcript"
+    },
+    {
+     "id": "person_4",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman in a white tutu and white headpiece",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "perform_interview",
+     "description": "Chanel Holland-Pierre answers questions about ballet",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "both"
+    },
+    {
+     "id": "a2",
+     "type": "listen_to",
+     "description": "Ivan and Vincenza listen to Chanel Holland-Pierre",
+     "participants": [
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a3",
+     "type": "display_image",
+     "description": "A ballerina in a white tutu is shown",
+     "participants": [
+      "person_4"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a4",
+     "type": "display_poster",
+     "description": "A poster for 'The Return of the Black Swan' is shown",
+     "participants": [
+      "person_4"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_1",
+     "predicate": "talks_to",
+     "object": "person_2",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_1",
+     "predicate": "talks_to",
+     "object": "person_3",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_2",
+     "predicate": "listens_to",
+     "object": "person_1",
+     "evidence": "visual"
+    },
+    {
+     "subject": "person_3",
+     "predicate": "listens_to",
+     "object": "person_1",
+     "evidence": "visual"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "the benefits of pursuing ballet",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "medium shot",
+    "shot_scale": "medium",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 2.0,
+    "people_count_max": 4,
+    "speech_share": 0.946,
+    "music_share": 0.667,
+    "speakers": [
+     "S1",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 0.583
+     },
+     {
+      "label": "a gym or dance studio",
+      "share": 0.25
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "uncertain",
+      "share": 0.75
+     },
+     {
+      "state": "talking to the camera",
+      "share": 0.25
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "talking to the camera",
+      "start_s": 412.0,
+      "end_s": 418.0
+     }
+    ],
+    "on_screen_text": [
+     "THE CHOCOLATE BALLERINA: A SWAN LAKE COMING APRIL 19TH",
+     "APRIL 19TH"
+    ],
+    "shot_cuts": 4,
+    "shot_scale_detector": [
+     {
+      "label": "wide",
+      "share": 0.562
+     },
+     {
+      "label": "close_up",
+      "share": 0.292
+     },
+     {
+      "label": "medium_wide",
+      "share": 0.146
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": true,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "attributes.shot_scale: None -> 'medium' (from cinematography note)",
+     "name removed: entity person_1 name 'Chanel Holland-Pierre' was given to 2 entities",
+     "name removed: entity person_4 name 'Chanel Holland-Pierre' was given to 2 entities",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      406.5,
+      414.17,
+      421.83,
+      429.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c012"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [
+     "name removed: entity person_1 name 'Chanel Holland-Pierre' was given to 2 entities",
+     "name removed: entity person_4 name 'Chanel Holland-Pierre' was given to 2 entities",
+     "shot scale: metadata medium, detector mostly wide"
+    ],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m04",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003",
+   "start_s": 430.0,
+   "end_s": 454.0,
+   "source_intervals": [
+    "c013"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B13",
+     "t": 430.0,
+     "decision": "child split inside segment (VLM said merge)",
+     "explanation": "The cut occurs during a continuous interview segment where the guest is speaking; the transition from a wide shot to a close-up and the subsequent display of a promotional graphic are standard editing techniques within a single interview event.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B14",
+     "t": 454.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from an interview setting to a stage performance of a ballet.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "visual_transition"
+      ],
+      "score": 2.0,
+      "reason": "accepted: pooled evidence 2.00 >= 1 (activity 1 + environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "description": "Chanel Holland-Pierre sits on a television studio set and speaks to two hosts, Ivan and Vincenza, about her business and community work. A graphic for 'The Chocolate Ballerina: A Swan Lake' is displayed on the screen behind the hosts.",
+   "tags": [
+    "interview",
+    "television studio",
+    "business",
+    "dance",
+    "community",
+    "swan lake"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "woman wearing glasses and a white shirt with black sleeves",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "man wearing a grey suit",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing a black top",
+     "evidence": "visual"
+    },
+    {
+     "id": "text_1",
+     "type": "text",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "poster for 'The Chocolate Ballerina: A Swan Lake'",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "give_interview",
+     "description": "Chanel Holland-Pierre speaks to the hosts",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "both"
+    },
+    {
+     "id": "a2",
+     "type": "listen_to",
+     "description": "Ivan and Vincenza listen to Chanel Holland-Pierre",
+     "participants": [
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_2",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_3",
+     "evidence": "both"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "entrepreneurship and community",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "medium shot",
+    "shot_scale": "medium",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 1.0,
+    "people_count_max": 3,
+    "speech_share": 0.912,
+    "music_share": 0.667,
+    "speakers": [
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "uncertain",
+      "share": 0.667
+     },
+     {
+      "state": "talking to the camera",
+      "share": 0.333
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "talking to the camera",
+      "start_s": 436.0,
+      "end_s": 444.0
+     }
+    ],
+    "on_screen_text": [
+     "APRIL 19TH",
+     "THE CHOCOLATE BALLERINA: A SWAN LAKE COMING APRIL 19TH"
+    ],
+    "shot_cuts": 2,
+    "shot_scale_detector": [
+     {
+      "label": "close_up",
+      "share": 0.583
+     },
+     {
+      "label": "wide",
+      "share": 0.417
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": false,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "attributes.shot_scale: None -> 'medium' (from cinematography note)",
+     "entity person_1 name 'Chanel Holland-Pierre': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      430.5,
+      438.17,
+      445.83,
+      453.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c013"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s004_m01",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s004",
+   "start_s": 454.0,
+   "end_s": 486.0,
+   "source_intervals": [
+    "c014",
+    "c015",
+    "c016"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B14",
+     "t": 454.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from an interview setting to a stage performance of a ballet.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "visual_transition"
+      ],
+      "score": 2.0,
+      "reason": "accepted: pooled evidence 2.00 >= 1 (activity 1 + environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B17",
+     "t": 486.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video transitions from a ballet performance on a stage to a television studio interview, representing a distinct change in setting and activity.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "description": "Chanel Holland-Pierre, CEO of Chocolate Ballerina, sits on a television studio stage with two hosts and discusses the company's mission to provide free professional ballet lessons to underserved communities. The video cuts to a performance of Swan Lake on a stage, showing a group of dancers in tutus performing a ballet routine.",
+   "tags": [
+    "ballet",
+    "dance",
+    "interview",
+    "business",
+    "education",
+    "community"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "woman wearing a grey long-sleeved top and a black skirt",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "man wearing a grey suit",
+     "evidence": "transcript",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing a black top and grey pants",
+     "evidence": "transcript"
+    },
+    {
+     "id": "person_group_1",
+     "type": "person_group",
+     "name": null,
+     "name_source": null,
+     "count": "6-10",
+     "description": "people wearing white tutus and pointe shoes",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "give_interview",
+     "description": "sitting and talking",
+     "participants": [
+      "person_1",
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "both"
+    },
+    {
+     "id": "a2",
+     "type": "perform_ballet",
+     "description": "dancing on stage",
+     "participants": [
+      "person_group_1"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_2",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_3",
+     "evidence": "both"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "access to professional ballet lessons",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "medium shot",
+    "shot_scale": "medium",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 5.0,
+    "people_count_max": 8,
+    "speech_share": 0.922,
+    "music_share": 0.594,
+    "speakers": [
+     "S0",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a stage or auditorium",
+      "share": 0.938
+     },
+     {
+      "label": "a television studio",
+      "share": 0.062
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "dancing",
+      "share": 0.75
+     },
+     {
+      "state": "playing a musical instrument",
+      "share": 0.188
+     },
+     {
+      "state": "uncertain",
+      "share": 0.062
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "dancing",
+      "start_s": 454.0,
+      "end_s": 474.0
+     },
+     {
+      "state": "playing a musical instrument",
+      "start_s": 476.0,
+      "end_s": 482.0
+     },
+     {
+      "state": "dancing",
+      "start_s": 482.0,
+      "end_s": 486.0
+     }
+    ],
+    "on_screen_text": [
+     "THE CHOCOLATE BALLERINA: A SWAN LAKE COMING APRIL 19TH"
+    ],
+    "shot_cuts": 1,
+    "shot_scale_detector": [
+     {
+      "label": "wide",
+      "share": 0.609
+     },
+     {
+      "label": "no_person",
+      "share": 0.297
+     },
+     {
+      "label": "extreme_wide",
+      "share": 0.078
+     },
+     {
+      "label": "medium",
+      "share": 0.016
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": true,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "entity person_group_1: name 'dancers' without name_source -> name removed",
+     "action type interview -> give_interview",
+     "attributes.shot_scale: None -> 'medium' (from cinematography note)",
+     "entity person_1 name 'Chanel Holland-Pierre': name_source 'on_screen_text' -> 'elsewhere_in_video' (checked)",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      454.5,
+      464.83,
+      475.17,
+      485.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c014",
+      "c015",
+      "c016"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [
+     "shot scale: metadata medium, detector mostly wide"
+    ],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s005_m01",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s005",
+   "start_s": 486.0,
+   "end_s": 596.0,
+   "source_intervals": [
+    "c017",
+    "c018",
+    "c019"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B17",
+     "t": 486.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video transitions from a ballet performance on a stage to a television studio interview, representing a distinct change in setting and activity.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B20",
+     "t": 596.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video transitions from an interview setting to a stage performance clip, indicating a change in activity and setting.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "visual_transition"
+      ],
+      "score": 2.0,
+      "reason": "accepted: pooled evidence 2.00 >= 1 (activity 1 + environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "description": "Chanel Holland-Pierre, CEO of Chocolate Ballerina Company, sits with two hosts in a television studio and discusses the impact of her classes on students, particularly those with autism. She explains how the program helps students build confidence and influence their community.",
+   "tags": [
+    "interview",
+    "business",
+    "autism",
+    "education",
+    "confidence",
+    "chocolate ballerina"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "on_screen_text",
+     "count": null,
+     "description": "Black woman wearing large glasses, a white collared shirt, and a patterned head wrap",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "Black man wearing glasses and a grey suit jacket",
+     "evidence": "transcript",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "Woman with long dark hair wearing a black top",
+     "evidence": "transcript"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "give_interview",
+     "description": "Chanel Holland-Pierre answers questions about her business and its impact on students",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "both"
+    },
+    {
+     "id": "a2",
+     "type": "talks_to",
+     "description": "Ivan asks questions about the program",
+     "participants": [
+      "person_2"
+     ],
+     "evidence": "transcript"
+    },
+    {
+     "id": "a3",
+     "type": "listens_to",
+     "description": "Vincenza listens to Chanel's response",
+     "participants": [
+      "person_3"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_2",
+     "predicate": "interviews",
+     "object": "person_1",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_3",
+     "predicate": "listens_to",
+     "object": "person_1",
+     "evidence": "visual"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "the impact of the Chocolate Ballerina program on students and the community",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "medium shot",
+    "shot_scale": "medium",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 1.0,
+    "people_count_max": 4,
+    "speech_share": 0.929,
+    "music_share": 0.445,
+    "speakers": [
+     "S0",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "uncertain",
+      "share": 0.4
+     },
+     {
+      "state": "talking to the camera",
+      "share": 0.345
+     },
+     {
+      "state": "talking while seated",
+      "share": 0.218
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "talking to the camera",
+      "start_s": 488.0,
+      "end_s": 514.0
+     },
+     {
+      "state": "demonstrating or presenting an object",
+      "start_s": 516.0,
+      "end_s": 520.0
+     },
+     {
+      "state": "talking while seated",
+      "start_s": 530.0,
+      "end_s": 534.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 534.0,
+      "end_s": 540.0
+     },
+     {
+      "state": "talking to the camera",
+      "start_s": 542.0,
+      "end_s": 548.0
+     },
+     {
+      "state": "talking while seated",
+      "start_s": 558.0,
+      "end_s": 562.0
+     },
+     {
+      "state": "talking while seated",
+      "start_s": 578.0,
+      "end_s": 588.0
+     },
+     {
+      "state": "talking while seated",
+      "start_s": 592.0,
+      "end_s": 596.0
+     }
+    ],
+    "on_screen_text": [
+     "THE CHOCOLATE BALLERINA: A SWAN LAKE COMING APRIL 19TH",
+     "CHANEL HOLLAND-PIERRE",
+     "CEO & FOUNDER OF CHOCOLATE BALLERINA COMPANY"
+    ],
+    "shot_cuts": 5,
+    "shot_scale_detector": [
+     {
+      "label": "close_up",
+      "share": 0.827
+     },
+     {
+      "label": "wide",
+      "share": 0.159
+     },
+     {
+      "label": "medium_wide",
+      "share": 0.009
+     },
+     {
+      "label": "medium",
+      "share": 0.005
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": false,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "action type interview -> give_interview",
+     "span extended: 486-488 s absorbed (interval shorter than 5 s, min_interval rule, similarity previous 0.025 / next 0.884); metadata of the longer part kept",
+     "attributes.shot_scale: None -> 'medium' (from cinematography note)",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      488.5,
+      499.2,
+      509.9,
+      520.6,
+      531.3,
+      542.0,
+      552.7,
+      563.4,
+      574.1,
+      584.8,
+      595.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c018",
+      "c019"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s006_m01",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s006",
+   "start_s": 596.0,
+   "end_s": 606.0,
+   "source_intervals": [
+    "c020",
+    "c021"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B20",
+     "t": 596.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video transitions from an interview setting to a stage performance clip, indicating a change in activity and setting.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "visual_transition"
+      ],
+      "score": 2.0,
+      "reason": "accepted: pooled evidence 2.00 >= 1 (activity 1 + environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B22",
+     "t": 606.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from a ballet performance on stage to a studio interview with three people seated in front of a backdrop.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.6,
+      "reason": "accepted: pooled evidence 1.60 >= 1 (activity 1 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "description": "Two dancers in white tutus perform a ballet routine on a stage with a backdrop depicting a lake. The dancers execute synchronized movements, including leaps and turns, while a lower-third graphic promotes the show 'The Chocolate Ballerina'.",
+   "tags": [
+    "ballet",
+    "dance",
+    "stage",
+    "white tutus",
+    "lake backdrop",
+    "promotional graphic"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person_group",
+     "name": null,
+     "name_source": null,
+     "count": "2",
+     "description": "two dancers wearing white tutus and ballet shoes",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "perform_ballet",
+     "description": "two dancers perform a ballet routine",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [],
+   "context": {
+    "setting": "theatre stage",
+    "topic": null,
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "perform_ballet",
+    "cinematography": "wide shot",
+    "shot_scale": "wide",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 1.0,
+    "people_count_max": 2,
+    "speech_share": 0.92,
+    "music_share": 0.8,
+    "speakers": [
+     "S1",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a stage or auditorium",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "working with tools",
+      "share": 0.8
+     },
+     {
+      "state": "uncertain",
+      "share": 0.2
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "working with tools",
+      "start_s": 596.0,
+      "end_s": 602.0
+     }
+    ],
+    "on_screen_text": [
+     "THE CHOCOLATE BALLERINA: A SWAN LAKE COMING APRIL 19TH"
+    ],
+    "shot_cuts": 0,
+    "shot_scale_detector": [
+     {
+      "label": "wide",
+      "share": 0.85
+     },
+     {
+      "label": "no_person",
+      "share": 0.1
+     },
+     {
+      "label": "close_up",
+      "share": 0.05
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": false,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "span extended: 602-606 s absorbed (interval shorter than 5 s, min_interval rule, similarity previous 0.962 / next 0.554); metadata of the longer part kept",
+     "attributes.shot_scale: None -> 'wide' (from cinematography note)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      596.5,
+      598.17,
+      599.83,
+      601.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c020"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s007_m01",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s007",
+   "start_s": 606.0,
+   "end_s": 660.0,
+   "source_intervals": [
+    "c022",
+    "c023"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B22",
+     "t": 606.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video cuts from a ballet performance on stage to a studio interview with three people seated in front of a backdrop.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.6,
+      "reason": "accepted: pooled evidence 1.60 >= 1 (activity 1 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B24",
+     "t": 660.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video transitions from a full-screen clip of a ballet performance on a stage to a close-up shot of the host speaking in the studio, marking a clear change in setting and visual content.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.2,
+      "reason": "accepted: pooled evidence 1.20 >= 1 (environment 0.6 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "description": "The video shows a television studio interview with three people discussing the company Chocolate Ballerina. The interview is interspersed with clips of ballet dancers performing on a stage.",
+   "tags": [
+    "interview",
+    "ballet",
+    "dancers",
+    "stage",
+    "television studio",
+    "swan lake"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "woman wearing a white shirt and black vest",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Dennis",
+     "name_source": "transcript",
+     "count": null,
+     "description": "man wearing a grey suit",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e04"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing a black top",
+     "evidence": "visual"
+    },
+    {
+     "id": "person_group_1",
+     "type": "person_group",
+     "name": null,
+     "name_source": null,
+     "count": "2",
+     "description": "ballet dancers in white tutus and costumes",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "give_interview",
+     "description": "person_1 and person_2 interview each other",
+     "participants": [
+      "person_1",
+      "person_2"
+     ],
+     "evidence": "both"
+    },
+    {
+     "id": "a2",
+     "type": "perform_ballet",
+     "description": "person_group_1 performs ballet on stage",
+     "participants": [
+      "person_group_1"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a3",
+     "type": "talks_to",
+     "description": "person_3 talks to person_1",
+     "participants": [
+      "person_3",
+      "person_1"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_2",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_3",
+     "predicate": "talks_to",
+     "object": "person_1",
+     "evidence": "visual"
+    },
+    {
+     "subject": "person_group_1",
+     "predicate": "performs_for",
+     "object": "person_1",
+     "evidence": "visual"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "Chocolate Ballerina Company",
+    "location": "Wilmington",
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "interview setup with B-roll footage",
+    "shot_scale": null,
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 3.0,
+    "people_count_max": 6,
+    "speech_share": 0.952,
+    "music_share": 0.444,
+    "speakers": [
+     "S0",
+     "S1",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 0.852
+     },
+     {
+      "label": "a stage or auditorium",
+      "share": 0.148
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "uncertain",
+      "share": 0.519
+     },
+     {
+      "state": "demonstrating or presenting an object",
+      "share": 0.333
+     },
+     {
+      "state": "playing a musical instrument",
+      "share": 0.148
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "demonstrating or presenting an object",
+      "start_s": 606.0,
+      "end_s": 624.0
+     },
+     {
+      "state": "playing a musical instrument",
+      "start_s": 626.0,
+      "end_s": 630.0
+     },
+     {
+      "state": "playing a musical instrument",
+      "start_s": 634.0,
+      "end_s": 638.0
+     }
+    ],
+    "on_screen_text": [
+     "THE CHOCOLATE BALLERINA: A SWAN LAKE COMING APRIL 19TH"
+    ],
+    "shot_cuts": 5,
+    "shot_scale_detector": [
+     {
+      "label": "wide",
+      "share": 0.62
+     },
+     {
+      "label": "medium_wide",
+      "share": 0.269
+     },
+     {
+      "label": "close_up",
+      "share": 0.093
+     },
+     {
+      "label": "extreme_wide",
+      "share": 0.019
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": false,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "action type interview -> give_interview",
+     "entity person_1 name 'Chanel Holland-Pierre': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      606.5,
+      619.75,
+      633.0,
+      646.25,
+      659.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c022",
+      "c023"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m01",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008",
+   "start_s": 660.0,
+   "end_s": 682.0,
+   "source_intervals": [
+    "c024"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B24",
+     "t": 660.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The video transitions from a full-screen clip of a ballet performance on a stage to a close-up shot of the host speaking in the studio, marking a clear change in setting and visual content.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.2,
+      "reason": "accepted: pooled evidence 1.20 >= 1 (environment 0.6 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "decision": "next child"
+    }
+   },
+   "description": "A video clip shows a group of dancers performing ballet on a dark stage, followed by a close-up of Chanel Holland-Pierre speaking in a television studio. The lower third graphic displays the text 'THE CHOCOLATE BALLERINA: A SWAN LAKE COMING APRIL 19TH'.",
+   "tags": [
+    "ballet",
+    "interview",
+    "dance",
+    "studio",
+    "chanel holland-pierre",
+    "chocolate ballerina"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "woman with braided hair, glasses, and a white collared shirt",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person_group",
+     "name": null,
+     "name_source": null,
+     "count": "3-5",
+     "description": "people in white costumes performing ballet",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "perform_ballet",
+     "description": "dancers perform ballet on stage",
+     "participants": [
+      "person_2"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a2",
+     "type": "give_interview",
+     "description": "Chanel Holland-Pierre speaks to the camera",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_1",
+     "predicate": "talks_to",
+     "object": "person_2",
+     "evidence": "visual"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "physical work of dancers",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "close-up",
+    "shot_scale": "close_up",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 1.0,
+    "people_count_max": 3,
+    "speech_share": 0.868,
+    "music_share": 0.091,
+    "speakers": [
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "uncertain",
+      "share": 0.818
+     },
+     {
+      "state": "talking to the camera",
+      "share": 0.182
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "talking to the camera",
+      "start_s": 676.0,
+      "end_s": 680.0
+     }
+    ],
+    "on_screen_text": [
+     "THE CHOCOLATE BALLERINA: A SWAN LAKE COMING APRIL 19TH"
+    ],
+    "shot_cuts": 1,
+    "shot_scale_detector": [
+     {
+      "label": "close_up",
+      "share": 0.886
+     },
+     {
+      "label": "no_person",
+      "share": 0.091
+     },
+     {
+      "label": "wide",
+      "share": 0.023
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": false,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "attributes.shot_scale: None -> 'close_up' (from cinematography note)",
+     "name removed: entity person_2 name 'dancers' is a description, not a proper name",
+     "entity person_1 name 'Chanel Holland-Pierre': name_source 'on_screen_text' -> 'elsewhere_in_video' (checked)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      660.5,
+      667.5,
+      674.5,
+      681.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c024"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m02",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008",
+   "start_s": 682.0,
+   "end_s": 702.0,
+   "source_intervals": [
+    "c025"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B25",
+     "t": 682.0,
+     "decision": "child split inside segment (VLM said merge)",
+     "explanation": "The cut transitions from a close-up of the interviewee speaking about ballet to a wide shot of the studio with the hosts and guest, but the transcript shows continuous dialogue about the physical demands of the dance, indicating a single coherent interview segment.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "people",
+       "visual_transition"
+      ],
+      "score": 1.6,
+      "reason": "accepted: pooled evidence 1.60 >= 1 (activity 1 + people 0.2 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "decision": "next child"
+    }
+   },
+   "description": "Chanel Holland-Pierre sits on a television studio set with two hosts and discusses the intense training required for the ballet company's upcoming Swan Lake production. She explains that the dancers must memorize over an hour of choreographic works and maintain precise synchronization in their movements.",
+   "tags": [
+    "interview",
+    "ballet",
+    "swan lake",
+    "training",
+    "chanel holland-pierre",
+    "good morning delaware"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "woman wearing glasses, white shirt, and patterned head wrap",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "man wearing a grey suit",
+     "evidence": "transcript",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing a black top",
+     "evidence": "transcript"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "give_interview",
+     "description": "Chanel Holland-Pierre explains the training process for Swan Lake",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "both"
+    },
+    {
+     "id": "a2",
+     "type": "listen_to",
+     "description": "Ivan and Vincenza listen to Chanel Holland-Pierre",
+     "participants": [
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_2",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_3",
+     "evidence": "both"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "training for Swan Lake",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "medium shot",
+    "shot_scale": "medium",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 3.0,
+    "people_count_max": 3,
+    "speech_share": 0.98,
+    "music_share": 0.0,
+    "speakers": [
+     "S1",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "demonstrating or presenting an object",
+      "share": 0.8
+     },
+     {
+      "state": "uncertain",
+      "share": 0.2
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "demonstrating or presenting an object",
+      "start_s": 682.0,
+      "end_s": 698.0
+     }
+    ],
+    "on_screen_text": [
+     "THE CHOCOLATE BALLERINA: A SWAN LAKE COMING APRIL 19TH"
+    ],
+    "shot_cuts": 1,
+    "shot_scale_detector": [
+     {
+      "label": "wide",
+      "share": 0.575
+     },
+     {
+      "label": "medium_wide",
+      "share": 0.275
+     },
+     {
+      "label": "close_up",
+      "share": 0.125
+     },
+     {
+      "label": "medium",
+      "share": 0.025
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": true,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "attributes.shot_scale: None -> 'medium' (from cinematography note)",
+     "entity person_1 name 'Chanel Holland-Pierre': name_source 'on_screen_text' -> 'elsewhere_in_video' (checked)",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      682.5,
+      688.83,
+      695.17,
+      701.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c025"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [
+     "shot scale: metadata medium, detector mostly wide"
+    ],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m03",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008",
+   "start_s": 702.0,
+   "end_s": 722.0,
+   "source_intervals": [
+    "c026"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B26",
+     "t": 702.0,
+     "decision": "child split inside segment (VLM said merge)",
+     "explanation": "The frames show a continuous interview where the camera cuts between a close-up of the guest and a wide shot of the studio as the hosts transition from discussing the company's training to asking the guest to demonstrate a specific move.",
+     "automatic_evidence": {
+      "types": [
+       "people",
+       "topic",
+       "visual_transition"
+      ],
+      "score": 1.8,
+      "reason": "accepted: pooled evidence 1.80 >= 1 (people 0.4 + topic 1 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "decision": "next child"
+    }
+   },
+   "description": "Chanel Holland-Pierre, wearing a white shirt and black apron, stands on a television stage with two hosts. The hosts, a man in a grey suit and a woman in a black top, are preparing to demonstrate a ballet move. The group stands in a line on the stage with a city skyline visible behind them.",
+   "tags": [
+    "ballet",
+    "demonstration",
+    "television studio",
+    "good morning delaware",
+    "chanel holland-pierre",
+    "dance",
+    "interview",
+    "live"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "woman with braided hair, white shirt, black apron, and glasses",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "man in grey suit",
+     "evidence": "transcript",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman in black top and grey pants",
+     "evidence": "transcript"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "get_into_position",
+     "description": "Chanel Holland-Pierre and the hosts get into ballet first position",
+     "participants": [
+      "person_1",
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a2",
+     "type": "prepare_to_demonstrate",
+     "description": "The hosts prepare to demonstrate a ballet move",
+     "participants": [
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_2",
+     "predicate": "interviews",
+     "object": "person_1",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_3",
+     "predicate": "interviews",
+     "object": "person_1",
+     "evidence": "both"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "building Chocolate Ballerina Company",
+    "location": "Wilmington",
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "medium shot",
+    "shot_scale": "medium",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 3.0,
+    "people_count_max": 3,
+    "speech_share": 0.945,
+    "music_share": 0.0,
+    "speakers": [
+     "S0",
+     "S1",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "uncertain",
+      "share": 1.0
+     }
+    ],
+    "detector_sub_events": [],
+    "on_screen_text": [
+     "THE CHOCOLATE BALLERINA: A SWAN LAKE COMING APRIL 19TH"
+    ],
+    "shot_cuts": 1,
+    "shot_scale_detector": [
+     {
+      "label": "medium_wide",
+      "share": 0.525
+     },
+     {
+      "label": "wide",
+      "share": 0.25
+     },
+     {
+      "label": "close_up",
+      "share": 0.225
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 0.9
+     },
+     {
+      "label": "zoom",
+      "share": 0.1
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": false,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "attributes.shot_scale: None -> 'medium' (from cinematography note)",
+     "entity person_1 name 'Chanel Holland-Pierre': name_source 'on_screen_text' -> 'elsewhere_in_video' (checked)",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      702.5,
+      708.83,
+      715.17,
+      721.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c026"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m04",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008",
+   "start_s": 722.0,
+   "end_s": 802.0,
+   "source_intervals": [
+    "c027"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B27",
+     "t": 722.0,
+     "decision": "child split inside segment (VLM said merge)",
+     "explanation": "The frames show a continuous sequence where the hosts and guest transition from sitting to standing and then begin a dance demonstration, with the dialogue confirming the start of the activity ('Come on. Let's do it.').",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "visual_transition"
+      ],
+      "score": 1.4,
+      "reason": "accepted: pooled evidence 1.40 >= 1 (activity 1 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "decision": "next child"
+    }
+   },
+   "description": "Three people stand on a television studio stage in front of a city backdrop. The person in the center, wearing overalls, performs ballet movements including bending knees and extending arms while the two hosts on either side watch and provide verbal instructions. The group concludes the demonstration with a curtsy.",
+   "tags": [
+    "ballet",
+    "television studio",
+    "dance demonstration",
+    "interview",
+    "good morning delaware",
+    "heels",
+    "curtsy",
+    "instruction"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "woman wearing black top and grey pants",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "man wearing grey suit",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing black top and grey pants",
+     "evidence": "visual"
+    },
+    {
+     "id": "person_4",
+     "type": "person_group",
+     "name": null,
+     "name_source": null,
+     "count": "3",
+     "description": "people performing ballet moves",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "perform_ballet",
+     "description": "performing ballet moves including curtsy",
+     "participants": [
+      "person_4"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a2",
+     "type": "give_interview",
+     "description": "providing instructions and commentary",
+     "participants": [
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "transcript"
+    },
+    {
+     "id": "a3",
+     "type": "watch",
+     "description": "observing the performance",
+     "participants": [
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_2",
+     "predicate": "talks_to",
+     "object": "person_4",
+     "evidence": "transcript"
+    },
+    {
+     "subject": "person_3",
+     "predicate": "talks_to",
+     "object": "person_4",
+     "evidence": "transcript"
+    },
+    {
+     "subject": "person_2",
+     "predicate": "watches",
+     "object": "person_4",
+     "evidence": "visual"
+    },
+    {
+     "subject": "person_3",
+     "predicate": "watches",
+     "object": "person_4",
+     "evidence": "visual"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "building a business",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "ballet demonstration",
+    "cinematography": "static wide shot",
+    "shot_scale": "wide",
+    "camera_motion": "static",
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 3.0,
+    "people_count_max": 3,
+    "speech_share": 0.864,
+    "music_share": 0.163,
+    "speakers": [
+     "S0",
+     "S1",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "uncertain",
+      "share": 0.7
+     },
+     {
+      "state": "singing",
+      "share": 0.1
+     },
+     {
+      "state": "dancing",
+      "share": 0.1
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "talking while standing",
+      "start_s": 722.0,
+      "end_s": 726.0
+     },
+     {
+      "state": "singing",
+      "start_s": 748.0,
+      "end_s": 752.0
+     },
+     {
+      "state": "dancing",
+      "start_s": 754.0,
+      "end_s": 758.0
+     },
+     {
+      "state": "singing",
+      "start_s": 758.0,
+      "end_s": 762.0
+     },
+     {
+      "state": "dancing",
+      "start_s": 792.0,
+      "end_s": 796.0
+     }
+    ],
+    "on_screen_text": [
+     "THE CHOCOLATE BALLERINA: A SWAN LAKE COMING APRIL 19TH"
+    ],
+    "shot_cuts": 0,
+    "shot_scale_detector": [
+     {
+      "label": "wide",
+      "share": 1.0
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": true,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "entity person_4: name 'ballet dancers' without name_source -> name removed",
+     "attributes.shot_scale: None -> 'wide' (from cinematography note)",
+     "attributes.camera_motion: None -> 'static' (from cinematography note)",
+     "entity person_1 name 'Chanel Holland-Pierre': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      722.5,
+      733.79,
+      745.07,
+      756.36,
+      767.64,
+      778.93,
+      790.21,
+      801.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c027"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [
+     "people: metadata describes 6, detector saw at most 3"
+    ],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m05",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008",
+   "start_s": 802.0,
+   "end_s": 838.0,
+   "source_intervals": [
+    "c028"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B28",
+     "t": 802.0,
+     "decision": "child split inside segment (VLM said merge)",
+     "explanation": "The frames show a continuous dance performance where the hosts are instructing the guest on ballet movements, with the activity seamlessly transitioning from instruction to execution across the cut at 802 s.",
+     "automatic_evidence": {
+      "types": [
+       "activity"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (activity 1)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "decision": "next child"
+    }
+   },
+   "description": "Three people stand on a television studio stage in front of a city backdrop. A man in a grey suit stands on the left, a woman in a black top and grey pants stands on the right, and a woman in a white shirt and grey overalls stands in the center. The man in the grey suit instructs the woman in the center on ballet movements, while the woman on the right watches.",
+   "tags": [
+    "television studio",
+    "ballet",
+    "instruction",
+    "dance",
+    "interview",
+    "good morning delaware"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing a white shirt and grey overalls",
+     "evidence": "visual"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing a black top and grey pants",
+     "evidence": "visual"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "man wearing a grey suit",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "demonstrate_step",
+     "description": "man in grey suit demonstrates ballet steps",
+     "participants": [
+      "person_3"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a2",
+     "type": "perform_ballet",
+     "description": "woman in overalls performs ballet steps",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a3",
+     "type": "watch",
+     "description": "woman in black top watches the demonstration",
+     "participants": [
+      "person_2"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_3",
+     "predicate": "demonstrates_to",
+     "object": "person_1",
+     "evidence": "both"
+    },
+    {
+     "subject": "person_3",
+     "predicate": "talks_to",
+     "object": "person_2",
+     "evidence": "transcript"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "ballet",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "demonstrate_step",
+    "cinematography": "static wide shot",
+    "shot_scale": "wide",
+    "camera_motion": "static",
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 3.0,
+    "people_count_max": 3,
+    "speech_share": 0.75,
+    "music_share": 0.806,
+    "speakers": [
+     "S0",
+     "S1",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "singing",
+      "share": 0.556
+     },
+     {
+      "state": "uncertain",
+      "share": 0.444
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "singing",
+      "start_s": 802.0,
+      "end_s": 806.0
+     },
+     {
+      "state": "singing",
+      "start_s": 808.0,
+      "end_s": 816.0
+     },
+     {
+      "state": "singing",
+      "start_s": 830.0,
+      "end_s": 838.0
+     }
+    ],
+    "on_screen_text": [],
+    "shot_cuts": 0,
+    "shot_scale_detector": [
+     {
+      "label": "wide",
+      "share": 1.0
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": true,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "attributes.shot_scale: None -> 'wide' (from cinematography note)",
+     "attributes.camera_motion: None -> 'static' (from cinematography note)",
+     "name removed: entity person_1 name 'Chanel Holland-Pierre' was given to 3 entities",
+     "name removed: entity person_2 name 'Chanel Holland-Pierre' was given to 3 entities",
+     "name removed: entity person_3 name 'Chanel Holland-Pierre' was given to 3 entities"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      802.5,
+      814.17,
+      825.83,
+      837.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c028"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [
+     "name removed: entity person_1 name 'Chanel Holland-Pierre' was given to 3 entities",
+     "name removed: entity person_2 name 'Chanel Holland-Pierre' was given to 3 entities",
+     "name removed: entity person_3 name 'Chanel Holland-Pierre' was given to 3 entities"
+    ],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m06",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008",
+   "start_s": 838.0,
+   "end_s": 880.0,
+   "source_intervals": [
+    "c029",
+    "c030",
+    "c031"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B29",
+     "t": 838.0,
+     "decision": "child split inside segment (VLM said merge)",
+     "explanation": "The frames show a continuous performance where the hosts instruct the guest on a dance move (a bow) and the guest executes it while the hosts applaud, indicating a single coherent event.",
+     "automatic_evidence": {
+      "types": [
+       "activity"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (activity 1)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B32",
+     "t": 880.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The frames show the hosts introducing the guest and the event, followed immediately by a graphic overlay displaying the promotional poster for 'The Return of the Black Swan' ballet performance.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "description": "Three people stand on a television studio stage in front of a city backdrop. The man in the center counts down from five to eight, and the two people on either side perform a synchronized curtsy.",
+   "tags": [
+    "good morning delaware",
+    "television studio",
+    "dance",
+    "curtsy",
+    "countdown",
+    "interview"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "woman wearing a black top and grey pants",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "man wearing a grey suit",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing a white shirt and black overalls",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "count_down",
+     "description": "counting down from five to eight",
+     "participants": [
+      "person_2"
+     ],
+     "evidence": "transcript"
+    },
+    {
+     "id": "a2",
+     "type": "perform_curtsy",
+     "description": "performing a curtsy",
+     "participants": [
+      "person_1",
+      "person_3"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_2",
+     "predicate": "performs_with",
+     "object": "person_1",
+     "evidence": "visual"
+    },
+    {
+     "subject": "person_2",
+     "predicate": "performs_with",
+     "object": "person_3",
+     "evidence": "visual"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "the showcase",
+    "location": "Delaware State",
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "medium shot",
+    "shot_scale": "medium",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 3.0,
+    "people_count_max": 4,
+    "speech_share": 0.881,
+    "music_share": 0.5,
+    "speakers": [
+     "S0",
+     "S1",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "uncertain",
+      "share": 0.476
+     },
+     {
+      "state": "dancing",
+      "share": 0.238
+     },
+     {
+      "state": "applauding",
+      "share": 0.19
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "applauding",
+      "start_s": 838.0,
+      "end_s": 844.0
+     },
+     {
+      "state": "dancing",
+      "start_s": 852.0,
+      "end_s": 856.0
+     },
+     {
+      "state": "dancing",
+      "start_s": 862.0,
+      "end_s": 868.0
+     },
+     {
+      "state": "singing",
+      "start_s": 872.0,
+      "end_s": 876.0
+     }
+    ],
+    "on_screen_text": [],
+    "shot_cuts": 0,
+    "shot_scale_detector": [
+     {
+      "label": "wide",
+      "share": 1.0
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": true,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "attributes.shot_scale: None -> 'medium' (from cinematography note)",
+     "entity person_1 name 'Chanel Holland-Pierre': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      838.5,
+      852.17,
+      865.83,
+      879.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c029",
+      "c030",
+      "c031"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [
+     "shot scale: metadata medium, detector mostly wide"
+    ],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s009_m01",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s009",
+   "start_s": 880.0,
+   "end_s": 906.0,
+   "source_intervals": [
+    "c032",
+    "c033",
+    "c034"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B32",
+     "t": 880.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The frames show the hosts introducing the guest and the event, followed immediately by a graphic overlay displaying the promotional poster for 'The Return of the Black Swan' ballet performance.",
+     "automatic_evidence": {
+      "types": [
+       "environment",
+       "visual_transition"
+      ],
+      "score": 1.0,
+      "reason": "accepted: pooled evidence 1.00 >= 1 (environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "boundary": "B35",
+     "t": 906.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The LEFT interval displays a static poster for 'The Return of the Black Swan' with a website banner, while the RIGHT interval cuts to a live studio shot of three people discussing the event. The change from a static graphic to a live interview setting indicates a new segment.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "visual_transition"
+      ],
+      "score": 2.0,
+      "reason": "accepted: pooled evidence 2.00 >= 1 (activity 1 + environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    }
+   },
+   "description": "A static graphic displays a promotional poster for the ballet production 'The Return of the Black Swan' featuring a ballerina and a male dancer. The poster includes the date April 19th and the location Delaware State University. A lower third banner appears with the website www.chocolateballerinacompany.com. The scene then cuts to a television studio where three people are standing in front of a city backdrop.",
+   "tags": [
+    "ballet",
+    "poster",
+    "interview",
+    "studio",
+    "dancers",
+    "business",
+    "delaware",
+    "chocolate ballerina"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "woman wearing a white blouse and black vest",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "man wearing a grey suit",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing a black top",
+     "evidence": "visual"
+    },
+    {
+     "id": "text_1",
+     "type": "text",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "poster for 'The Return of the Black Swan'",
+     "evidence": "visual"
+    },
+    {
+     "id": "text_2",
+     "type": "text",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "lower third banner with website URL",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "perform_ballet",
+     "description": "dancers on the poster perform ballet poses",
+     "participants": [
+      "text_1"
+     ],
+     "evidence": "visual"
+    },
+    {
+     "id": "a2",
+     "type": "give_interview",
+     "description": "Chanel Holland-Pierre speaks to the hosts",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "transcript"
+    },
+    {
+     "id": "a3",
+     "type": "stand",
+     "description": "three people stand in a studio",
+     "participants": [
+      "person_1",
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "visual"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_1",
+     "predicate": "talks_to",
+     "object": "person_2",
+     "evidence": "transcript"
+    },
+    {
+     "subject": "person_1",
+     "predicate": "talks_to",
+     "object": "person_3",
+     "evidence": "transcript"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "Chocolate Ballerina Company",
+    "location": "Delaware State University",
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "static shot",
+    "shot_scale": null,
+    "camera_motion": "static",
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 2.0,
+    "people_count_max": 3,
+    "speech_share": 0.965,
+    "music_share": 0.115,
+    "speakers": [
+     "S0",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a stage or auditorium",
+      "share": 1.0
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "applauding",
+      "share": 0.462
+     },
+     {
+      "state": "dancing",
+      "share": 0.462
+     },
+     {
+      "state": "uncertain",
+      "share": 0.077
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "applauding",
+      "start_s": 880.0,
+      "end_s": 884.0
+     },
+     {
+      "state": "dancing",
+      "start_s": 884.0,
+      "end_s": 896.0
+     },
+     {
+      "state": "applauding",
+      "start_s": 896.0,
+      "end_s": 904.0
+     }
+    ],
+    "on_screen_text": [
+     "APRIL 19TH",
+     "WWW.CHOCOLATEBALLERINACOMPANYCOM",
+     "FOR MORE INFORMATION",
+     "CHOCOLATE BALLERINA COMPANY"
+    ],
+    "shot_cuts": 0,
+    "shot_scale_detector": [
+     {
+      "label": "wide",
+      "share": 0.923
+     },
+     {
+      "label": "medium",
+      "share": 0.077
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": false,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "span extended: 880-884 s absorbed (interval shorter than 5 s, min_interval rule, similarity previous 0.384 / next 0.965); metadata of the longer part kept",
+     "attributes.camera_motion: None -> 'static' (from cinematography note)",
+     "entity person_1 name 'Chanel Holland-Pierre': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      884.5,
+      891.5,
+      898.5,
+      905.5
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c033",
+      "c034"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  },
+  {
+   "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s010_m01",
+   "segment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s010",
+   "start_s": 906.0,
+   "end_s": 946.492,
+   "source_intervals": [
+    "c035"
+   ],
+   "boundary": {
+    "start": {
+     "boundary": "B35",
+     "t": 906.0,
+     "decision": "keep",
+     "decided_by": "vlm",
+     "explanation": "The LEFT interval displays a static poster for 'The Return of the Black Swan' with a website banner, while the RIGHT interval cuts to a live studio shot of three people discussing the event. The change from a static graphic to a live interview setting indicates a new segment.",
+     "automatic_evidence": {
+      "types": [
+       "activity",
+       "environment",
+       "visual_transition"
+      ],
+      "score": 2.0,
+      "reason": "accepted: pooled evidence 2.00 >= 1 (activity 1 + environment 0.6 + visual_transition 0.4)",
+      "decided_by": "rules"
+     }
+    },
+    "end": {
+     "decision": "video end"
+    }
+   },
+   "description": "Chanel Holland-Pierre, CEO of Chocolate Ballerina Company, stands between two hosts in a television studio and shares her social media handle. The hosts thank her for the information and express their appreciation for the segment.",
+   "tags": [
+    "interview",
+    "business",
+    "social media",
+    "television studio",
+    "entrepreneurship",
+    "good morning delaware"
+   ],
+   "entities": [
+    {
+     "id": "person_1",
+     "type": "person",
+     "name": "Chanel Holland-Pierre",
+     "name_source": "transcript",
+     "count": null,
+     "description": "woman wearing a white and black dress",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01"
+    },
+    {
+     "id": "person_2",
+     "type": "person",
+     "name": "Ivan",
+     "name_source": "elsewhere_in_video",
+     "count": null,
+     "description": "man wearing a grey suit",
+     "evidence": "visual",
+     "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02"
+    },
+    {
+     "id": "person_3",
+     "type": "person",
+     "name": null,
+     "name_source": null,
+     "count": null,
+     "description": "woman wearing a black top",
+     "evidence": "visual"
+    }
+   ],
+   "actions": [
+    {
+     "id": "a1",
+     "type": "give_interview",
+     "description": "Chanel Holland-Pierre shares her social media handle",
+     "participants": [
+      "person_1"
+     ],
+     "evidence": "transcript"
+    },
+    {
+     "id": "a2",
+     "type": "thank",
+     "description": "Ivan and Vincenza thank Chanel Holland-Pierre",
+     "participants": [
+      "person_2",
+      "person_3"
+     ],
+     "evidence": "transcript"
+    }
+   ],
+   "relationships": [
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_2",
+     "evidence": "visual"
+    },
+    {
+     "subject": "person_1",
+     "predicate": "interviews",
+     "object": "person_3",
+     "evidence": "visual"
+    }
+   ],
+   "context": {
+    "setting": "television studio",
+    "topic": "social media handle",
+    "location": null,
+    "notes": null
+   },
+   "attributes": {
+    "action": "interview",
+    "cinematography": "medium shot",
+    "shot_scale": "medium",
+    "camera_motion": null,
+    "camera_angle": null
+   },
+   "observed": {
+    "people_count_median": 3.0,
+    "people_count_max": 3,
+    "speech_share": 0.84,
+    "music_share": 0.35,
+    "speakers": [
+     "S0",
+     "S1",
+     "S2"
+    ],
+    "setting_detector": [
+     {
+      "label": "a television studio",
+      "share": 0.85
+     },
+     {
+      "label": "a waterfront or beach",
+      "share": 0.15
+     }
+    ],
+    "activity_detector": [
+     {
+      "state": "demonstrating or presenting an object",
+      "share": 0.75
+     },
+     {
+      "state": "uncertain",
+      "share": 0.25
+     }
+    ],
+    "detector_sub_events": [
+     {
+      "state": "demonstrating or presenting an object",
+      "start_s": 906.0,
+      "end_s": 914.0
+     },
+     {
+      "state": "demonstrating or presenting an object",
+      "start_s": 916.0,
+      "end_s": 938.0
+     }
+    ],
+    "on_screen_text": [
+     "WWW.CHOCOLATEBALLERINACOMPANYCOM",
+     "FOR MORE INFORMATION",
+     "CHOCOLATE BALLERINA COMPANY",
+     "@IAMCHOCOLATEBALLERINA",
+     "FOR INFORMATION",
+     "GOOD"
+    ],
+    "shot_cuts": 1,
+    "shot_scale_detector": [
+     {
+      "label": "medium",
+      "share": 0.575
+     },
+     {
+      "label": "medium_wide",
+      "share": 0.338
+     },
+     {
+      "label": "no_person",
+      "share": 0.075
+     },
+     {
+      "label": "wide",
+      "share": 0.013
+     }
+    ],
+    "camera_motion_detector": [
+     {
+      "label": "static",
+      "share": 1.0
+     }
+    ],
+    "provenance": "Level-1 detectors (YOLO, YOLO-pose framing heuristic, CLIP, X-CLIP, VAD, diarisation, AST, OCR, shot detection, optical-flow camera motion); automatic"
+   },
+   "annotation": {
+    "status": "automatic",
+    "review_status": "unreviewed",
+    "needs_review": false,
+    "generation_status": "ok",
+    "generation_errors": null,
+    "normalisation_repairs": [
+     "attributes.shot_scale: None -> 'medium' (from cinematography note)",
+     "entity person_2 name 'Ivan': name_source 'transcript' -> 'elsewhere_in_video' (checked)",
+     "name removed: entity person_3 name 'Vincenza' is not said or shown anywhere in the video (only in source metadata)"
+    ],
+    "attempts": 1,
+    "model": "Qwen/Qwen3.5-4B",
+    "metadata_prompt_version": "meta-v3",
+    "evidence_provenance": {
+     "frames_s": [
+      906.5,
+      919.66,
+      932.83,
+      945.99
+     ],
+     "transcript": "captions.en.vtt",
+     "level1_intervals": [
+      "c035"
+     ],
+     "video_context_used": true
+    },
+    "review_reasons": [],
+    "entity_ids": "local to this moment; see video_entity_id for cross-moment links"
+   }
+  }
+ ],
+ "entity_registry": [
+  {
+   "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e01",
+   "name": "Chanel Holland-Pierre",
+   "type": "person",
+   "name_sources": [
+    "elsewhere_in_video",
+    "on_screen_text",
+    "transcript"
+   ],
+   "mentions": [
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s000_m01",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s001_m01",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m01",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m02",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m04",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s004_m01",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s005_m01",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s007_m01",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m01",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m02",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m03",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m04",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m06",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s009_m01",
+     "local_id": "person_1"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s010_m01",
+     "local_id": "person_1"
+    }
+   ],
+   "link_method": "same normalised name (on-screen text or transcript); unverified"
+  },
+  {
+   "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e02",
+   "name": "Ivan",
+   "type": "person",
+   "name_sources": [
+    "elsewhere_in_video",
+    "transcript"
+   ],
+   "mentions": [
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s000_m01",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s001_m01",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m01",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m02",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m03",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s003_m04",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s004_m01",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s005_m01",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m02",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m03",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m04",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s008_m06",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s009_m01",
+     "local_id": "person_2"
+    },
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s010_m01",
+     "local_id": "person_2"
+    }
+   ],
+   "link_method": "same normalised name (on-screen text or transcript); unverified"
+  },
+  {
+   "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e03",
+   "name": "Good Morning Delaware",
+   "type": "text",
+   "name_sources": [
+    "on_screen_text"
+   ],
+   "mentions": [
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s000_m01",
+     "local_id": "text_1"
+    }
+   ],
+   "link_method": "same normalised name (on-screen text or transcript); unverified"
+  },
+  {
+   "video_entity_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_e04",
+   "name": "Dennis",
+   "type": "person",
+   "name_sources": [
+    "transcript"
+   ],
+   "mentions": [
+    {
+     "moment_id": "detvde-Chocolate_Ballerina_Founder_Chane_5b4f44_s007_m01",
+     "local_id": "person_2"
+    }
+   ],
+   "link_method": "same normalised name (on-screen text or transcript); unverified"
+  }
+ ]
+}

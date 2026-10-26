@@ -1,9 +1,11 @@
 # Default configuration. Every path may be absolute or relative to the current working directory.
 # Override with --config my.yaml (deep-merged) or VMP_* environment variables (see config.py).
 paths:
-  corpus_root: data/corpus            # folder that contains the downloaded Internet Archive item folders
-  manifest: data/corpus_manifest.json
-  outputs_root: outputs
+  corpus_root: corpus                 # downloaded Internet Archive item folders (<category>/<item>/)
+  manifest: outputs/corpus_manifest.json
+  outputs_root: outputs               # per-video working outputs
+  review_root: review                 # human edits per video (<video_id>/overrides.json), tracked in git
+  metadata_root: metadata             # the dataset: <original video name>_metadata.json (+ .md) per video
   model_cache: null                   # e.g. /scratch/$USER/hf_cache ; null = library defaults
   legacy_segments_dir: null           # optional: reuse earlier per-video detector outputs (<dir>/<video_id>/*.json)
   legacy_level1_dir: null             # optional: reuse earlier YOLO/CLIP/X-CLIP/VAD outputs (<dir>/<video_id>/...)

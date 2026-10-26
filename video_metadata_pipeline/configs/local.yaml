@@ -1,7 +1,0 @@
-# Development machine (run from the video_metadata_pipeline folder). Reuses earlier research outputs.
-paths:
-  corpus_root: ../data/pilot
-  manifest: data/corpus_manifest.json
-  outputs_root: outputs
-  legacy_segments_dir: ../data/segments
-  legacy_level1_dir: ../data/level1

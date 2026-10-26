@@ -1,6 +1,6 @@
 """Human overrides from review (authoritative; never reversed by automatic reprocessing).
 
-Read from outputs/<id>/review/overrides.json (written by the review workflow):
+Read from <paths.review_root>/<video_id>/overrides.json (tracked in git; falls back to outputs/<id>/review/):
   {"activity_overrides": [{"start": s, "end": e, "state": "dancing", "edit_id": ...}],
    "forced_boundaries":  [{"t": s, "edit_id": ...}],
    "removed_boundaries": [{"t": s, "tolerance_s": 2.0, "edit_id": ...}]}
@@ -14,8 +14,9 @@ from ..utils.io import read_json
 EMPTY = {"activity_overrides": [], "forced_boundaries": [], "removed_boundaries": []}
 
 
-def load(vdir: Path) -> dict:
-    o = read_json(Path(vdir) / "review" / "overrides.json") or {}
+def load(vdir: Path, review_dir: Path | None = None) -> dict:
+    o = (read_json(Path(review_dir) / "overrides.json") if review_dir else None) or \
+        read_json(Path(vdir) / "review" / "overrides.json") or {}
     return {k: o.get(k, []) for k in EMPTY}
 
 

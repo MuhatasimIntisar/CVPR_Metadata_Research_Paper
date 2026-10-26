@@ -6,25 +6,25 @@ then download only the picked videos with full metadata and captions.
 Categories: interview, meeting, event, guide, museum
 
 Step 1  search (no downloads)
-  python ia_pilot_download.py search
-  python ia_pilot_download.py search --candidates 40 --spanish-candidates 15 --max-min 20
-  -> data/pilot/candidates.csv  (25 English + 10 Spanish per category by default)
+  python collection/ia_download.py search
+  python collection/ia_download.py search --candidates 40 --spanish-candidates 15 --max-min 20
+  -> collection/rounds/candidates.csv  (25 English + 10 Spanish per category by default)
 
 Step 2  pick
   Open candidates.csv (Excel is fine), put an x in the 'select' column for the videos you want,
   e.g. 4 per category, and save as CSV.
 
 Step 3  download (only the rows marked x; asks for confirmation)
-  python ia_pilot_download.py download data/pilot/candidates.csv
+  python collection/ia_download.py download collection/rounds/candidates.csv
 
 Output of step 3
-  data/pilot/<category>/<short id>/   (data/ is git-ignored; short names avoid Windows' 260-char path limit)
+  corpus/<category>/<short id>/   (corpus/ is git-ignored; short names avoid Windows' 260-char path limit)
       video.mp4            smallest suitable MP4 derivative under --max-mb
       metadata.json        full IA metadata API response (item fields + file list)
       captions*.srt/.vtt   captions if the item has any
       thumb.jpg            item thumbnail
       files.json           identifier + local name -> original archive file name
-  data/pilot/manifest.csv  the selected rows
+  collection/rounds/manifest.csv  the selected rows (next to the candidates csv; rename both to roundN_*.csv)
 
 Candidate rules
   * collection:community_media, movies only, youtube-* mirror IDs excluded
@@ -413,7 +413,7 @@ def cmd_download(args):
         k = sum(1 for r in rows if r["category"] == cat)
         print(f"  {cat:10} {k}{'' if k == args.expect else f'   (expected {args.expect})'}")
     total_mb = sum(float(r.get("video_mb") or 0) for r in rows)
-    out = args.out or os.path.dirname(os.path.abspath(args.csv))
+    out = args.out
     if not args.yes:
         ans = input(f"\nDownload {len(rows)} videos (~{total_mb:.0f} MB) into {out}? [y/N] ").strip().lower()
         if ans not in ("y", "yes"):
@@ -424,11 +424,12 @@ def cmd_download(args):
         print(f"  {row['category']:9} {row['identifier'][:70]}")
         if not fetch_item(row, None, out):
             failed.append(row["identifier"])
-    with open(os.path.join(out, "manifest.csv"), "w", newline="", encoding="utf-8-sig") as f:
+    man = os.path.join(os.path.dirname(os.path.abspath(args.csv)), "manifest.csv")
+    with open(man, "w", newline="", encoding="utf-8-sig") as f:
         w = csv.DictWriter(f, fieldnames=CANDIDATE_FIELDS)
         w.writeheader()
         w.writerows({k: r.get(k, "") for k in CANDIDATE_FIELDS} for r in rows)
-    print(f"\nDone. {len(rows) - len(failed)}/{len(rows)} complete. Manifest: {os.path.join(out, 'manifest.csv')}")
+    print(f"\nDone. {len(rows) - len(failed)}/{len(rows)} complete. Manifest: {man}")
     if failed:
         print("Failed (rerun the same command to resume):", *failed, sep="\n  ")
 
@@ -438,7 +439,7 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     s = sub.add_parser("search", help="find candidates and write candidates.csv (no downloads)")
-    s.add_argument("-o", "--out", default=os.path.join("data", "pilot"))
+    s.add_argument("-o", "--out", default=os.path.join("collection", "rounds"), help="where candidates.csv is written")
     s.add_argument("--candidates", type=int, default=25, help="English candidates per category")
     s.add_argument("--spanish-candidates", type=int, default=10, help="Spanish candidates per category")
     s.add_argument("--per-station", type=int, default=3, help="max candidates per station per category")
@@ -455,7 +456,7 @@ def main():
 
     d = sub.add_parser("download", help="download rows marked in the 'select' column")
     d.add_argument("csv", help="candidates.csv with your selections")
-    d.add_argument("-o", "--out", help="output folder (default: same folder as the csv)")
+    d.add_argument("-o", "--out", default="corpus", help="where the videos go (default: corpus/)")
     d.add_argument("--expect", type=int, default=4, help="expected picks per category (warning only)")
     d.add_argument("-y", "--yes", action="store_true", help="skip the confirmation prompt")
 

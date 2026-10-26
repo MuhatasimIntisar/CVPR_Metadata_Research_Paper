@@ -1,5 +1,5 @@
 # Kelvin2 (or any Linux/SLURM machine). Run every command from the code folder; all paths are relative to it:
-#   <scratch>/vmp/code      this package            <scratch>/vmp/data/pilot     the Internet Archive folders
+#   <scratch>/vmp/code      git clone of this repo  <scratch>/vmp/data/pilot     the Internet Archive folders
 #   <scratch>/vmp/models    model cache             <scratch>/vmp/data/segments  earlier detector outputs (optional reuse)
 #   <scratch>/vmp/outputs   results                 <scratch>/vmp/data/level1    earlier YOLO/CLIP/X-CLIP/VAD outputs (optional)
 paths:
@@ -7,6 +7,8 @@ paths:
   manifest: ../outputs/corpus_manifest.json
   outputs_root: ../outputs
   model_cache: ../models
+  review_root: review              # inside the clone (tracked in git)
+  metadata_root: ../metadata       # dataset copies; bring back to the laptop's metadata/
   legacy_segments_dir: ../data/segments
   legacy_level1_dir: ../data/level1
 runtime:

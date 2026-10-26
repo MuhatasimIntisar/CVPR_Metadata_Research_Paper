@@ -308,7 +308,8 @@ def run(cfg, entry, vdir: Path, log):
     out = vdir / "correction"
     out.mkdir(parents=True, exist_ok=True)
     clog = []
-    overrides = manual_overrides.load(vdir)
+    rr = cfg["paths"].get("review_root")
+    overrides = manual_overrides.load(vdir, Path(rr) / vid if rr else None)
     times = [o["t"] for o in obs]
     first = [step_state(o, c) for o in obs]
     states = manual_overrides.apply_activity([s for s, _ in first], times, overrides, clog)
