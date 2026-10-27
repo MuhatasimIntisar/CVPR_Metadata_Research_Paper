@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from collections import Counter
 
 SEL = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SEL))
@@ -21,8 +22,8 @@ def load(name):
     return m
 
 
-S1, S2, S3, S4, S5 = (load(n) for n in ("01_consolidate.py", "02_eligibility.py", "03_profile_metadata.py",
-                                        "04_select.py", "05_report_and_freeze.py"))
+S1, S2, S3, S4, S5, S6 = (load(n) for n in ("01_consolidate.py", "02_eligibility.py", "03_profile_metadata.py",
+                                            "04_select.py", "05_report_and_freeze.py", "06_make_batches.py"))
 FIELDS = ["select", "category", "title", "duration_min", "station", "creator", "date", "weekday", "neighbours_1d",
           "date_source", "video_mb", "has_captions", "language", "matched_terms", "subjects", "found_via", "description",
           "details_url", "identifier", "video_file", "video_md5", "captions"]
@@ -202,3 +203,28 @@ def test_infeasible_budget_is_reported(world):
     with pytest.raises(SystemExit) as e:
         S4.main(["--config", str(cp), "--budget-hours", "1"])
     assert "infeasible" in str(e.value)
+
+
+def test_batches_stratified_audit_last(world):
+    tmp, cp, cfg = world
+    run_all(cp)
+    S6.main(["--config", str(cp), "--batch-size", "25"])
+    b = tmp / "out" / "06_batches"
+    idx = C.read_csv(b / "batches_index.csv")
+    audit = {r["identifier"] for r in C.read_csv(tmp / "out" / "05_final" / "human_audit.csv")}
+    assert len(idx) == 120 and len({r["identifier"] for r in idx}) == 120
+    order = sorted({r["batch"] for r in idx})
+    first_audit = min(k for k, n in enumerate(order) if n.endswith("_audit"))
+    assert all(not n.endswith("_audit") for n in order[:first_audit]) and all(n.endswith("_audit") for n in order[first_audit:])
+    assert {r["identifier"] for r in idx if r["audit_sample"] == "1"} == audit
+    sizes = [sum(r["batch"] == n for r in idx) for n in order]
+    assert max(sizes) <= 25
+    for n in order:
+        rows = C.read_csv(b / n / f"{n}.csv")
+        assert rows and all(r["select"] == "x" for r in rows)
+        assert C.csv_header(b / n / f"{n}.csv") == S5.load_downloader_fields()
+    main = [n for n in order if not n.endswith("_audit")]
+    cats = [Counter(r["category"] for r in idx if r["batch"] == n) for n in main]
+    for c in {r["category"] for r in idx if r["audit_sample"] == "0"}:
+        v = [x[c] for x in cats]
+        assert max(v) - min(v) <= 1          # each category spread evenly across the main batches

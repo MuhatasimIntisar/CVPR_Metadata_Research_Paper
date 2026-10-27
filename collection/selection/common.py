@@ -393,3 +393,37 @@ def concentration(counts: dict) -> dict:
 
 def log(msg):
     print(msg, flush=True)
+
+
+# ------------------------------------------------------------------ downloader interface
+def downloader_fields() -> list[str]:
+    """CANDIDATE_FIELDS from collection/ia_download.py (parsed, not imported, so nothing runs)."""
+    import ast
+    src = (REPO / "collection" / "ia_download.py").read_text(encoding="utf-8")
+    for node in ast.parse(src).body:
+        if isinstance(node, ast.Assign) and any(getattr(t, "id", "") == "CANDIDATE_FIELDS" for t in node.targets):
+            return ast.literal_eval(node.value)
+    raise StageError("CANDIDATE_FIELDS not found in collection/ia_download.py")
+
+
+def download_row(r: dict, fields: list[str]) -> dict:
+    """One manifest row -> one ia_download.py row: select = x, category = the corpus/<category>/ folder."""
+    row = {k: r.get(k, "") for k in fields}
+    row["select"] = "x"
+    row["category"] = r.get("primary_category") or (split_list(r.get("categories")) or ["uncategorised"])[0]
+    for need in ("identifier", "video_file"):
+        if not row.get(need):
+            raise StageError(f"{r.get('identifier')}: missing {need} needed by ia_download.py")
+    return row
+
+
+def verify_sha256_file(sha_file: Path):
+    """Check every '<sha256>  <relative path>' line of a .sha256 file; raises if a listed file changed."""
+    bad = []
+    for line in Path(sha_file).read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            h, name = line.split(None, 1)
+            p = Path(sha_file).parent / name.strip()
+            if not p.exists() or sha256_file(p) != h:
+                bad.append(name.strip())
+    return bad

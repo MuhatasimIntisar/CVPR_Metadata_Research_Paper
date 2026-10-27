@@ -1,0 +1,452 @@
+{
+  "created": "2026-10-27T20:24:21+00:00",
+  "source": "/sessions/rcw-01mrz9b3jy89fxa6ckdbntdw/mnt/CVPR_Metadata_Research_Paper/collection/selection/outputs/05_final/corpus_manifest_v1.csv",
+  "source_sha256": "47265a6ef2143ae82d2114147869f5bfee9888e6793cb16386f4fc56ff6aa8bc",
+  "batch_size": 50,
+  "audit_csv": "/sessions/rcw-01mrz9b3jy89fxa6ckdbntdw/mnt/CVPR_Metadata_Research_Paper/collection/selection/outputs/05_final/human_audit.csv",
+  "videos": 1000,
+  "audit_videos": 96,
+  "batches": [
+    {
+      "batch": "batch_01",
+      "videos": 48,
+      "audit": false,
+      "hours": 23.4,
+      "gb": 7.4,
+      "categories": {
+        "guide": 6,
+        "documentary": 3,
+        "news": 3,
+        "meeting": 5,
+        "event": 4,
+        "presentation": 8,
+        "discussion": 6,
+        "performance": 6,
+        "demonstration": 5,
+        "interview": 2
+      },
+      "stations": 45,
+      "csv": "collection/selection/outputs/06_batches/batch_01/batch_01.csv"
+    },
+    {
+      "batch": "batch_02",
+      "videos": 48,
+      "audit": false,
+      "hours": 23.0,
+      "gb": 7.1,
+      "categories": {
+        "guide": 6,
+        "discussion": 6,
+        "demonstration": 5,
+        "news": 3,
+        "performance": 6,
+        "meeting": 5,
+        "event": 4,
+        "presentation": 8,
+        "interview": 2,
+        "documentary": 3
+      },
+      "stations": 46,
+      "csv": "collection/selection/outputs/06_batches/batch_02/batch_02.csv"
+    },
+    {
+      "batch": "batch_03",
+      "videos": 48,
+      "audit": false,
+      "hours": 22.5,
+      "gb": 7.3,
+      "categories": {
+        "performance": 6,
+        "guide": 6,
+        "discussion": 6,
+        "interview": 2,
+        "demonstration": 5,
+        "event": 4,
+        "presentation": 8,
+        "meeting": 5,
+        "news": 3,
+        "documentary": 3
+      },
+      "stations": 46,
+      "csv": "collection/selection/outputs/06_batches/batch_03/batch_03.csv"
+    },
+    {
+      "batch": "batch_04",
+      "videos": 48,
+      "audit": false,
+      "hours": 22.1,
+      "gb": 7.0,
+      "categories": {
+        "guide": 6,
+        "presentation": 8,
+        "performance": 6,
+        "meeting": 5,
+        "news": 3,
+        "discussion": 6,
+        "interview": 2,
+        "event": 4,
+        "demonstration": 5,
+        "documentary": 3
+      },
+      "stations": 44,
+      "csv": "collection/selection/outputs/06_batches/batch_04/batch_04.csv"
+    },
+    {
+      "batch": "batch_05",
+      "videos": 48,
+      "audit": false,
+      "hours": 21.7,
+      "gb": 7.0,
+      "categories": {
+        "guide": 6,
+        "event": 4,
+        "presentation": 8,
+        "meeting": 5,
+        "demonstration": 5,
+        "documentary": 3,
+        "news": 3,
+        "discussion": 6,
+        "performance": 6,
+        "interview": 2
+      },
+      "stations": 46,
+      "csv": "collection/selection/outputs/06_batches/batch_05/batch_05.csv"
+    },
+    {
+      "batch": "batch_06",
+      "videos": 48,
+      "audit": false,
+      "hours": 21.4,
+      "gb": 6.6,
+      "categories": {
+        "presentation": 8,
+        "event": 4,
+        "interview": 2,
+        "news": 3,
+        "guide": 6,
+        "performance": 6,
+        "demonstration": 5,
+        "meeting": 5,
+        "discussion": 6,
+        "documentary": 3
+      },
+      "stations": 46,
+      "csv": "collection/selection/outputs/06_batches/batch_06/batch_06.csv"
+    },
+    {
+      "batch": "batch_07",
+      "videos": 48,
+      "audit": false,
+      "hours": 21.4,
+      "gb": 6.6,
+      "categories": {
+        "interview": 2,
+        "guide": 7,
+        "performance": 6,
+        "news": 3,
+        "demonstration": 5,
+        "event": 4,
+        "presentation": 7,
+        "discussion": 6,
+        "documentary": 3,
+        "meeting": 5
+      },
+      "stations": 44,
+      "csv": "collection/selection/outputs/06_batches/batch_07/batch_07.csv"
+    },
+    {
+      "batch": "batch_08",
+      "videos": 48,
+      "audit": false,
+      "hours": 21.5,
+      "gb": 6.8,
+      "categories": {
+        "performance": 6,
+        "guide": 7,
+        "presentation": 7,
+        "meeting": 5,
+        "discussion": 5,
+        "event": 4,
+        "demonstration": 6,
+        "news": 3,
+        "interview": 2,
+        "documentary": 3
+      },
+      "stations": 45,
+      "csv": "collection/selection/outputs/06_batches/batch_08/batch_08.csv"
+    },
+    {
+      "batch": "batch_09",
+      "videos": 48,
+      "audit": false,
+      "hours": 21.3,
+      "gb": 6.8,
+      "categories": {
+        "discussion": 5,
+        "performance": 6,
+        "guide": 7,
+        "meeting": 5,
+        "demonstration": 6,
+        "news": 3,
+        "documentary": 3,
+        "event": 4,
+        "presentation": 7,
+        "interview": 2
+      },
+      "stations": 46,
+      "csv": "collection/selection/outputs/06_batches/batch_09/batch_09.csv"
+    },
+    {
+      "batch": "batch_10",
+      "videos": 48,
+      "audit": false,
+      "hours": 22.2,
+      "gb": 6.8,
+      "categories": {
+        "meeting": 6,
+        "guide": 7,
+        "performance": 5,
+        "discussion": 5,
+        "documentary": 3,
+        "demonstration": 6,
+        "presentation": 7,
+        "event": 4,
+        "news": 3,
+        "interview": 2
+      },
+      "stations": 45,
+      "csv": "collection/selection/outputs/06_batches/batch_10/batch_10.csv"
+    },
+    {
+      "batch": "batch_11",
+      "videos": 48,
+      "audit": false,
+      "hours": 22.4,
+      "gb": 7.0,
+      "categories": {
+        "meeting": 6,
+        "guide": 7,
+        "discussion": 5,
+        "demonstration": 6,
+        "news": 4,
+        "documentary": 3,
+        "performance": 5,
+        "presentation": 7,
+        "event": 3,
+        "interview": 2
+      },
+      "stations": 43,
+      "csv": "collection/selection/outputs/06_batches/batch_11/batch_11.csv"
+    },
+    {
+      "batch": "batch_12",
+      "videos": 47,
+      "audit": false,
+      "hours": 23.5,
+      "gb": 7.6,
+      "categories": {
+        "discussion": 6,
+        "presentation": 7,
+        "guide": 6,
+        "performance": 5,
+        "documentary": 3,
+        "interview": 1,
+        "demonstration": 6,
+        "meeting": 5,
+        "news": 4,
+        "event": 4
+      },
+      "stations": 45,
+      "csv": "collection/selection/outputs/06_batches/batch_12/batch_12.csv"
+    },
+    {
+      "batch": "batch_13",
+      "videos": 47,
+      "audit": false,
+      "hours": 23.5,
+      "gb": 7.4,
+      "categories": {
+        "guide": 6,
+        "presentation": 7,
+        "demonstration": 6,
+        "meeting": 5,
+        "news": 4,
+        "discussion": 6,
+        "interview": 2,
+        "documentary": 2,
+        "performance": 5,
+        "event": 4
+      },
+      "stations": 42,
+      "csv": "collection/selection/outputs/06_batches/batch_13/batch_13.csv"
+    },
+    {
+      "batch": "batch_14",
+      "videos": 47,
+      "audit": false,
+      "hours": 23.1,
+      "gb": 7.2,
+      "categories": {
+        "meeting": 5,
+        "discussion": 6,
+        "guide": 6,
+        "presentation": 7,
+        "news": 4,
+        "demonstration": 6,
+        "performance": 5,
+        "interview": 2,
+        "event": 4,
+        "documentary": 2
+      },
+      "stations": 44,
+      "csv": "collection/selection/outputs/06_batches/batch_14/batch_14.csv"
+    },
+    {
+      "batch": "batch_15",
+      "videos": 47,
+      "audit": false,
+      "hours": 22.7,
+      "gb": 7.1,
+      "categories": {
+        "performance": 5,
+        "guide": 6,
+        "interview": 2,
+        "documentary": 2,
+        "event": 4,
+        "discussion": 6,
+        "demonstration": 6,
+        "presentation": 7,
+        "meeting": 5,
+        "news": 4
+      },
+      "stations": 45,
+      "csv": "collection/selection/outputs/06_batches/batch_15/batch_15.csv"
+    },
+    {
+      "batch": "batch_16",
+      "videos": 47,
+      "audit": false,
+      "hours": 23.1,
+      "gb": 7.3,
+      "categories": {
+        "presentation": 7,
+        "documentary": 3,
+        "guide": 6,
+        "meeting": 5,
+        "event": 4,
+        "demonstration": 6,
+        "news": 3,
+        "discussion": 6,
+        "performance": 5,
+        "interview": 2
+      },
+      "stations": 45,
+      "csv": "collection/selection/outputs/06_batches/batch_16/batch_16.csv"
+    },
+    {
+      "batch": "batch_17",
+      "videos": 47,
+      "audit": false,
+      "hours": 22.7,
+      "gb": 7.1,
+      "categories": {
+        "meeting": 5,
+        "guide": 6,
+        "performance": 5,
+        "presentation": 7,
+        "demonstration": 6,
+        "discussion": 6,
+        "news": 3,
+        "documentary": 3,
+        "event": 4,
+        "interview": 2
+      },
+      "stations": 45,
+      "csv": "collection/selection/outputs/06_batches/batch_17/batch_17.csv"
+    },
+    {
+      "batch": "batch_18",
+      "videos": 47,
+      "audit": false,
+      "hours": 22.3,
+      "gb": 7.0,
+      "categories": {
+        "meeting": 5,
+        "discussion": 6,
+        "guide": 6,
+        "event": 4,
+        "performance": 5,
+        "demonstration": 6,
+        "presentation": 7,
+        "news": 3,
+        "interview": 2,
+        "documentary": 3
+      },
+      "stations": 46,
+      "csv": "collection/selection/outputs/06_batches/batch_18/batch_18.csv"
+    },
+    {
+      "batch": "batch_19",
+      "videos": 47,
+      "audit": false,
+      "hours": 22.8,
+      "gb": 7.3,
+      "categories": {
+        "meeting": 5,
+        "discussion": 6,
+        "documentary": 3,
+        "guide": 6,
+        "performance": 6,
+        "presentation": 7,
+        "event": 4,
+        "news": 3,
+        "interview": 2,
+        "demonstration": 5
+      },
+      "stations": 46,
+      "csv": "collection/selection/outputs/06_batches/batch_19/batch_19.csv"
+    },
+    {
+      "batch": "batch_20_audit",
+      "videos": 48,
+      "audit": true,
+      "hours": 20.7,
+      "gb": 6.7,
+      "categories": {
+        "meeting": 5,
+        "discussion": 5,
+        "guide": 5,
+        "news": 7,
+        "event": 4,
+        "performance": 4,
+        "demonstration": 8,
+        "presentation": 4,
+        "documentary": 3,
+        "interview": 3
+      },
+      "stations": 42,
+      "csv": "collection/selection/outputs/06_batches/batch_20_audit/batch_20_audit.csv"
+    },
+    {
+      "batch": "batch_21_audit",
+      "videos": 48,
+      "audit": true,
+      "hours": 22.5,
+      "gb": 7.1,
+      "categories": {
+        "meeting": 5,
+        "guide": 4,
+        "discussion": 5,
+        "presentation": 4,
+        "demonstration": 7,
+        "news": 7,
+        "interview": 4,
+        "performance": 4,
+        "documentary": 3,
+        "event": 5
+      },
+      "stations": 44,
+      "csv": "collection/selection/outputs/06_batches/batch_21_audit/batch_21_audit.csv"
+    }
+  ]
+}

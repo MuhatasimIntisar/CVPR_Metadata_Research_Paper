@@ -57,6 +57,7 @@ import os
 import random
 import re
 import sys
+import threading
 import time
 from collections import Counter, defaultdict
 from types import SimpleNamespace
@@ -138,42 +139,120 @@ def get(url, params=None, as_json=True, retries=3):
             time.sleep(2 * (attempt + 1))
 
 
-def download(url, dest, expect_size=None, expect_md5=None, retries=4):
+QUIET = False                 # set by `download --workers N` (N > 1): no per-chunk progress, one line per file
+_LOCK = threading.Lock()
+
+
+def say(*a, **k):
+    with _LOCK:
+        print(*a, **k, flush=True)
+
+
+ACTIVE = {}                   # dest -> [bytes so far, expected bytes, start time]: in-flight transfers for the status line
+SLOW_BPS = 50 * 1024          # a transfer slower than this over SLOW_WINDOW_S is abandoned and retried (resuming)
+SLOW_WINDOW_S = 90
+
+
+def _md5_of(path):
+    h = hashlib.md5()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h
+
+
+def download(url, dest, expect_size=None, expect_md5=None, retries=6):
+    """Download with resume: an existing .part is continued with an HTTP Range request (archive.org supports it),
+    a transfer that falls below SLOW_BPS for SLOW_WINDOW_S is dropped and retried from where it stopped (a new
+    request is often served by a faster storage node), and the finished file is MD5-checked."""
     if os.path.exists(dest) and expect_size and os.path.getsize(dest) == expect_size:
         return True
     tmp = dest + ".part"
-    print("Downloading from:", url)
-    for attempt in range(1, retries + 1):
-        md5 = hashlib.md5()
-        req = urllib.request.Request(url, headers={"User-Agent": UA})
+    t0 = time.time()
+    if not QUIET:
+        print("Downloading from:", url)
+    attempt = 0
+    while attempt < retries:
+        attempt += 1
+        have = os.path.getsize(tmp) if os.path.exists(tmp) else 0
+        if expect_size and have > expect_size:
+            os.remove(tmp)
+            have = 0
+        headers = {"User-Agent": UA}
+        if have and (not expect_size or have < expect_size):
+            headers["Range"] = f"bytes={have}-"
+        req = urllib.request.Request(url, headers=headers)
+        slow = False
         try:
-            with urllib.request.urlopen(req, timeout=120) as r, open(tmp, "wb") as f:
-                if r.geturl() != url:
-                    print("Redirected to:   ", r.geturl())
-                total, done = int(r.headers.get("Content-Length") or expect_size or 0), 0
-                while True:
-                    chunk = r.read(1 << 20)
-                    if not chunk:
-                        break
-                    f.write(chunk)
-                    md5.update(chunk)
-                    done += len(chunk)
-                    if total:
-                        print(f"\r    {os.path.basename(dest)[:50]:50} {done / total:6.1%}", end="", flush=True)
-            print()
+            if not (expect_size and have == expect_size):
+                with urllib.request.urlopen(req, timeout=60) as r:
+                    resumed = have and r.status == 206
+                    if have and not resumed:
+                        have = 0  # server ignored the range: start again
+                    if r.geturl() != url and not QUIET:
+                        print("Redirected to:   ", r.geturl())
+                    total = (have + int(r.headers.get("Content-Length") or 0)) or expect_size or 0
+                    done = have
+                    ACTIVE[dest] = [done, total, time.time()]
+                    win_t, win_b = time.time(), done
+                    with open(tmp, "ab" if resumed else "wb") as f:
+                        while True:
+                            chunk = r.read(1 << 18)
+                            if not chunk:
+                                break
+                            f.write(chunk)
+                            done += len(chunk)
+                            ACTIVE[dest][0] = done
+                            if total and not QUIET:
+                                print(f"\r    {os.path.basename(dest)[:50]:50} {done / total:6.1%}", end="", flush=True)
+                            now = time.time()
+                            if now - win_t >= SLOW_WINDOW_S:
+                                if (done - win_b) / (now - win_t) < SLOW_BPS:
+                                    slow = True
+                                    break
+                                win_t, win_b = now, done
+                    if not QUIET:
+                        print()
+            if slow:
+                say(f"  ~ {os.path.basename(os.path.dirname(dest))[:46]}: slower than {SLOW_BPS // 1024} KB/s for "
+                    f"{SLOW_WINDOW_S} s at {os.path.getsize(tmp) / 1048576:.0f} MB - reconnecting and resuming "
+                    f"(attempt {attempt}/{retries})")
+                attempt -= 1 if attempt > 1 else 0  # slow reconnects do not use up the error retries
+                time.sleep(2)
+                continue
+        except urllib.error.HTTPError as e:
+            if e.code == 416 and have:       # range not satisfiable: the part is already complete
+                pass
+            else:
+                say(f"\n  ! {os.path.basename(dest)[:60]}: attempt {attempt}/{retries} failed: {e}", file=sys.stderr)
+                if attempt < retries:
+                    time.sleep(5 * attempt)
+                    continue
+                ACTIVE.pop(dest, None)
+                return False
         except (urllib.error.URLError, TimeoutError, ConnectionError, OSError) as e:
-            print(f"\n  ! attempt {attempt}/{retries} failed: {e}", file=sys.stderr)
+            say(f"\n  ! {os.path.basename(dest)[:60]}: attempt {attempt}/{retries} failed: {e} (will resume)",
+                file=sys.stderr)
             if attempt < retries:
                 time.sleep(5 * attempt)
                 continue
+            ACTIVE.pop(dest, None)
             return False
-        if expect_md5 and md5.hexdigest() != expect_md5:
-            print(f"  ! md5 mismatch for {dest} (attempt {attempt}/{retries})", file=sys.stderr)
-            if attempt < retries:
-                continue
-            return False
+        if expect_size and os.path.getsize(tmp) < expect_size:
+            continue  # connection closed early: resume
+        if expect_md5 and _md5_of(tmp).hexdigest() != expect_md5:
+            say(f"  ! md5 mismatch for {dest} (attempt {attempt}/{retries}) - downloading again", file=sys.stderr)
+            os.remove(tmp)
+            continue
         os.replace(tmp, dest)
+        ACTIVE.pop(dest, None)
+        size = os.path.getsize(dest)
+        if QUIET and size > 1 << 20:
+            dt = max(time.time() - t0, 1e-6)
+            say(f"      {os.path.basename(os.path.dirname(dest))[:46]:46} {os.path.basename(dest)[:12]:12} "
+                f"{size / 1048576:7.1f} MB  {size / 1048576 / dt:5.1f} MB/s")
         return True
+    ACTIVE.pop(dest, None)
     return False
 
 
@@ -586,7 +665,8 @@ def fetch_item(row, item, out):
     with open(os.path.join(d, "files.json"), "w", encoding="utf-8") as f:
         json.dump({"identifier": ident, "details_url": f"https://archive.org/details/{ident}",
                    "files": mapping}, f, ensure_ascii=False, indent=2)
-    print(f"    -> {d}")
+    if not QUIET:
+        print(f"    -> {d}")
     return ok
 
 
@@ -643,10 +723,52 @@ def cmd_download(args):
             print("Cancelled.")
             return
     failed = []
-    for row in rows:
-        print(f"  {row['category']:9} {row['identifier'][:70]}")
-        if not fetch_item(row, None, out):
-            failed.append(row["identifier"])
+    t0 = time.time()
+    if args.workers <= 1:
+        for row in rows:
+            print(f"  {row['category']:9} {row['identifier'][:70]}")
+            if not fetch_item(row, None, out):
+                failed.append(row["identifier"])
+    else:
+        global QUIET
+        QUIET = True
+        from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
+        say(f"downloading with {args.workers} parallel videos")
+        done = 0
+        ex = ThreadPoolExecutor(max_workers=args.workers)
+        futs = {ex.submit(fetch_item, row, None, out): row for row in rows}
+        pending = set(futs)
+        last_status = time.time()
+        try:
+            while pending:
+                # short waits so Ctrl+C reaches the main thread (an unbounded wait ignores it on Windows)
+                finished, pending = wait(pending, timeout=0.5, return_when=FIRST_COMPLETED)
+                if time.time() - last_status >= args.status_every and ACTIVE:
+                    last_status = time.time()
+                    now = time.time()
+                    parts = []
+                    for dst, (got, tot, st) in list(ACTIVE.items()):
+                        rate = got / max(now - st, 1e-6) / 1048576
+                        pct = f"{got / tot:4.0%}" if tot else "  ? "
+                        parts.append(f"{os.path.basename(os.path.dirname(dst))[:28]} {pct} {got / 1048576:.0f} MB ({rate:.2f} MB/s)")
+                    say(f"  .. {len(pending)} in progress: " + " | ".join(parts))
+                for fu in finished:
+                    row = futs[fu]
+                    try:
+                        ok = fu.result()
+                    except Exception as e:  # noqa: BLE001  (one bad item must not stop the batch)
+                        say(f"  ! {row['identifier'][:60]}: {type(e).__name__}: {e}", file=sys.stderr)
+                        ok = False
+                    done += 1
+                    if not ok:
+                        failed.append(row["identifier"])
+                    say(f"  [{done:>3}/{len(rows)}] {'ok    ' if ok else 'FAILED'} {row['category']:12} {row['identifier'][:60]}")
+        except KeyboardInterrupt:
+            say(f"\nStopped after {done}/{len(rows)} videos. Completed files are kept; unfinished ones (.part) are "
+                "redone when you rerun the same command.")
+            os._exit(130)  # worker threads are blocked in network reads; exit without waiting for them
+        ex.shutdown(wait=True)
+    say(f"elapsed {(time.time() - t0) / 60:.1f} min")
     man = os.path.join(os.path.dirname(os.path.abspath(args.csv)), "manifest.csv")
     with open(man, "w", newline="", encoding="utf-8-sig") as f:
         w = csv.DictWriter(f, fieldnames=CANDIDATE_FIELDS)
@@ -705,6 +827,9 @@ def main():
                    help="where the videos go (default: corpus/ at the repository root)")
     d.add_argument("--expect", type=int, default=4, help="expected picks per category (warning only)")
     d.add_argument("-y", "--yes", action="store_true", help="skip the confirmation prompt")
+    d.add_argument("--status-every", type=int, default=30, help="seconds between progress lines when --workers > 1")
+    d.add_argument("-w", "--workers", type=int, default=1,
+                   help="videos downloaded in parallel (e.g. 4); keep it modest to be polite to archive.org")
 
     args = ap.parse_args()
     {"search": cmd_search, "around": cmd_around, "report": report, "download": cmd_download}[args.cmd](args)

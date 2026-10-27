@@ -36,13 +36,7 @@ MANIFEST_COLS = ["identifier", "title", "details_url", "station_id", "station_na
 
 
 def load_downloader_fields():
-    """CANDIDATE_FIELDS from collection/ia_download.py (parsed, not imported, so nothing runs)."""
-    import ast
-    src = (C.REPO / "collection" / "ia_download.py").read_text(encoding="utf-8")
-    for node in ast.parse(src).body:
-        if isinstance(node, ast.Assign) and any(getattr(t, "id", "") == "CANDIDATE_FIELDS" for t in node.targets):
-            return ast.literal_eval(node.value)
-    raise C.StageError("CANDIDATE_FIELDS not found in collection/ia_download.py")
+    return C.downloader_fields()
 
 
 def audit_sample(sel, prof_by_id, reup, ac, seed):
@@ -200,19 +194,15 @@ def main(argv=None):
 
     if not a.apply_audit:
         audit = audit_sample(sel, {r["identifier"]: r for r in sel}, reup, cfg["audit"], seed)
-        C.write_csv(out / "human_audit.csv", audit, list(audit[0].keys()) if audit else ["identifier"] + AUDIT_COLS)
+        ap_ = out / "human_audit.csv"
+        if ap_.exists() and any((r.get(c) or "").strip() for r in C.read_csv(ap_) for c in AUDIT_COLS):
+            ap_ = out / "human_audit_new.csv"  # never overwrite reviewer work
+            C.log(f"  human_audit.csv already has reviewer entries; new sample written to {ap_.name}")
+        C.write_csv(ap_, audit, list(audit[0].keys()) if audit else ["identifier"] + AUDIT_COLS)
     v = a.version
     man_p = C.write_csv(out / f"corpus_manifest_{v}.csv", sel, MANIFEST_COLS)
     dl_fields = load_downloader_fields()
-    dl = []
-    for r in sel:
-        row = {k: r.get(k, "") for k in dl_fields}
-        row["select"] = "x"
-        row["category"] = r.get("primary_category") or (C.split_list(r.get("categories")) or ["uncategorised"])[0]
-        for need in ("identifier", "video_file"):
-            if not row.get(need):
-                raise C.StageError(f"{r['identifier']}: missing {need} needed by ia_download.py")
-        dl.append(row)
+    dl = [C.download_row(r, dl_fields) for r in sel]
     dl_p = C.write_csv(out / "download" / f"download_list_{v}.csv", dl, dl_fields)
     C.write_csv(out / "reserve_manifest.csv", [r for r in reserve if r["identifier"] not in set(ids)],
                 ["reserve_rank", "identifier", "title", "details_url", "primary_category", "categories", "station_name",
