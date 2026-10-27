@@ -1,0 +1,60 @@
+{
+  "stage": "02_eligibility",
+  "created": "2026-10-27T16:26:53+00:00",
+  "input": "C:\\msc_ds_ai\\CVPR_Metadata_Research_Paper\\collection\\selection\\outputs\\01_consolidation\\candidate_master.csv",
+  "input_sha256": "ddaf818f72b3b147817699ea1f1ed80017de78d84507fa1052195e6122ea7f28",
+  "consolidated_candidates": 2536,
+  "status_counts": {
+    "conditional": 850,
+    "eligible": 1686
+  },
+  "exclusion_reasons": {},
+  "flags": {
+    "no_captions": 527,
+    "no_description": 351,
+    "no_rights_field": 2536,
+    "date_is_upload_date": 65,
+    "no_creator": 55,
+    "suspected_reupload": 8,
+    "no_exact_date": 18
+  },
+  "missing_mp4": 0,
+  "captions": {
+    "with": 2009,
+    "usable_total": 2536
+  },
+  "duration_min_usable": {
+    "min": 5.0,
+    "median": 26.7,
+    "max": 89.8,
+    "bands": {
+      "0-10": 251,
+      "10-20": 610,
+      "20-30": 826,
+      "30-45": 419,
+      "45-60": 373,
+      "60+": 57
+    }
+  },
+  "resolution": {
+    "unknown (not in discovery metadata)": 2536
+  },
+  "usable_hours": 1185.6,
+  "usable_reported_gb": 374.3,
+  "availability": {
+    "checked": 0,
+    "of": 2536,
+    "cache": null,
+    "note": "statuses use collected discovery metadata; live checks are optional"
+  },
+  "rules": {
+    "min_minutes": 5,
+    "max_minutes": 90,
+    "soft_max_mb": 600,
+    "hard_max_mb": 2000,
+    "allowed_extensions": [
+      ".mp4"
+    ],
+    "captions_required": false
+  }
+}

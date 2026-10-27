@@ -1,0 +1,129 @@
+{
+  "stage": "01_consolidation",
+  "created": "2026-10-27T16:26:28+00:00",
+  "config": "C:\\msc_ds_ai\\CVPR_Metadata_Research_Paper\\collection\\selection\\selection_config.json",
+  "categories_config": "C:\\msc_ds_ai\\CVPR_Metadata_Research_Paper\\collection\\categories.json",
+  "categories_config_sha256": "e3138b2fea2e217e9f09856151e01793d52886dad2155467d6fab2a3ee652248",
+  "code": {
+    "selection_code_sha256": "d015faad03343b070da8e197b46910a340957e8829e5f158cac4ea5427808073",
+    "python": "3.13.5",
+    "numpy_version": "2.2.6",
+    "scipy_version": "1.18.1",
+    "sklearn_version": "1.9.1",
+    "git_commit": "7360f9a876d9bebe1fadadafb39e36c254a883e5",
+    "selection_code_uncommitted_changes": true
+  },
+  "inputs": [
+    {
+      "name": "search_1",
+      "path": "C:\\msc_ds_ai\\CVPR_Metadata_Research_Paper\\collection\\rounds\\round2_candidates_try1.csv",
+      "sha256": "e03d74412e57ccc3862d19780b1cc31894cb053ba4cf43e286f5805ba246eb98",
+      "records": 400,
+      "unique_identifiers": 400,
+      "discovery_category_counts": {
+        "meeting": 40,
+        "discussion": 40,
+        "interview": 40,
+        "presentation": 40,
+        "news": 40,
+        "performance": 40,
+        "demonstration": 40,
+        "guide": 40,
+        "documentary": 40,
+        "event": 40
+      }
+    },
+    {
+      "name": "search_2",
+      "path": "C:\\msc_ds_ai\\CVPR_Metadata_Research_Paper\\collection\\rounds\\round2_candidates_a.csv",
+      "sha256": "1cbfdde611e49cf06b08746df6a8f653e78dec4d791ac45f120bff30effa9bd3",
+      "records": 1500,
+      "unique_identifiers": 1500,
+      "discovery_category_counts": {
+        "meeting": 150,
+        "discussion": 150,
+        "interview": 150,
+        "presentation": 150,
+        "news": 150,
+        "performance": 150,
+        "demonstration": 150,
+        "guide": 150,
+        "documentary": 150,
+        "event": 150
+      }
+    },
+    {
+      "name": "search_3",
+      "path": "C:\\msc_ds_ai\\CVPR_Metadata_Research_Paper\\collection\\rounds\\candidates.csv",
+      "sha256": "fa8f832fb18dbd27e916b86bb4dcf0f9e3be70dac3d6a1d23f067956d8229248",
+      "records": 750,
+      "unique_identifiers": 750,
+      "discovery_category_counts": {
+        "guide": 150,
+        "presentation": 150,
+        "discussion": 150,
+        "demonstration": 150,
+        "performance": 150
+      }
+    }
+  ],
+  "records_total": 2650,
+  "unique_identifiers": 2537,
+  "duplicate_records_merged": 113,
+  "identifiers_in_multiple_rounds": 110,
+  "exact_md5_duplicate_groups": 1,
+  "exact_md5_duplicates_excluded": 1,
+  "pilot_identifiers_known": 8,
+  "pilot_videos_excluded": 0,
+  "suspected_reupload_pairs": 4,
+  "suspected_reupload_pairs_by_confidence": {
+    "medium": 4
+  },
+  "videos_in_suspected_reupload_pairs": 8,
+  "kept": 2536,
+  "excluded": 1,
+  "exclusion_reasons": {
+    "exact_md5_duplicate_of": 1
+  },
+  "kept_hours": 1185.6,
+  "kept_reported_gb": 374.3,
+  "categories_kept": {
+    "discovery_label_counts": {
+      "performance": 329,
+      "demonstration": 310,
+      "meeting": 189,
+      "event": 188,
+      "guide": 324,
+      "presentation": 322,
+      "discussion": 323,
+      "interview": 177,
+      "documentary": 186,
+      "news": 188
+    },
+    "multilabel_counts": {
+      "meeting": 281,
+      "discussion": 341,
+      "interview": 273,
+      "presentation": 328,
+      "news": 262,
+      "performance": 357,
+      "demonstration": 332,
+      "guide": 375,
+      "documentary": 242,
+      "event": 267
+    },
+    "labels_per_video": {
+      "1": 2051,
+      "2": 448,
+      "3": 37
+    },
+    "videos_with_rematch_added_labels": 470,
+    "discovery_labels_not_reproduced_by_rematch": 464,
+    "note": "category labels are keyword evidence (title / IA subject tags / discovery query), not verified content"
+  },
+  "field_conflicts": {
+    "_round": 110,
+    "_round_order": 110,
+    "_row": 110
+  }
+}

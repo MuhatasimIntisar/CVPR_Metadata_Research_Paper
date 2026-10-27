@@ -1,0 +1,551 @@
+{
+  "stage": "04_selection",
+  "created": "2026-10-27T16:28:05+00:00",
+  "seed": 20261027,
+  "final_strategy": "coverage_related_budget",
+  "selection_config": {
+    "target": 1000,
+    "budget_hours": 470,
+    "min_per_category": 60,
+    "weights": {
+      "category": 3,
+      "topic": 2,
+      "station": 2,
+      "region": 1,
+      "date": 1,
+      "duration": 1
+    },
+    "caption_bonus": 0.3,
+    "series_confidence": [
+      "high"
+    ],
+    "series_bonus": [
+      0,
+      0.6,
+      0.4,
+      0.2
+    ],
+    "related_bonus": {
+      "same_station_near_date": 0.3,
+      "same_event": 0.4,
+      "similar_topic": 0.1
+    },
+    "related_bonus_cap": 0.5,
+    "similar_topic_cap": 0.2,
+    "avoid_possible_reupload_pairs": true,
+    "swap_passes": 2,
+    "swap_candidates": 50,
+    "reserve_size": 200,
+    "final_strategy": "coverage_related_budget"
+  },
+  "inputs": {
+    "profiles": "C:\\msc_ds_ai\\CVPR_Metadata_Research_Paper\\collection\\selection\\outputs\\03_profile\\metadata_profiles.csv",
+    "profiles_sha256": "c9c4771d4f915929f5d566ce028e40fd0da8ab967b41f7b04d16535d47fdc51f",
+    "pairs": "C:\\msc_ds_ai\\CVPR_Metadata_Research_Paper\\collection\\selection\\outputs\\03_profile\\related_video_pairs.csv",
+    "pairs_sha256": "2084e9ed134e258944a438e505305a0382dcaa3176d2b90a73f48ec3c9bc48dc"
+  },
+  "code": {
+    "selection_code_sha256": "d015faad03343b070da8e197b46910a340957e8829e5f158cac4ea5427808073",
+    "python": "3.13.5",
+    "numpy_version": "2.2.6",
+    "scipy_version": "1.18.1",
+    "sklearn_version": "1.9.1",
+    "git_commit": "7360f9a876d9bebe1fadadafb39e36c254a883e5",
+    "selection_code_uncommitted_changes": true
+  },
+  "pool": {
+    "videos": 2536,
+    "hours": 1185.6,
+    "metrics": {
+      "videos": 2536,
+      "category_counts": {
+        "meeting": 281,
+        "discussion": 341,
+        "interview": 273,
+        "presentation": 328,
+        "news": 262,
+        "performance": 357,
+        "demonstration": 332,
+        "guide": 375,
+        "documentary": 242,
+        "event": 267
+      },
+      "category_min": 242,
+      "categories_covered": 10,
+      "mean_labels_per_video": 1.206,
+      "multilabel_videos": 485,
+      "stations": {
+        "n_unique": 747,
+        "total": 2536,
+        "hhi": 0.00535,
+        "top1_share": 0.0426,
+        "top10_share": 0.151,
+        "normalised_entropy": 0.9077,
+        "gini": 0.5336
+      },
+      "topic_clusters_covered": 40,
+      "topic_entropy": 0.9634,
+      "regions_covered": 56,
+      "videos_with_region": 2450,
+      "years": {
+        "2024": 1280,
+        "2025": 784,
+        "2026": 472
+      },
+      "quarters_covered": 12,
+      "duration_bands": {
+        "0-10": 251,
+        "10-20": 610,
+        "20-30": 826,
+        "30-45": 419,
+        "45-60": 373,
+        "60+": 57
+      },
+      "families_with_multiple_selected": 146,
+      "videos_in_multi_episode_families": 549,
+      "related_pairs_retained": {
+        "same_series": 1022,
+        "similar_topic": 3614,
+        "same_event": 69,
+        "same_station_near_date": 270,
+        "possible_reupload": 4
+      },
+      "related_cluster_sizes": {
+        "2": 125,
+        "3": 54,
+        "4": 19,
+        "5": 11,
+        "6": 12,
+        "7": 6,
+        "13": 2,
+        "15": 1,
+        "21": 1,
+        "83": 1
+      },
+      "caption_share": 0.7922,
+      "total_hours": 1185.6,
+      "estimated_storage_gb": 374.3
+    }
+  },
+  "feasibility": {
+    "shortest_N_hours": 226.5,
+    "budget_hours": 470,
+    "category_availability": {
+      "performance": 357,
+      "demonstration": 332,
+      "meeting": 281,
+      "event": 267,
+      "discussion": 341,
+      "guide": 375,
+      "presentation": 328,
+      "interview": 273,
+      "documentary": 242,
+      "news": 262
+    }
+  },
+  "strategies": {
+    "stratified_random": {
+      "objective": null,
+      "metrics": {
+        "videos": 1000,
+        "category_counts": {
+          "meeting": 131,
+          "discussion": 108,
+          "interview": 138,
+          "presentation": 103,
+          "news": 129,
+          "performance": 111,
+          "demonstration": 109,
+          "guide": 117,
+          "documentary": 124,
+          "event": 136
+        },
+        "category_min": 103,
+        "categories_covered": 10,
+        "mean_labels_per_video": 1.206,
+        "multilabel_videos": 193,
+        "stations": {
+          "n_unique": 460,
+          "total": 1000,
+          "hhi": 0.00548,
+          "top1_share": 0.038,
+          "top10_share": 0.153,
+          "normalised_entropy": 0.9378,
+          "gini": 0.4158
+        },
+        "topic_clusters_covered": 40,
+        "topic_entropy": 0.9608,
+        "regions_covered": 54,
+        "videos_with_region": 976,
+        "years": {
+          "2024": 494,
+          "2025": 323,
+          "2026": 183
+        },
+        "quarters_covered": 12,
+        "duration_bands": {
+          "0-10": 88,
+          "10-20": 249,
+          "20-30": 323,
+          "30-45": 177,
+          "45-60": 133,
+          "60+": 30
+        },
+        "families_with_multiple_selected": 70,
+        "videos_in_multi_episode_families": 186,
+        "related_pairs_retained": {
+          "similar_topic": 656,
+          "same_series": 186,
+          "same_station_near_date": 40,
+          "same_event": 9,
+          "possible_reupload": 2
+        },
+        "related_cluster_sizes": {
+          "2": 57,
+          "3": 17,
+          "4": 8,
+          "5": 1,
+          "6": 1,
+          "7": 2,
+          "10": 1
+        },
+        "caption_share": 0.791,
+        "total_hours": 468.5,
+        "estimated_storage_gb": 147.9,
+        "coverage_vs_pool": {
+          "stations": 0.6158,
+          "topic_clusters": 1.0,
+          "regions": 0.9643,
+          "quarters": 1.0
+        }
+      },
+      "swaps": 0
+    },
+    "coverage_only": {
+      "objective": 1249.359,
+      "metrics": {
+        "videos": 1000,
+        "category_counts": {
+          "meeting": 140,
+          "discussion": 146,
+          "interview": 134,
+          "presentation": 160,
+          "news": 116,
+          "performance": 132,
+          "demonstration": 138,
+          "guide": 143,
+          "documentary": 117,
+          "event": 138
+        },
+        "category_min": 116,
+        "categories_covered": 10,
+        "mean_labels_per_video": 1.364,
+        "multilabel_videos": 332,
+        "stations": {
+          "n_unique": 708,
+          "total": 1000,
+          "hhi": 0.00215,
+          "top1_share": 0.013,
+          "top10_share": 0.077,
+          "normalised_entropy": 0.9762,
+          "gini": 0.2383
+        },
+        "topic_clusters_covered": 40,
+        "topic_entropy": 0.9819,
+        "regions_covered": 56,
+        "videos_with_region": 964,
+        "years": {
+          "2024": 460,
+          "2025": 332,
+          "2026": 208
+        },
+        "quarters_covered": 12,
+        "duration_bands": {
+          "0-10": 121,
+          "10-20": 241,
+          "20-30": 248,
+          "30-45": 175,
+          "45-60": 172,
+          "60+": 43
+        },
+        "families_with_multiple_selected": 33,
+        "videos_in_multi_episode_families": 86,
+        "related_pairs_retained": {
+          "similar_topic": 919,
+          "same_station_near_date": 17,
+          "same_event": 15,
+          "same_series": 84
+        },
+        "related_cluster_sizes": {
+          "2": 37,
+          "3": 8,
+          "4": 3,
+          "5": 3
+        },
+        "caption_share": 0.915,
+        "total_hours": 488.5,
+        "estimated_storage_gb": 152.0,
+        "coverage_vs_pool": {
+          "stations": 0.9478,
+          "topic_clusters": 1.0,
+          "regions": 1.0,
+          "quarters": 1.0
+        }
+      },
+      "swaps": 0
+    },
+    "coverage_related": {
+      "objective": 1397.8298,
+      "metrics": {
+        "videos": 1000,
+        "category_counts": {
+          "meeting": 164,
+          "discussion": 144,
+          "interview": 115,
+          "presentation": 159,
+          "news": 120,
+          "performance": 122,
+          "demonstration": 116,
+          "guide": 142,
+          "documentary": 101,
+          "event": 139
+        },
+        "category_min": 101,
+        "categories_covered": 10,
+        "mean_labels_per_video": 1.322,
+        "multilabel_videos": 291,
+        "stations": {
+          "n_unique": 595,
+          "total": 1000,
+          "hhi": 0.00491,
+          "top1_share": 0.047,
+          "top10_share": 0.128,
+          "normalised_entropy": 0.9473,
+          "gini": 0.3411
+        },
+        "topic_clusters_covered": 40,
+        "topic_entropy": 0.9797,
+        "regions_covered": 56,
+        "videos_with_region": 980,
+        "years": {
+          "2024": 463,
+          "2025": 337,
+          "2026": 200
+        },
+        "quarters_covered": 12,
+        "duration_bands": {
+          "0-10": 108,
+          "10-20": 226,
+          "20-30": 260,
+          "30-45": 186,
+          "45-60": 176,
+          "60+": 44
+        },
+        "families_with_multiple_selected": 66,
+        "videos_in_multi_episode_families": 225,
+        "related_pairs_retained": {
+          "similar_topic": 2070,
+          "same_series": 360,
+          "same_event": 23,
+          "same_station_near_date": 107
+        },
+        "related_cluster_sizes": {
+          "2": 48,
+          "3": 20,
+          "4": 11,
+          "5": 4,
+          "6": 2,
+          "9": 1,
+          "12": 1,
+          "13": 1,
+          "47": 1
+        },
+        "caption_share": 0.916,
+        "total_hours": 502.9,
+        "estimated_storage_gb": 158.1,
+        "coverage_vs_pool": {
+          "stations": 0.7965,
+          "topic_clusters": 1.0,
+          "regions": 1.0,
+          "quarters": 1.0
+        }
+      },
+      "swaps": 0
+    },
+    "coverage_related_budget": {
+      "objective": 1384.122,
+      "metrics": {
+        "videos": 1000,
+        "category_counts": {
+          "meeting": 149,
+          "discussion": 133,
+          "interview": 107,
+          "presentation": 150,
+          "news": 129,
+          "performance": 133,
+          "demonstration": 132,
+          "guide": 154,
+          "documentary": 97,
+          "event": 130
+        },
+        "category_min": 97,
+        "categories_covered": 10,
+        "mean_labels_per_video": 1.314,
+        "multilabel_videos": 284,
+        "stations": {
+          "n_unique": 570,
+          "total": 1000,
+          "hhi": 0.0049,
+          "top1_share": 0.041,
+          "top10_share": 0.142,
+          "normalised_entropy": 0.9449,
+          "gini": 0.3566
+        },
+        "topic_clusters_covered": 40,
+        "topic_entropy": 0.9788,
+        "regions_covered": 56,
+        "videos_with_region": 982,
+        "years": {
+          "2024": 469,
+          "2025": 337,
+          "2026": 194
+        },
+        "quarters_covered": 12,
+        "duration_bands": {
+          "0-10": 192,
+          "10-20": 203,
+          "20-30": 230,
+          "30-45": 168,
+          "45-60": 164,
+          "60+": 43
+        },
+        "families_with_multiple_selected": 66,
+        "videos_in_multi_episode_families": 231,
+        "related_pairs_retained": {
+          "same_series": 383,
+          "similar_topic": 1931,
+          "same_event": 25,
+          "same_station_near_date": 110
+        },
+        "related_cluster_sizes": {
+          "2": 49,
+          "3": 22,
+          "4": 12,
+          "5": 4,
+          "6": 1,
+          "12": 1,
+          "13": 1,
+          "21": 1,
+          "40": 1
+        },
+        "caption_share": 0.912,
+        "total_hours": 470.0,
+        "estimated_storage_gb": 148.1,
+        "coverage_vs_pool": {
+          "stations": 0.7631,
+          "topic_clusters": 1.0,
+          "regions": 1.0,
+          "quarters": 1.0
+        }
+      },
+      "swaps": 14
+    }
+  },
+  "final": {
+    "videos": 1000,
+    "hours": 470.0,
+    "objective": 1384.122,
+    "phases": {
+      "free": 986,
+      "swap": 14
+    },
+    "swaps": [
+      {
+        "out": "cctv15mi-Winter_Storm_Heading_for_SE_Michigan-_What_to_Know_Before_You_Hit_the_Road_Craig_Bryson",
+        "in": "scictvma-Town_of_Scituate_News_Update_-_09-03-2024",
+        "gain_in": 0.88983,
+        "loss_out": 0.31534
+      },
+      {
+        "out": "The_Curious_Senior_Belly_Dancing_Friendship_and_Staying_Active",
+        "in": "homtv-HOM_Entertainment_-_The_Wiz",
+        "gain_in": 0.44108,
+        "loss_out": 0.33873
+      },
+      {
+        "out": "umcmb-Your_Guide_to_Getting_Grants_in_Manitoba",
+        "in": "uwwtvwi-Talk_to_Me_-_Week_of_April_14_2025",
+        "gain_in": 1.05422,
+        "loss_out": 0.3573
+      },
+      {
+        "out": "detvde-DETV_NEWS_-_Lisa_Blunt_Rochester_Pushes_to_End_Clock_Changes_SNAP_Halt_Smyrna_Protests",
+        "in": "uwwtvwi-Talk_to_Me_-_Week_of_May_5_2025",
+        "gain_in": 0.90349,
+        "loss_out": 0.36371
+      },
+      {
+        "out": "ccdenco-Emergency_Preparedness_for_Special_Events_-_How-to_Guide_for_Tabletop_Exercises",
+        "in": "spstvwa-Cooking_with_SPS_-_Vegetarian_Thai_Lettuce_Wraps",
+        "gain_in": 0.69267,
+        "loss_out": 0.37116
+      },
+      {
+        "out": "ccdenco-How_to_Set_Up_Xcel_Auto_Upload",
+        "in": "scictvma-Town_of_Scituate_News_Update_-_02-20-2024",
+        "gain_in": 0.66825,
+        "loss_out": 0.494
+      },
+      {
+        "out": "whhisc-843TV_Bennett_Schiller_-_Golf_Carts_Rules_Regulations_Safety_Schiller_Hamilton_WHHITV",
+        "in": "homtv-Keeping_Up_with_Ki_-_Meridian_Historical_Village",
+        "gain_in": 0.62149,
+        "loss_out": 0.18002
+      },
+      {
+        "out": "whhisc-HEALTHY_LIVING_Dr._Drew_Matthews_-_Avoiding_Animal_Critter_Injuries_Summer_Safety_WHHITV",
+        "in": "waynnc-Cooking_With_Michelle_-_Mt._Olive_Pickle_Gelato",
+        "gain_in": 0.58254,
+        "loss_out": 0.18977
+      },
+      {
+        "out": "cctv15mi-LIVE_Demonstration_Of_The_New_H.A.W.K._Crosswalk_Signals_Jake_Schaf_The_Splash_LIVE",
+        "in": "ccdenco-How_to_Set_Up_Xcel_Auto_Upload",
+        "gain_in": 0.4947,
+        "loss_out": 0.20058
+      },
+      {
+        "out": "spautx-Mean_Girls_-_The_Musical_Review",
+        "in": "detvde-DETV_NEWS_-_Lisa_Blunt_Rochester_Pushes_to_End_Clock_Changes_SNAP_Halt_Smyrna_Protests",
+        "gain_in": 0.36228,
+        "loss_out": 0.23332
+      },
+      {
+        "out": "wpmma-Learning_how_to_create_art_with_AI_generators_p.1",
+        "in": "ccdenco-Emergency_Preparedness_for_Special_Events_-_How-to_Guide_for_Tabletop_Exercises",
+        "gain_in": 0.37403,
+        "loss_out": 0.27918
+      },
+      {
+        "out": "factvwi-Chase_Bank_Ribbon_Cutting_in_Fitchburg_Wisconsin",
+        "in": "The_Curious_Senior_Belly_Dancing_Friendship_and_Staying_Active",
+        "gain_in": 0.34077,
+        "loss_out": 0.29416
+      },
+      {
+        "out": "cctv17vt-BTV_Bike_Park_at_Leddy_Park_Grand_Opening",
+        "in": "waynnc-Cooking_With_Michelle_-_Dijon_Steak_Tacos_w_Pickle_Chimichurri_and_Aioli",
+        "gain_in": 0.7659,
+        "loss_out": 0.37493
+      },
+      {
+        "out": "tbcnfl-Kids_Talent_Blitz_-_Penny_Cooks_Breakfast_in_the_Studio_tbcn_kids",
+        "in": "waynnc-Cooking_With_Michelle_-_Strawberry_Pickle_Jalapeno_Jam",
+        "gain_in": 0.75624,
+        "loss_out": 0.3699
+      }
+    ],
+    "reserve": 200
+  },
+  "note": "related-video counts are potential retrieval distractors from metadata, not verified hard negatives"
+}

@@ -1,0 +1,1163 @@
+{
+  "stage": "03_profile",
+  "created": "2026-10-27T16:27:15+00:00",
+  "input": "C:\\msc_ds_ai\\CVPR_Metadata_Research_Paper\\collection\\selection\\outputs\\02_eligibility\\eligible_candidates.csv",
+  "input_sha256": "55b7ff5daf91feee807a40a3ffe96bfafa50532c923b0804de23576d8f5172e7",
+  "videos_profiled": 2536,
+  "set_metrics": {
+    "videos": 2536,
+    "category_counts": {
+      "meeting": 281,
+      "discussion": 341,
+      "interview": 273,
+      "presentation": 328,
+      "news": 262,
+      "performance": 357,
+      "demonstration": 332,
+      "guide": 375,
+      "documentary": 242,
+      "event": 267
+    },
+    "category_min": 242,
+    "categories_covered": 10,
+    "mean_labels_per_video": 1.206,
+    "multilabel_videos": 485,
+    "stations": {
+      "n_unique": 747,
+      "total": 2536,
+      "hhi": 0.00535,
+      "top1_share": 0.0426,
+      "top10_share": 0.151,
+      "normalised_entropy": 0.9077,
+      "gini": 0.5336
+    },
+    "topic_clusters_covered": 40,
+    "topic_entropy": 0.9634,
+    "regions_covered": 56,
+    "videos_with_region": 2450,
+    "years": {
+      "2024": 1280,
+      "2025": 784,
+      "2026": 472
+    },
+    "quarters_covered": 12,
+    "duration_bands": {
+      "0-10": 251,
+      "10-20": 610,
+      "20-30": 826,
+      "30-45": 419,
+      "45-60": 373,
+      "60+": 57
+    },
+    "families_with_multiple_selected": 146,
+    "videos_in_multi_episode_families": 549,
+    "related_pairs_retained": {
+      "same_series": 1022,
+      "similar_topic": 3614,
+      "same_event": 69,
+      "same_station_near_date": 270,
+      "possible_reupload": 4
+    },
+    "related_cluster_sizes": {
+      "2": 125,
+      "3": 54,
+      "4": 19,
+      "5": 11,
+      "6": 12,
+      "7": 6,
+      "13": 2,
+      "15": 1,
+      "21": 1,
+      "83": 1
+    },
+    "caption_share": 0.7922,
+    "total_hours": 1185.6,
+    "estimated_storage_gb": 374.3
+  },
+  "categories": {
+    "counts": {
+      "meeting": 281,
+      "discussion": 341,
+      "interview": 273,
+      "presentation": 328,
+      "news": 262,
+      "performance": 357,
+      "demonstration": 332,
+      "guide": 375,
+      "documentary": 242,
+      "event": 267
+    },
+    "co_occurrence": {
+      "meeting": {
+        "meeting": 281,
+        "discussion": 45,
+        "interview": 18,
+        "presentation": 18,
+        "news": 3,
+        "performance": 1,
+        "demonstration": 10,
+        "guide": 18,
+        "documentary": 3,
+        "event": 4
+      },
+      "discussion": {
+        "meeting": 45,
+        "discussion": 341,
+        "interview": 30,
+        "presentation": 5,
+        "news": 8,
+        "performance": 9,
+        "demonstration": 2,
+        "guide": 9,
+        "documentary": 5,
+        "event": 8
+      },
+      "interview": {
+        "meeting": 18,
+        "discussion": 30,
+        "interview": 273,
+        "presentation": 14,
+        "news": 36,
+        "performance": 8,
+        "demonstration": 8,
+        "guide": 15,
+        "documentary": 17,
+        "event": 19
+      },
+      "presentation": {
+        "meeting": 18,
+        "discussion": 5,
+        "interview": 14,
+        "presentation": 328,
+        "news": 14,
+        "performance": 2,
+        "demonstration": 1,
+        "guide": 4,
+        "documentary": 16,
+        "event": 6
+      },
+      "news": {
+        "meeting": 3,
+        "discussion": 8,
+        "interview": 36,
+        "presentation": 14,
+        "news": 262,
+        "performance": 2,
+        "demonstration": 3,
+        "guide": 22,
+        "documentary": 8,
+        "event": 20
+      },
+      "performance": {
+        "meeting": 1,
+        "discussion": 9,
+        "interview": 8,
+        "presentation": 2,
+        "news": 2,
+        "performance": 357,
+        "demonstration": 7,
+        "guide": 7,
+        "documentary": 11,
+        "event": 18
+      },
+      "demonstration": {
+        "meeting": 10,
+        "discussion": 2,
+        "interview": 8,
+        "presentation": 1,
+        "news": 3,
+        "performance": 7,
+        "demonstration": 332,
+        "guide": 43,
+        "documentary": 6,
+        "event": 17
+      },
+      "guide": {
+        "meeting": 18,
+        "discussion": 9,
+        "interview": 15,
+        "presentation": 4,
+        "news": 22,
+        "performance": 7,
+        "demonstration": 43,
+        "guide": 375,
+        "documentary": 6,
+        "event": 8
+      },
+      "documentary": {
+        "meeting": 3,
+        "discussion": 5,
+        "interview": 17,
+        "presentation": 16,
+        "news": 8,
+        "performance": 11,
+        "demonstration": 6,
+        "guide": 6,
+        "documentary": 242,
+        "event": 25
+      },
+      "event": {
+        "meeting": 4,
+        "discussion": 8,
+        "interview": 19,
+        "presentation": 6,
+        "news": 20,
+        "performance": 18,
+        "demonstration": 17,
+        "guide": 8,
+        "documentary": 25,
+        "event": 267
+      }
+    },
+    "labels_per_video": {
+      "1": 2051,
+      "2": 448,
+      "3": 37
+    }
+  },
+  "stations": {
+    "n_unique": 747,
+    "total": 2536,
+    "hhi": 0.00535,
+    "top1_share": 0.0426,
+    "top10_share": 0.151,
+    "normalised_entropy": 0.9077,
+    "gini": 0.5336,
+    "top20": [
+      {
+        "station_id": "st_nutmeg_tv_c2e7",
+        "station_name": "Nutmeg TV",
+        "videos": 108
+      },
+      {
+        "station_id": "st_wcca_9e65",
+        "station_name": "WCCA",
+        "videos": 42
+      },
+      {
+        "station_id": "st_cctv17_d663",
+        "station_name": "CCTV17",
+        "videos": 39
+      },
+      {
+        "station_id": "st_missoula_community_access_televi_96e3",
+        "station_name": "Missoula Community Access Television",
+        "videos": 37
+      },
+      {
+        "station_id": "st_access_humboldt_8e4d",
+        "station_name": "Access Humboldt",
+        "videos": 32
+      },
+      {
+        "station_id": "st_u_multicultural_channel_fe86",
+        "station_name": "U Multicultural Channel",
+        "videos": 28
+      },
+      {
+        "station_id": "st_cct_6264",
+        "station_name": "CCT",
+        "videos": 26
+      },
+      {
+        "station_id": "st_jtv_079a",
+        "station_name": "JTV",
+        "videos": 25
+      },
+      {
+        "station_id": "st_whhi_5a6c",
+        "station_name": "WHHI",
+        "videos": 24
+      },
+      {
+        "station_id": "st_iemg_inland_empire_media_group_609a",
+        "station_name": "IEMG -  Inland Empire Media Group",
+        "videos": 22
+      },
+      {
+        "station_id": "st_detv_81f1",
+        "station_name": "DETV",
+        "videos": 21
+      },
+      {
+        "station_id": "st_ecat_937e",
+        "station_name": "ECAT",
+        "videos": 21
+      },
+      {
+        "station_id": "st_ltv_east_hampton_391c",
+        "station_name": "LTV East Hampton",
+        "videos": 21
+      },
+      {
+        "station_id": "st_fairfax_county_government_b1f3",
+        "station_name": "Fairfax County Government",
+        "videos": 19
+      },
+      {
+        "station_id": "st_citicable_e90d",
+        "station_name": "CitiCable",
+        "videos": 18
+      },
+      {
+        "station_id": "st_1623_studios_ca92",
+        "station_name": "1623 Studios",
+        "videos": 18
+      },
+      {
+        "station_id": "st_fact_tv_04b7",
+        "station_name": "FACT TV",
+        "videos": 16
+      },
+      {
+        "station_id": "st_sctv_6a9a",
+        "station_name": "SCTV",
+        "videos": 16
+      },
+      {
+        "station_id": "st_wctv_2056",
+        "station_name": "WCTV",
+        "videos": 16
+      },
+      {
+        "station_id": "st_wc_tv_f890",
+        "station_name": "WC-TV",
+        "videos": 16
+      }
+    ],
+    "inferred_from_identifier_prefix": 0
+  },
+  "programme_families": {
+    "families": 146,
+    "videos_in_families": 547,
+    "by_evidence": {
+      "episode_marker": 40,
+      "recurring_title_template": 61,
+      "shared_title_prefix": 45
+    },
+    "by_confidence": {
+      "high": 101,
+      "medium": 45
+    },
+    "size_distribution": {
+      "2": 46,
+      "3": 39,
+      "4": 20,
+      "5": 13,
+      "6": 18,
+      "7": 5,
+      "8": 2,
+      "10": 1,
+      "11": 1,
+      "13": 1
+    },
+    "largest": [
+      {
+        "series_id": "ser_bba7b10f9b",
+        "station_name": "Nutmeg TV",
+        "series_key": "racing action today",
+        "n_videos": 13
+      },
+      {
+        "series_id": "ser_4b2e574b75",
+        "station_name": "JTV",
+        "series_key": "today s news the morning show",
+        "n_videos": 11
+      },
+      {
+        "series_id": "ser_4465721e1e",
+        "station_name": "Nutmeg TV",
+        "series_key": "christine s corner",
+        "n_videos": 10
+      },
+      {
+        "series_id": "ser_014c059872",
+        "station_name": "U Multicultural Channel",
+        "series_key": "u talk",
+        "n_videos": 8
+      },
+      {
+        "series_id": "ser_aeec4cc1bf",
+        "station_name": "WHHI",
+        "series_key": "talk of the town",
+        "n_videos": 8
+      },
+      {
+        "series_id": "ser_db2bf51f23",
+        "station_name": "Nutmeg TV",
+        "series_key": "ct valley views",
+        "n_videos": 7
+      },
+      {
+        "series_id": "ser_908ac4c6bc",
+        "station_name": "ONTV",
+        "series_key": "ontv cooking",
+        "n_videos": 7
+      },
+      {
+        "series_id": "ser_2cc9777d28",
+        "station_name": "City of Bloomington MN",
+        "series_key": "city council listening session",
+        "n_videos": 7
+      },
+      {
+        "series_id": "ser_99ab7789a8",
+        "station_name": "Lynn Community Television",
+        "series_key": "lctv news interview",
+        "n_videos": 7
+      },
+      {
+        "series_id": "ser_c2d5ff4f7a",
+        "station_name": "WHHI",
+        "series_key": "whhi news",
+        "n_videos": 7
+      },
+      {
+        "series_id": "ser_03821a0aab",
+        "station_name": "Nutmeg TV",
+        "series_key": "bristol health cares",
+        "n_videos": 6
+      },
+      {
+        "series_id": "ser_d1790bdf02",
+        "station_name": "Nutmeg TV",
+        "series_key": "do you want to be made well",
+        "n_videos": 6
+      },
+      {
+        "series_id": "ser_4cdbef7187",
+        "station_name": "Nutmeg TV",
+        "series_key": "doors to hope and healing",
+        "n_videos": 6
+      },
+      {
+        "series_id": "ser_ee96518a1a",
+        "station_name": "Simsbury Community Television",
+        "series_key": "healthy fork cooking with lisa",
+        "n_videos": 6
+      },
+      {
+        "series_id": "ser_1b6f76c1ff",
+        "station_name": "WCTV",
+        "series_key": "all about the flavors",
+        "n_videos": 6
+      }
+    ]
+  },
+  "topics": {
+    "clusters": 40,
+    "unclustered_videos": 0,
+    "boilerplate_sentences_removed": 688,
+    "tfidf_features": 8957,
+    "clusters_detail": [
+      {
+        "topic_cluster": "t00",
+        "n_videos": 86,
+        "top_terms": [
+          "forum",
+          "candidate",
+          "candidate forum",
+          "candidates",
+          "election",
+          "candidates forum",
+          "district",
+          "primary"
+        ]
+      },
+      {
+        "topic_cluster": "t01",
+        "n_videos": 22,
+        "top_terms": [
+          "empire",
+          "inland empire",
+          "inland",
+          "empire alive",
+          "alive",
+          "alive guest",
+          "san",
+          "bernardino"
+        ]
+      },
+      {
+        "topic_cluster": "t02",
+        "n_videos": 101,
+        "top_terms": [
+          "community",
+          "community forum",
+          "forum",
+          "media",
+          "conversation",
+          "community meeting",
+          "community conversation",
+          "meeting"
+        ]
+      },
+      {
+        "topic_cluster": "t03",
+        "n_videos": 81,
+        "top_terms": [
+          "series",
+          "speaker",
+          "lecture",
+          "speaker series",
+          "panel",
+          "panel discussion",
+          "history",
+          "discussion"
+        ]
+      },
+      {
+        "topic_cluster": "t04",
+        "n_videos": 107,
+        "top_terms": [
+          "cooking",
+          "chef",
+          "love",
+          "cooking love",
+          "chicken",
+          "marilyn",
+          "cooking michelle",
+          "ontv"
+        ]
+      },
+      {
+        "topic_cluster": "t05",
+        "n_videos": 69,
+        "top_terms": [
+          "ribbon",
+          "ribbon cutting",
+          "cutting",
+          "cutting ceremony",
+          "ceremony",
+          "park",
+          "center",
+          "center ribbon"
+        ]
+      },
+      {
+        "topic_cluster": "t06",
+        "n_videos": 29,
+        "top_terms": [
+          "commission",
+          "commission meeting",
+          "planning commission",
+          "meeting",
+          "planning",
+          "fargo",
+          "city commission",
+          "city"
+        ]
+      },
+      {
+        "topic_cluster": "t07",
+        "n_videos": 53,
+        "top_terms": [
+          "choir",
+          "choir concert",
+          "concert",
+          "school",
+          "spring choir",
+          "spring",
+          "middle",
+          "middle school"
+        ]
+      },
+      {
+        "topic_cluster": "t08",
+        "n_videos": 101,
+        "top_terms": [
+          "interview",
+          "candidate interview",
+          "candidate",
+          "news interview",
+          "interviews",
+          "sports",
+          "sits",
+          "lynn"
+        ]
+      },
+      {
+        "topic_cluster": "t09",
+        "n_videos": 72,
+        "top_terms": [
+          "presentation",
+          "budget",
+          "budget presentation",
+          "city",
+          "proposed",
+          "presentation city",
+          "proposed budget",
+          "county"
+        ]
+      },
+      {
+        "topic_cluster": "t10",
+        "n_videos": 154,
+        "top_terms": [
+          "roundtable",
+          "city",
+          "housing",
+          "host",
+          "kalamazoo",
+          "west bloomfield",
+          "bloomfield",
+          "safe"
+        ]
+      },
+      {
+        "topic_cluster": "t11",
+        "n_videos": 60,
+        "top_terms": [
+          "state city",
+          "state",
+          "city",
+          "city state",
+          "mayor",
+          "city mayor",
+          "city city",
+          "future"
+        ]
+      },
+      {
+        "topic_cluster": "t12",
+        "n_videos": 58,
+        "top_terms": [
+          "county",
+          "state county",
+          "fair",
+          "county fair",
+          "county address",
+          "state",
+          "williamson county",
+          "williamson"
+        ]
+      },
+      {
+        "topic_cluster": "t13",
+        "n_videos": 74,
+        "top_terms": [
+          "documentary",
+          "production",
+          "stories",
+          "state connections",
+          "story",
+          "connections",
+          "students",
+          "journey"
+        ]
+      },
+      {
+        "topic_cluster": "t14",
+        "n_videos": 76,
+        "top_terms": [
+          "concert",
+          "orchestra",
+          "orchestra concert",
+          "school",
+          "high",
+          "grade",
+          "middle",
+          "spring"
+        ]
+      },
+      {
+        "topic_cluster": "t15",
+        "n_videos": 24,
+        "top_terms": [
+          "update",
+          "news update",
+          "news",
+          "mcallen",
+          "mcallen news",
+          "town scituate",
+          "scituate news",
+          "scituate"
+        ]
+      },
+      {
+        "topic_cluster": "t16",
+        "n_videos": 41,
+        "top_terms": [
+          "women",
+          "league women",
+          "women voters",
+          "voters",
+          "league",
+          "forum",
+          "candidate forum",
+          "candidate"
+        ]
+      },
+      {
+        "topic_cluster": "t17",
+        "n_videos": 43,
+        "top_terms": [
+          "session",
+          "listening session",
+          "listening",
+          "work session",
+          "city council",
+          "council",
+          "work",
+          "council listening"
+        ]
+      },
+      {
+        "topic_cluster": "t18",
+        "n_videos": 42,
+        "top_terms": [
+          "lunch",
+          "learn",
+          "lunch learn",
+          "artist",
+          "library",
+          "meet artist",
+          "meet",
+          "lunch library"
+        ]
+      },
+      {
+        "topic_cluster": "t19",
+        "n_videos": 62,
+        "top_terms": [
+          "oral history",
+          "oral",
+          "history",
+          "stories",
+          "story",
+          "story stories",
+          "whitman",
+          "history project"
+        ]
+      },
+      {
+        "topic_cluster": "t20",
+        "n_videos": 24,
+        "top_terms": [
+          "newscast",
+          "newscast newscast",
+          "chtv",
+          "chtv newscast",
+          "newscast april",
+          "hamden",
+          "week",
+          "kvaq"
+        ]
+      },
+      {
+        "topic_cluster": "t21",
+        "n_videos": 54,
+        "top_terms": [
+          "ceremony",
+          "graduation",
+          "graduation ceremony",
+          "groundbreaking ceremony",
+          "groundbreaking",
+          "memorial",
+          "memorial ceremony",
+          "police"
+        ]
+      },
+      {
+        "topic_cluster": "t22",
+        "n_videos": 25,
+        "top_terms": [
+          "public forum",
+          "public",
+          "forum",
+          "csmc public",
+          "csmc",
+          "forum public",
+          "bcc",
+          "forum csmc"
+        ]
+      },
+      {
+        "topic_cluster": "t23",
+        "n_videos": 72,
+        "top_terms": [
+          "meeting",
+          "board",
+          "board meeting",
+          "committee",
+          "committee meeting",
+          "regular",
+          "regular meeting",
+          "manchester sea"
+        ]
+      },
+      {
+        "topic_cluster": "t24",
+        "n_videos": 71,
+        "top_terms": [
+          "council",
+          "council meeting",
+          "meeting",
+          "city council",
+          "city",
+          "meeting city",
+          "dunkirk",
+          "meeting april"
+        ]
+      },
+      {
+        "topic_cluster": "t25",
+        "n_videos": 121,
+        "top_terms": [
+          "episode",
+          "make",
+          "new",
+          "season",
+          "chef",
+          "season episode",
+          "video",
+          "healthy"
+        ]
+      },
+      {
+        "topic_cluster": "t26",
+        "n_videos": 35,
+        "top_terms": [
+          "ep",
+          "cooking ep",
+          "mediocre",
+          "mediocre cooking",
+          "cooking",
+          "music",
+          "wood",
+          "track"
+        ]
+      },
+      {
+        "topic_cluster": "t27",
+        "n_videos": 52,
+        "top_terms": [
+          "festival",
+          "film",
+          "film festival",
+          "music",
+          "music festival",
+          "craft",
+          "cultural",
+          "heritage"
+        ]
+      },
+      {
+        "topic_cluster": "t28",
+        "n_videos": 54,
+        "top_terms": [
+          "address",
+          "state city",
+          "city address",
+          "state",
+          "city",
+          "mayor",
+          "address mayor",
+          "address state"
+        ]
+      },
+      {
+        "topic_cluster": "t29",
+        "n_videos": 26,
+        "top_terms": [
+          "dance",
+          "dancin",
+          "dance performance",
+          "ballet",
+          "performance",
+          "spring dance",
+          "nutcracker",
+          "choreographed"
+        ]
+      },
+      {
+        "topic_cluster": "t30",
+        "n_videos": 39,
+        "top_terms": [
+          "pt",
+          "racing",
+          "racing action",
+          "action today",
+          "action",
+          "today talk",
+          "talk series",
+          "want"
+        ]
+      },
+      {
+        "topic_cluster": "t31",
+        "n_videos": 77,
+        "top_terms": [
+          "talk",
+          "safety",
+          "talk town",
+          "whhitv",
+          "public safety",
+          "town",
+          "public",
+          "whhi"
+        ]
+      },
+      {
+        "topic_cluster": "t32",
+        "n_videos": 36,
+        "top_terms": [
+          "kitchen",
+          "jenice",
+          "jenice kitchen",
+          "bonnie",
+          "kitchen bonnie",
+          "chef",
+          "chicken",
+          "pasta"
+        ]
+      },
+      {
+        "topic_cluster": "t33",
+        "n_videos": 27,
+        "top_terms": [
+          "band",
+          "concert",
+          "marching",
+          "marching band",
+          "band edge",
+          "edge",
+          "big",
+          "band concert"
+        ]
+      },
+      {
+        "topic_cluster": "t34",
+        "n_videos": 152,
+        "top_terms": [
+          "news",
+          "town",
+          "town hall",
+          "hall",
+          "day",
+          "tree",
+          "weekly news",
+          "weekly"
+        ]
+      },
+      {
+        "topic_cluster": "t35",
+        "n_videos": 98,
+        "top_terms": [
+          "health",
+          "know",
+          "dr",
+          "bristol health",
+          "health cares",
+          "healing",
+          "bristol",
+          "cares"
+        ]
+      },
+      {
+        "topic_cluster": "t36",
+        "n_videos": 25,
+        "top_terms": [
+          "corner",
+          "ct",
+          "christine",
+          "christine corner",
+          "ct valley",
+          "valley views",
+          "views",
+          "valley"
+        ]
+      },
+      {
+        "topic_cluster": "t37",
+        "n_videos": 31,
+        "top_terms": [
+          "morning",
+          "today news",
+          "today",
+          "news",
+          "morning today",
+          "mary jacobsen",
+          "jacobsen",
+          "good"
+        ]
+      },
+      {
+        "topic_cluster": "t38",
+        "n_videos": 110,
+        "top_terms": [
+          "musical",
+          "theatre",
+          "school",
+          "talent",
+          "high",
+          "theater",
+          "high school",
+          "performance"
+        ]
+      },
+      {
+        "topic_cluster": "t39",
+        "n_videos": 52,
+        "top_terms": [
+          "tv",
+          "fitness",
+          "fact",
+          "fact tv",
+          "coach",
+          "recovery",
+          "mind",
+          "recovery fitness"
+        ]
+      }
+    ]
+  },
+  "geography": {
+    "by_source": {
+      "ia_subject_tag": 2389,
+      "none": 86,
+      "station_majority_subject_tag": 49,
+      "ia_subject_tag_multiple": 12
+    },
+    "countries": {
+      "US": 2384,
+      "unknown": 86,
+      "CA": 66
+    },
+    "regions": {
+      "MA": 332,
+      "CA": 200,
+      "CT": 163,
+      "MI": 139,
+      "VT": 109,
+      "MN": 104,
+      "TX": 104,
+      "NY": 100,
+      "unknown": 86,
+      "FL": 85,
+      "IL": 74,
+      "OH": 70,
+      "WI": 70,
+      "WA": 66,
+      "VA": 64,
+      "MD": 52,
+      "NC": 50,
+      "TN": 48,
+      "CO": 45,
+      "MB": 41,
+      "PA": 39,
+      "MT": 38,
+      "SC": 36,
+      "KY": 33,
+      "AZ": 30,
+      "MO": 27,
+      "UT": 24,
+      "IN": 23,
+      "NH": 22,
+      "DE": 22,
+      "KS": 19,
+      "AL": 19,
+      "GA": 18,
+      "OK": 17,
+      "OR": 16,
+      "ND": 14,
+      "NJ": 14,
+      "IA": 13,
+      "ME": 12,
+      "AR": 11,
+      "BC": 11,
+      "NM": 9,
+      "NE": 8,
+      "WY": 7,
+      "LA": 7,
+      "MS": 6,
+      "SD": 6,
+      "AK": 5,
+      "NV": 5,
+      "HI": 4,
+      "QC": 4,
+      "NS": 4,
+      "ID": 3,
+      "NB": 3,
+      "ON": 3,
+      "RI": 1,
+      "WV": 1
+    },
+    "note": "station / upload location from IA metadata; not necessarily where the footage was filmed"
+  },
+  "dates": {
+    "years": {
+      "2024": 1280,
+      "2025": 784,
+      "2026": 472
+    },
+    "quarters": {
+      "2024": 13,
+      "2024Q1": 356,
+      "2024Q2": 410,
+      "2024Q3": 290,
+      "2024Q4": 211,
+      "2025": 3,
+      "2025Q1": 195,
+      "2025Q2": 197,
+      "2025Q3": 156,
+      "2025Q4": 233,
+      "2026": 2,
+      "2026Q1": 216,
+      "2026Q2": 191,
+      "2026Q3": 58,
+      "2026Q4": 5
+    },
+    "exact_dates": 2518,
+    "upload_date_used": 65
+  },
+  "durations": {
+    "bands": {
+      "30-45": 419,
+      "20-30": 826,
+      "60+": 57,
+      "10-20": 610,
+      "45-60": 373,
+      "0-10": 251
+    },
+    "total_hours": 1185.6
+  },
+  "relations": {
+    "pairs": 3949,
+    "by_type": {
+      "same_series": 1022,
+      "similar_topic": 3614,
+      "same_event": 69,
+      "same_station_near_date": 270,
+      "possible_reupload": 4
+    },
+    "pairs_with_multiple_types": 901,
+    "note": "potential retrieval distractors from metadata, not verified hard negatives"
+  },
+  "parameters": {
+    "near_date_days": 2,
+    "tfidf": {
+      "max_features": 40000,
+      "min_df": 2,
+      "max_df": 0.3,
+      "ngram_max": 2
+    },
+    "neighbours_k": 10,
+    "similar_topic_threshold": 0.35,
+    "same_event_threshold": 0.55,
+    "same_event_days": 1,
+    "topic_clusters": 40,
+    "svd_components": 100,
+    "duration_bands": [
+      10,
+      20,
+      30,
+      45,
+      60
+    ],
+    "boilerplate_min_videos": 3,
+    "boilerplate_global_videos": 15,
+    "family_min_key_tokens": 2,
+    "prefix_family_min_size": 3
+  }
+}
