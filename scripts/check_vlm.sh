@@ -13,4 +13,5 @@ L2_ENV=${VMP_L2_ENV:-$HOME/.conda/envs/vmp-vllm}
 [ -x "$L2_ENV/bin/python" ] || L2_ENV=$HOME/.conda/envs/vmp
 nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv || true
 echo "env: $L2_ENV"
+"$L2_ENV/bin/python" scripts/patch_vllm_mig.py || true
 "$L2_ENV/bin/python" -m video_metadata.cli check-vlm --config configs/cluster.yaml

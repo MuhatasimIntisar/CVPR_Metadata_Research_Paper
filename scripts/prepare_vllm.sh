@@ -7,8 +7,11 @@ module load miniforge 2>/dev/null || module load anaconda3 2>/dev/null || echo "
 conda env list | grep -q "^vmp-vllm " || conda create -y -n vmp-vllm -c conda-forge python=3.12 ffmpeg
 unset PYTHONPATH PYTHONHOME          # the miniforge module points PYTHONPATH at PyPy
 export PATH=$HOME/.conda/envs/vmp-vllm/bin:$PATH
-python -m pip install "vllm>=0.17"
+python -m pip install --upgrade pip
+# wheels only: otherwise pip may try to compile dependencies (e.g. llguidance) with the cluster's old Rust compiler
+python -m pip install --only-binary=:all: "vllm>=0.17"
 python -m pip install -e ".[vllm,dev]"
+python scripts/patch_vllm_mig.py      # SLURM gives MIG UUIDs in CUDA_VISIBLE_DEVICES; stock vLLM crashes on them
 python -c "import vllm, torch; print('vllm', vllm.__version__, '| torch', torch.__version__, '| CUDA build', torch.version.cuda)"
 python -m pytest -q tests/test_batching.py tests/test_level2.py tests/test_metadata_v21.py
 echo "ready: level2 runs in this env automatically (scripts/submit_cluster.sh)"

@@ -32,6 +32,7 @@ run() {  # run <env> <stages...>
 [ -n "$PRE" ] && run "$MAIN_ENV" $PRE
 if [[ " $STAGES " == *" level2 "* ]]; then
   echo "level2 env: $L2_ENV"
+  "$L2_ENV/bin/python" scripts/patch_vllm_mig.py || true
   run "$L2_ENV" level2
 fi
 "$MAIN_ENV/bin/python" -m video_metadata.cli status --config configs/cluster.yaml
