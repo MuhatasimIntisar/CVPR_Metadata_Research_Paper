@@ -39,8 +39,9 @@ Candidate rules
   * not access-restricted, has an MP4 under --max-mb, duration within [--min-min, --max-min]
   * dated within [--from-date, --to-date] (default 2024-2026); uses the item's date field,
     falling back to its upload date when no date is given (see the date_source column)
-  * at most --per-station items per channel (identifier prefix, e.g. "cctv17vt-") per category, for variety;
-    --stations picks specific channels (then no cap); length/date/channel can also be set per category
+  * at most --per-station items per channel (the item's creator) per category, and at most --max-term-share of a
+    category from one search term, for variety; --channels / --stations pick specific channels (then no channel
+    cap); --captions-only keeps only captioned videos; length/date/channel/captions/term share can be set per category
   * an item is listed under the first category it matches (no duplicates across categories)
   * shuffled with --seed, so reruns with the same seed give the same list
 
@@ -67,7 +68,7 @@ UA = "tvm-collection/0.2 (academic research dataset; metadata + selected downloa
 SEARCH = "https://archive.org/advancedsearch.php"
 META = "https://archive.org/metadata/"
 DL = "https://archive.org/download/"
-DELAY_S = 0.5
+DELAY_S = 1.0
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_CONFIG = os.path.join(HERE, "categories.json")
@@ -94,11 +95,13 @@ def full_date(s):
 def rules_for(c, args):
     """Per-category settings from categories.json, falling back to the command-line values.
     --stations on the command line wins over a category's own list."""
-    stations = [x.lower() for x in (args.stations or c.get("stations") or [])]
+    stations = [x.lower() for x in (getattr(args, "stations", None) or c.get("stations") or [])]
+    channels = [" ".join(x.lower().split()) for x in (getattr(args, "channels", None) or c.get("channels") or [])]
     return SimpleNamespace(
         min_s=60 * float(c.get("min_minutes", args.min_minutes)), max_s=60 * float(c.get("max_minutes", args.max_minutes)),
         from_d=as_date(c.get("from_date", args.from_date)), to_d=as_date(c.get("to_date", args.to_date), end=True),
-        stations=stations, max_mb=int(c.get("max_mb", args.max_mb)))
+        stations=stations, channels=channels, max_mb=int(c.get("max_mb", args.max_mb)),
+        captions_only=bool(getattr(args, "captions_only", False) or c.get("require_captions", False)))
 
 
 def load_categories(path):
@@ -194,6 +197,12 @@ def to_seconds(v):
     return None
 
 
+def channel_of(row):
+    """Channel = the item's creator (the uploading station's name); identifier prefix only when it has none.
+    (Prefixes are unreliable: one station can upload under many prefixes, several stations can share one.)"""
+    return " ".join(str(row.get("creator") or "").lower().split()) or (row.get("station") or station_of(row["identifier"]))
+
+
 def station_of(identifier):
     m = re.match(r"^([A-Za-z0-9]+)[-_]", identifier)
     return m.group(1).lower() if m else identifier[:8].lower()
@@ -228,6 +237,8 @@ def base_query(cfg, rules):
     q = f"collection:({' OR '.join(cfg['collections'])}) AND mediatype:movies AND NOT identifier:youtube-*"
     if rules.stations:
         q += f" AND identifier:({' OR '.join(st + '*' for st in rules.stations)})"
+    if getattr(rules, "channels", None):
+        q += " AND creator:(" + " OR ".join(f'"{ch}"' for ch in rules.channels) + ")"
     span = f"[{rules.from_d.isoformat()} TO {rules.to_d.isoformat()}]"
     # date = content/air date; publicdate = upload date, used when an item has no date
     return f"({q}) AND (date:{span} OR publicdate:{span})"
@@ -283,6 +294,10 @@ def evaluate(identifier, rules):
     meta, files = item["metadata"], item.get("files", [])
     if str(meta.get("access-restricted-item", "")).lower() == "true" or item.get("is_dark"):
         return None, "restricted"
+    if getattr(rules, "channels", None) and " ".join(str(first(meta.get("creator"))).lower().split()) not in rules.channels:
+        return None, "other channel"
+    if getattr(rules, "captions_only", False) and not any(f.get("name", "").lower().endswith(CAPTION_EXT) for f in files):
+        return None, "no captions"
     date, date_src = item_date(meta)
     fd = full_date(date)
     if not date or (fd and not rules.from_d <= fd <= rules.to_d) or \
@@ -333,7 +348,7 @@ def mark_neighbours(rows, days=1):
     for r in rows:
         fd = full_date(r.get("date"))
         if fd:
-            by[r.get("station")].append((fd, r))
+            by[channel_of(r)].append((fd, r))
     for lst in by.values():
         for fd, r in lst:
             r["neighbours_1d"] = str(sum(1 for g, x in lst if x is not r and abs((g - fd).days) <= days))
@@ -365,7 +380,9 @@ def search(args):
         c = cfg["categories"][cat]
         rules = rules_for(c, args)
         need = int(c.get("candidates", args.candidates))
-        cap = need if rules.stations else args.per_station  # a chosen channel is not capped
+        cap = need if (rules.stations or rules.channels) else args.per_station  # chosen channels are not capped
+        term_cap = max(1, int(round(float(c.get("max_term_share", args.max_term_share)) * need)))
+        per_term = Counter()
         print(f"\n=== {cat}  ({rules.min_s / 60:g}-{rules.max_s / 60:g} min, {rules.from_d} to {rules.to_d}"
               + (f", channels {', '.join(rules.stations)}" if rules.stations else "") + ")", flush=True)
         per_station = {}
@@ -376,22 +393,28 @@ def search(args):
         for ident in ids:
             if got >= need:
                 break
-            st = station_of(ident)
-            if ident in used_ids or per_station.get(st, 0) >= cap:
+            if ident in used_ids:
                 continue
             res, why = evaluate(ident, rules)
             if not res:
                 if args.verbose:
                     print(f"     skip {ident[:70]}: {why}")
                 continue
+            row = make_row(ident, cat, c, res)
+            st, term = channel_of(row), (row["matched_terms"].split(";")[0].strip() or "-")
+            if per_station.get(st, 0) >= cap or per_term[term] >= term_cap:
+                if args.verbose:
+                    print(f"     skip {ident[:70]}: {'channel' if per_station.get(st, 0) >= cap else 'term'} quota full")
+                continue
             used_ids.add(ident)
             per_station[st] = per_station.get(st, 0) + 1
+            per_term[term] += 1
             got += 1
-            rows.append(make_row(ident, cat, c, res))
+            rows.append(row)
             print(f"     {got:>3}. {rows[-1]['title'][:62]}  ({rows[-1]['duration_min']} min, {st}, {rows[-1]['date']})", flush=True)
         if got < need:
-            print(f"  ! only {got}/{need} candidates for {cat}; raise --pool or --per-station, widen the length or "
-                  f"date range, or add terms in {os.path.basename(args.config)}")
+            print(f"  ! only {got}/{need} candidates for {cat}; raise --pool, --per-station or --max-term-share, widen "
+                  f"the length or date range, or add terms in {os.path.basename(args.config)}")
     return mark_neighbours(rows)
 
 
@@ -408,13 +431,16 @@ def around(args):
     for sd in seeds:
         d = full_date(sd.get("date"))
         st = sd.get("station") or station_of(sd["identifier"])
+        creator = " ".join(str(sd.get("creator") or "").lower().split())
         if not d:
             print(f"  - {sd['identifier'][:60]}: no exact date, skipped")
             continue
         rules = SimpleNamespace(min_s=60 * args.min_minutes, max_s=60 * args.max_minutes, max_mb=args.max_mb,
-                                from_d=d - dt.timedelta(days=args.days), to_d=d + dt.timedelta(days=args.days), stations=[st])
+                                captions_only=args.captions_only,
+                                from_d=d - dt.timedelta(days=args.days), to_d=d + dt.timedelta(days=args.days),
+                                stations=[] if creator else [st], channels=[creator] if creator else [])
         ids, total = run_query(base_query(cfg, rules), args.pool)
-        print(f"\n=== {st} around {d} (+-{args.days} d), from {sd['title'][:50]}: {total} items", flush=True)
+        print(f"\n=== {creator or st} around {d} (+-{args.days} d), from {sd['title'][:50]}: {total} items", flush=True)
         got = 0
         for ident in sorted(ids):
             if got >= args.per_item:
@@ -457,10 +483,13 @@ def report(args):
             b = Counter("<10" if m < 10 else "10-20" if m < 20 else "20-30" if m < 30 else "30-60" if m < 60 else "60+" for m in mins)
             print(f"  length   min {mins[0]:.0f} / median {mins[len(mins) // 2]:.0f} / max {mins[-1]:.0f} min;  "
                   + ", ".join(f"{k} min: {b[k]}" for k in ("<10", "10-20", "20-30", "30-60", "60+") if b[k]))
-        ch = Counter(r.get("station") or station_of(r["identifier"]) for r in rs)
-        cr = {r.get("station"): r.get("creator") for r in rs if r.get("creator")}
-        print("  channels " + ", ".join(f"{k}{' (' + cr[k][:25] + ')' if cr.get(k) else ''}: {n}" for k, n in ch.most_common(10))
-              + (f"  (+{len(ch) - 10} more)" if len(ch) > 10 else ""))
+        ch = Counter(channel_of(r) for r in rs)
+        name_of = {channel_of(r): (r.get("creator") or channel_of(r)) for r in rs}
+        print(f"  channels {len(ch)} distinct; " + ", ".join(f"{name_of[k][:30]}: {n}" for k, n in ch.most_common(10)))
+        if rs and ch.most_common(1)[0][1] / len(rs) > 0.2:
+            print(f"  ! one channel is {ch.most_common(1)[0][1] / len(rs):.0%} of this group")
+        caps = sum((r.get("has_captions") or "") == "yes" for r in rs)
+        print(f"  captions {caps}/{len(rs)} have captions (the pipeline's transcript comes from them)")
         ds = sorted(d for d in (full_date(r.get("date")) for r in rs) if d)
         if ds:
             ym = Counter(d.strftime("%Y-%m") for d in ds)
@@ -470,7 +499,7 @@ def report(args):
             for r in rs:
                 d = full_date(r.get("date"))
                 if d:
-                    by[r.get("station") or station_of(r["identifier"])].append(d)
+                    by[channel_of(r)].append(d)
             runs = []
             for st, lst in by.items():
                 lst = sorted(set(lst))
@@ -491,15 +520,19 @@ def report(args):
         mt = Counter(t.strip() for r in rs for t in (r.get("matched_terms") or "").split(";") if t.strip())
         if mt:
             print("  matched  " + ", ".join(f"{t} {n}" for t, n in mt.most_common(12)))
+            if rs and mt.most_common(1)[0][1] / len(rs) > 0.35:
+                print(f"  ! '{mt.most_common(1)[0][0]}' matches {mt.most_common(1)[0][1] / len(rs):.0%} of this group")
         c = cfg["categories"].get(name)
         if c and mt:  # only csvs written by this version record matched terms
             unused = [t.strip('"') for t in c.get("terms", []) if t.strip('"') not in mt]
             if unused:
                 print(f"  unused terms (matched nothing here): {', '.join(unused)}")
-    top = [k for k, _ in Counter(r.get("station") for r in rows).most_common(3) if k]
+    top = [r.get("creator") for r in rows if r.get("creator")]
+    top = [k for k, _ in Counter(top).most_common(3)]
     print("\nNext-search ideas:")
     if top:
-        print(f"  more from the top channels:   python collection/ia_download.py search --stations {' '.join(top)} --seed <n>")
+        print("  more from the top channels:   python collection/ia_download.py search --channels "
+              + " ".join(f'"{k}"' for k in top) + " --seed <n>")
     print(f"  series around picked videos:  python collection/ia_download.py around <csv with x marks> --days 2")
     print(f"  other lengths / dates:        --min-minutes 10 --max-minutes 30 --from-date 2025-01 --to-date 2025-06")
 
@@ -642,9 +675,13 @@ def main():
     rules_args(s)
     s.add_argument("-o", "--out", default=DEFAULT_ROUNDS, help="where candidates.csv is written")
     s.add_argument("--candidates", type=int, default=25, help="candidates per category (a category can override it)")
-    s.add_argument("--per-station", type=int, default=3, help="max candidates per channel per category (not applied with --stations)")
+    s.add_argument("--per-station", type=int, default=3, help="max candidates per channel per category (not applied with --stations/--channels)")
+    s.add_argument("--max-term-share", type=float, default=1.0,
+                   help="max share of a category from one search term, e.g. 0.3 (a category can set max_term_share); 1 = no limit")
+    s.add_argument("--channels", nargs="+", help='only these channels, by name as in the creator column, e.g. "DETV" "Nutmeg TV"')
+    s.add_argument("--captions-only", action="store_true", help="only videos with captions (a category can set require_captions)")
     s.add_argument("--categories", nargs="+", help="only search these categories (default: all in the config)")
-    s.add_argument("--stations", nargs="+", help="only these channels (identifier prefix, e.g. detvde cctv17vt)")
+    s.add_argument("--stations", nargs="+", help="only these identifier prefixes (e.g. detvde cctv17vt); --channels is usually better")
     s.add_argument("--from-date", default="2024", help="earliest date: YYYY, YYYY-MM or YYYY-MM-DD")
     s.add_argument("--to-date", default="2026", help="latest date: YYYY, YYYY-MM or YYYY-MM-DD")
     s.add_argument("--seed", type=int, default=42)
@@ -654,6 +691,7 @@ def main():
     rules_args(a, per_category=False)
     a.add_argument("--days", type=int, default=2, help="+- days around each picked video's date")
     a.add_argument("--per-item", type=int, default=10, help="max new candidates per picked video")
+    a.add_argument("--captions-only", action="store_true", help="only videos with captions")
 
     r = sub.add_parser("report", help="summarise candidate/manifest csvs (length, channel, date, series, title words)")
     r.add_argument("csv", nargs="+")

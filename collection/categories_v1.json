@@ -1,0 +1,82 @@
+{
+  "_help": [
+    "collections: Internet Archive collections searched.",
+    "categories: an item is listed under the FIRST category (in this order) whose terms it matches, so specific categories come before broad ones.",
+    "terms: words/phrases matched against titles and IA subject tags; write \"double quotes\" inside the string for an exact phrase.",
+    "example / contributes: what to collect and why (documentation only; the search ignores them).",
+    "optional per category: subject_tags (IA tags only), exclude (title words that rule an item out), candidates, min_minutes, max_minutes, from_date, to_date (YYYY, YYYY-MM or YYYY-MM-DD), stations (channel identifier prefixes), max_mb.",
+    "the category name becomes the corpus/<category>/ folder."
+  ],
+  "collections": ["community_media"],
+  "exclude_title": ["trailer", "promo", "teaser", "\"full schedule\"", "\"bulletin board\"", "\"slide show\""],
+  "categories": {
+    "meeting": {
+      "example": "A city council meeting discussing a redevelopment proposal",
+      "contributes": "Multiple speakers, voting, presentations, audience reactions",
+      "terms": ["\"city council\"", "\"council meeting\"", "selectboard", "\"select board\"", "\"board of supervisors\"",
+                "\"planning commission\"", "\"planning board\"", "\"zoning board\"", "\"committee meeting\"",
+                "\"school board\"", "\"board of education\"", "\"town meeting\"", "\"board meeting\"",
+                "\"city commission\"", "\"regular meeting\"", "\"special meeting\"", "\"work session\"",
+                "\"public hearing\"", "redevelopment"]
+    },
+    "discussion": {
+      "example": "A moderated panel discussing housing affordability",
+      "contributes": "Multiple speakers, disagreement, turn-taking, group interactions",
+      "terms": ["\"panel discussion\"", "panel", "forum", "debate", "\"town hall\"", "roundtable", "\"round table\"",
+                "moderated", "\"community conversation\"", "\"candidate forum\"", "\"public forum\"",
+                "\"listening session\"", "\"housing affordability\"", "\"affordable housing\""]
+    },
+    "interview": {
+      "example": "A local entrepreneur interviewed on a morning television programme",
+      "contributes": "Questions, answers, close-ups, studio shots, guest interactions",
+      "terms": ["interview", "\"talk show\"", "\"conversation with\"", "\"in conversation\"", "\"sits down\"",
+                "\"one on one\"", "\"morning show\"", "\"good morning\"", "guest", "entrepreneur", "founder",
+                "\"small business\""]
+    },
+    "presentation": {
+      "example": "A university researcher giving a public talk about climate change",
+      "contributes": "Speaker, slides, graphs, audience questions, visual aids",
+      "terms": ["lecture", "\"public talk\"", "presentation", "seminar", "keynote", "\"guest speaker\"",
+                "\"speaker series\"", "\"lunch and learn\"", "webinar", "researcher", "professor", "tedx",
+                "\"climate change\""]
+    },
+    "news": {
+      "example": "A reporter covering flooding in a local neighbourhood",
+      "contributes": "On-location reporting, environmental conditions, interviews, B-roll",
+      "terms": ["news", "newscast", "\"news report\"", "\"news update\"", "reporter", "reporting", "\"breaking news\"",
+                "\"on the scene\"", "flooding", "flood", "storm", "wildfire", "weather", "\"local news\""]
+    },
+    "performance": {
+      "example": "A local theatre company's ballet or musical production",
+      "contributes": "Dancing, gestures, stage lighting, costumes, camera framing",
+      "terms": ["ballet", "musical", "theater", "theatre", "\"dance performance\"", "recital", "concert", "orchestra",
+                "symphony", "choir", "opera", "nutcracker", "\"live music\"", "jazz", "band", "\"open mic\""]
+    },
+    "demonstration": {
+      "example": "A local chef demonstrating how to prepare a traditional dish",
+      "contributes": "Sequential actions, object manipulation, tools, close-up shots",
+      "terms": ["chef", "cooking", "recipe", "\"cooking with\"", "\"how to make\"", "\"traditional dish\"",
+                "demonstration", "demo", "workshop", "\"hands-on\"", "craft", "woodworking", "pottery", "blacksmith",
+                "gardening", "experiment"]
+    },
+    "guide": {
+      "example": "A community programme explaining how recycling works",
+      "contributes": "Explanations, instructional sequences, facilities, diagrams",
+      "terms": ["\"how to\"", "\"how it works\"", "\"how does\"", "explainer", "explained", "\"what to know\"", "tips",
+                "guide", "tutorial", "educational", "\"learn about\"", "recycling", "safety"]
+    },
+    "documentary": {
+      "example": "A documentary about the history of a local neighbourhood",
+      "contributes": "Archival footage, narration, interviews, historical locations",
+      "terms": ["documentary", "history", "\"local history\"", "historic", "heritage", "neighborhood", "neighbourhood",
+                "\"the story of\"", "archival", "retrospective", "\"a look back\"", "anniversary", "\"behind the scenes\""]
+    },
+    "event": {
+      "example": "Coverage of a community cultural festival",
+      "contributes": "Crowds, outdoor locations, multiple activities, changing scenes",
+      "terms": ["festival", "\"cultural festival\"", "parade", "fair", "carnival", "celebration", "ceremony",
+                "\"ribbon cutting\"", "\"block party\"", "\"community day\"", "fireworks", "graduation", "marathon",
+                "rodeo", "tournament", "football", "basketball", "soccer", "baseball"]
+    }
+  }
+}
