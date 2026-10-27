@@ -25,3 +25,7 @@ venv/
 .pytest_cache/
 .ipynb_checkpoints/
 logs/
+
+# selection outputs are tracked (small CSV/JSON, needed to reproduce the corpus); only the TF-IDF cache is not
+!collection/selection/outputs/
+collection/selection/outputs/03_profile/cache/

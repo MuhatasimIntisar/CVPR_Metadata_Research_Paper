@@ -1,0 +1,66 @@
+{
+  "_about": "Metadata-only selection of the TVM corpus. Paths are relative to the repository root. Change values here, not in the code; every output records this file's hash.",
+  "seed": 20261027,
+  "paths": {
+    "rounds": [
+      {"name": "search_1", "path": "collection/rounds/round2_candidates_try1.csv"},
+      {"name": "search_2", "path": "collection/rounds/round2_candidates_a.csv"},
+      {"name": "search_3", "path": "collection/rounds/candidates.csv"}
+    ],
+    "categories_config": "collection/categories.json",
+    "pilot_sources": ["collection/rounds/round1_manifest.csv", "corpus"],
+    "output_root": "collection/selection/outputs"
+  },
+  "consolidation": {
+    "reupload": {
+      "title_similarity": 0.92,
+      "duration_tolerance_s": 30,
+      "duration_tolerance_frac": 0.02,
+      "cross_station": true,
+      "cross_station_min_title_chars": 12
+    }
+  },
+  "eligibility": {
+    "min_minutes": 5,
+    "max_minutes": 90,
+    "soft_max_mb": 600,
+    "hard_max_mb": 2000,
+    "allowed_extensions": [".mp4"],
+    "captions_required": false
+  },
+  "availability": {"timeout_s": 20, "retries": 2, "concurrency": 4, "delay_s": 0.25},
+  "profiling": {
+    "near_date_days": 2,
+    "tfidf": {"max_features": 40000, "min_df": 2, "max_df": 0.3, "ngram_max": 2},
+    "neighbours_k": 10,
+    "similar_topic_threshold": 0.35,
+    "same_event_threshold": 0.55,
+    "same_event_days": 1,
+    "topic_clusters": 40,
+    "svd_components": 100,
+    "duration_bands": [10, 20, 30, 45, 60],
+    "boilerplate_min_videos": 3,
+    "boilerplate_global_videos": 15,
+    "family_min_key_tokens": 2,
+    "prefix_family_min_size": 3
+  },
+  "selection": {
+    "target": 1000,
+    "budget_hours": 470,
+    "min_per_category": 60,
+    "weights": {"category": 3, "topic": 2, "station": 2, "region": 1, "date": 1, "duration": 1},
+    "caption_bonus": 0.3,
+    "series_confidence": ["high"],
+    "series_bonus": [0, 0.6, 0.4, 0.2],
+    "related_bonus": {"same_station_near_date": 0.3, "same_event": 0.4, "similar_topic": 0.1},
+    "related_bonus_cap": 0.5,
+    "similar_topic_cap": 0.2,
+    "avoid_possible_reupload_pairs": true,
+    "swap_passes": 2,
+    "swap_candidates": 50,
+    "reserve_size": 200,
+    "final_strategy": "coverage_related_budget"
+  },
+  "audit": {"per_category": 4, "stations": 10, "multilabel": 10, "series_groups": 5, "reuploads": 10,
+            "extremes": 10, "incomplete": 10, "rare": 10}
+}
