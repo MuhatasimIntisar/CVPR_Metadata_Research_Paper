@@ -109,3 +109,12 @@ level2:
     shot_min_person_share: 0.5    # compare shot scale only if >= this share of frames show a person
     shot_min_label_share: 0.2     # ... VLM label agrees if the detector saw it in >= this share of person frames
     shot_max_distance: 1          # ... or the detector's dominant scale is within this many steps of it
+
+cleanup:                          # rule-based fixes before human review (no models); docs/cleanup_rules.md
+  version: clean-v1
+  merge: {min_description_sim: 0.75, min_tag_jaccard: 0.5, max_speech_share: 0.3, max_merged_s: 180.0}
+  ocr: {fuzzy: 0.85}              # misread word -> transcript / archive-metadata word at this similarity
+  names: {fuzzy: 0.8, min_profile_mentions: 3, conflict_score: 2.0, conflict_margin: 1.0}
+  shot: {min_person_share: 0.5, min_dominant_share: 0.7, max_model_share: 0.2, max_people: 2}
+  speakers: {min_s: 3.0, min_share: 0.1}
+  review: {crowd_min_people: 8}   # people-count check skipped for crowds (detector cannot count them)

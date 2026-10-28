@@ -54,3 +54,12 @@ content is added.
 Candidate intervals shorter than `correction.min_interval_s` (5 s) are absorbed into the neighbour whose adjacent 6 s
 is more similar (X-CLIP activity scores + CLIP setting); reviewer boundaries are never removed (logged as
 `min_interval` in correction_log.jsonl).
+
+
+## v2.2 (`vmp-2.2`): cleanup fields (outputs/<id>/cleanup/clean_metadata.json; docs/cleanup_rules.md)
+Same document plus: `video.location {country, region, place, source}`; `annotation_set.status` = automatic +
+rule-based cleanup, `annotation_set.cleanup {version, rule_changes, applied_at}`; `segments[].single_moment`;
+`moments[].merged_from` (ids of merged near-duplicates); `entities[].name_spelling_source` (on_screen_text /
+archive_metadata / model) and `entities[].name_binding` (on_screen_text / appearance_consistent / unverified /
+not_visible); `relationships[].restored_from` (original predicate); `attributes.shot_scale_source` (model / detector);
+`annotation.cleanup_changes` (human-readable list) and `annotation.review_reasons_suppressed` (with why).

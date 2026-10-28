@@ -376,8 +376,11 @@ def report(doc, D, stats, path):
                   f"music {m['observed'].get('music_share')}, setting {[x['label'] for x in m['observed'].get('setting_detector', [])]}",
                   f"- observed camera: shot {[(x['label'], x['share']) for x in m['observed'].get('shot_scale_detector', [])[:2]]}, "
                   f"motion {[(x['label'], x['share']) for x in m['observed'].get('camera_motion_detector', [])[:2]]}",
-                  f"- repairs: {m['annotation']['normalisation_repairs'] or '-'}",
-                  f"- review: {m['annotation'].get('review_reasons') or '-'}", ""]
+                  f"- repairs: {m['annotation']['normalisation_repairs'] or '-'}"]
+            if "cleanup_changes" in m["annotation"] or "review_reasons_suppressed" in m["annotation"]:
+                L += [f"- cleanup: {m['annotation'].get('cleanup_changes') or '-'}",
+                      f"- review suppressed: {m['annotation'].get('review_reasons_suppressed') or '-'}"]
+            L += [f"- review: {m['annotation'].get('review_reasons') or '-'}", ""]
     path.write_text("\n".join(L), encoding="utf-8")
 
 

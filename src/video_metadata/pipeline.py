@@ -11,8 +11,8 @@ from .state import State
 from .utils.io import fingerprint, read_json
 from .utils.logging import stage_logger
 
-STAGES = ["ingest", "level1", "correction", "level2", "review"]
-AUTOMATIC = ["ingest", "level1", "correction", "level2"]
+STAGES = ["ingest", "level1", "correction", "level2", "cleanup", "review"]
+AUTOMATIC = ["ingest", "level1", "correction", "level2", "cleanup"]
 
 
 def corpus_root(cfg, manifest):
@@ -49,6 +49,9 @@ def run_stage(cfg, manifest, entry, stage, force=False):
         elif stage == "level2":
             from .level2.pipeline import run as run_l2
             run_l2(cfg, manifest, entry, vdir, log)
+        elif stage == "cleanup":
+            from .cleanup.pipeline import run as run_clean
+            run_clean(cfg, manifest, entry, vdir, log)
         else:
             raise NotImplementedError(f"stage '{stage}' is not implemented yet (review: checkpoint 3)")
         st.mark(stage, "done", fingerprint=fp, runtime_s=round(time.time() - t0, 1))

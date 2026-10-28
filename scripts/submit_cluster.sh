@@ -1,6 +1,7 @@
 #!/bin/bash
 # Kelvin2 SLURM job, from <scratch>/vmp/code:  sbatch scripts/submit_cluster.sh [stages...]
-#   all stages, all videos:   sbatch scripts/submit_cluster.sh ingest level1 correction level2
+#   all stages, all videos:   sbatch scripts/submit_cluster.sh ingest level1 correction level2 cleanup
+#   cleanup only (CPU, s):    sbatch scripts/submit_cluster.sh cleanup   (or run it on the laptop)
 #   one video:                sbatch --export=ALL,VIDEO_IDS=<video_id> scripts/submit_cluster.sh level2
 #   split over 4 GPU slices:  sbatch --array=0-3 scripts/submit_cluster.sh   (each task gets ~1/4 of the hours)
 # Stages run stage by stage over all videos. Level 2 runs in the vLLM env (scripts/prepare_vllm.sh) when it exists,
@@ -31,8 +32,8 @@ if ! command -v ffmpeg >/dev/null; then
 fi
 command -v ffmpeg >/dev/null || { echo "ffmpeg not found. Install it once: conda install -y -p $MAIN_ENV -c conda-forge ffmpeg"; exit 1; }
 echo "ffmpeg: $(command -v ffmpeg)"
-STAGES=${*:-ingest level1 correction level2}
-PRE=$(for s in $STAGES; do [ "$s" != level2 ] && echo -n "$s "; done || true)
+STAGES=${*:-ingest level1 correction level2 cleanup}
+PRE=$(for s in $STAGES; do [ "$s" != level2 ] && [ "$s" != cleanup ] && echo -n "$s "; done || true)
 run() {  # run <env> <stages...>
   local env=$1; shift
   if [ -n "${VIDEO_IDS:-}" ]; then
@@ -60,4 +61,5 @@ if [[ " $STAGES " == *" level2 "* ]]; then
   [ -n "${VMP_CUDA_MODULE:-}" ] && module load "$VMP_CUDA_MODULE"
   run "$L2_ENV" level2
 fi
+[[ " $STAGES " == *" cleanup "* ]] && run "$MAIN_ENV" cleanup   # after Level 2; rule-based, CPU only
 "$MAIN_ENV/bin/python" -m video_metadata.cli status --config configs/cluster.yaml
