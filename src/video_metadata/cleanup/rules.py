@@ -7,6 +7,7 @@ Order (each rule sees the output of the previous ones):
   names      spelling from on-screen text / archive metadata; variants of one name merged within the video
   appearance a name whose description matches another named person's look is moved or removed; man/woman conflicts;
              description sentences that put a name on the wrong look are flagged
+  shared     a name Level 2 removed because it was given to several people goes back to the one matching its look
   vocab      dropped relationships mapped back onto the closed predicate list; action synonyms merged
   tags       appearance-only and generic tags removed; single words already inside another tag removed
   shot       shot_scale taken from the pose detector when it is confident and the model disagrees
@@ -50,6 +51,7 @@ class Ctx:
         self.meta_lines = [x for x in re.split(r"[.\n!?]|<br\s*/?>", str(self.src.get("description") or "")) if x.strip()]
         self.meta_lines += [str(self.src.get("title") or "")] + geo._subjects(self.src)
         self.runs = (speakers or {}).get("runs") or []
+        self.segments = (transcript or {}).get("segments", [])
         self.observed_fn = observed_fn  # (start, end) -> observed block, for merged moments
 
     def change(self, m, rule, what, old=None, new=None, why=""):
@@ -488,6 +490,66 @@ def _check_descriptions(doc, ctx, full):
                         ctx.flag(m, f"description may attach {name!r} to {b!r}'s appearance")
 
 
+SHARED_RX = re.compile(r"^name removed: entity (\S+) name (['\"])(.+)\2 was given to (\d+) entities")
+
+
+def _canonical(raw, ctx, known):
+    """Spell a removed name like the names kept elsewhere in the video."""
+    nm = spelling(raw, ctx)[0]
+    if nm in known:
+        return nm
+    t = nm.lower().split()
+    for k in known:
+        u = k.lower().split()
+        if t and u and tok_sim(t[0], u[0]) >= 0.85 and ratio(t[-1], u[-1]) >= 0.8:
+            return k
+    return nm
+
+
+def _name_source(name, m, ctx):
+    toks = [t for t in re.findall(r"\w+", name.lower()) if len(t) >= 3]
+    said = " ".join(s.get("text", "") for s in ctx.segments
+                    if s.get("end", 0) > m["start_s"] and s.get("start", 0) < m["end_s"]).lower()
+    shown = " ".join((m.get("observed") or {}).get("on_screen_text") or []).lower()
+    if any(re.search(rf"\b{re.escape(t)}\b", said) for t in toks):
+        return "transcript"
+    if any(re.search(rf"\b{re.escape(t)}\b", shown) for t in toks):
+        return "on_screen_text"
+    return "elsewhere_in_video"
+
+
+def restore_shared_names(doc, ctx):
+    """Level 2 removes a name the model gave to several people in one moment. When the name has a consistent look
+    elsewhere in the video and exactly one of those people matches it, the name goes back to that person."""
+    c = ctx.c["names"]
+    ments = [(m, e) for m in doc["moments"] for e in persons(m) if e.get("name") and visible(e)]
+    full = Profiles(ments, c["min_profile_mentions"]).full()
+    for m in doc["moments"]:
+        groups = defaultdict(set)
+        for r in m["annotation"].get("review_reasons") or []:
+            x = SHARED_RX.match(r)
+            if x:
+                groups[x.group(3)].add(x.group(1))
+        res = {}
+        for raw, ids in groups.items():
+            name = _canonical(raw, ctx, list(full))
+            prof, got = full.get(name), None
+            if prof and not any(e.get("name") == name for e in persons(m)):
+                cands = sorted(((match(sig(e.get("description")), prof), e["id"], e) for e in persons(m)
+                                if e["id"] in ids and not e.get("name") and visible(e)), key=lambda t: (-t[0], t[1]))
+                if cands and cands[0][0] >= c["conflict_score"] and \
+                        (len(cands) == 1 or cands[1][0] <= cands[0][0] - c["conflict_margin"]):
+                    e = cands[0][2]
+                    e["name"], e["name_source"] = name, _name_source(name, m, ctx)
+                    e["name_spelling_source"] = spelling(name, ctx)[1] or "model"
+                    got = e["id"]
+                    ctx.change(m, "names", f"{got} name restored", None, name,
+                               f"{raw!r} was given to {len(ids)} people; only {got} matches its look elsewhere in the video")
+            res[raw] = (got, len(ids))
+        if res:
+            m["_shared"] = res
+
+
 def name_bindings(doc, ctx):
     ments = [(m, e) for m in doc["moments"] for e in persons(m) if e.get("name") and visible(e)]
     P = Profiles(ments, ctx.c["names"]["min_profile_mentions"])
@@ -615,18 +677,45 @@ def _crowd(m, n_min):
     return n >= n_min
 
 
+PEOPLE_RX = re.compile(r"^people: metadata describes (\d+), detector saw at most (\d+)")
+
+
+def _shot_detector_state(m, c):
+    """None if the framing detector is informative, else why it is not."""
+    from ..level2.metadata_generator import SHOT_SCALES
+    det = {d["label"]: d["share"] for d in (m.get("observed") or {}).get("shot_scale_detector") or []}
+    person = 1 - det.get("no_person", 0)
+    if person < c["shot_min_person_share"]:
+        return f"detector saw a person in only {person:.0%} of frames"
+    top = max((s for k, s in det.items() if k in SHOT_SCALES), default=0) / person
+    if top < c["shot_min_dominant"]:
+        return f"detector framing is mixed (top framing {top:.0%} of person frames)"
+    return None
+
+
 def recompute_review(doc, ctx):
     c = ctx.c["review"]
     for m in doc["moments"]:
         an = m["annotation"]
         keep, supp = [], []
+        shared = m.pop("_shared", {})
         for r in an.get("review_reasons") or []:
+            x, p = SHARED_RX.match(r), PEOPLE_RX.match(r)
+            cuts = (m.get("observed") or {}).get("shot_cuts") or 0
             if r.startswith("relationship") and "dropped" in r:
                 supp.append(f"{r} [vocabulary repair, not a content error]")
-            elif r.startswith("people: metadata describes") and (_crowd(m, c["crowd_min_people"]) or is_screen(m)):
+            elif x and shared.get(x.group(3), (None,))[0]:
+                supp.append(f"{r} [resolved: name given back to {shared[x.group(3)][0]} by appearance]")
+            elif x:  # one reason per name, not one per entity
+                keep.append(f"name {x.group(3)!r} was given to {x.group(4)} people; removed from all")
+            elif p and (_crowd(m, c["crowd_min_people"]) or is_screen(m)):
                 supp.append(f"{r} [{'crowd' if _crowd(m, c['crowd_min_people']) else 'screen/video-call content'}: detector cannot count]")
+            elif p and cuts and int(p.group(1)) <= int(p.group(2)) * (cuts + 1):
+                supp.append(f"{r} [{cuts} shot cuts: the people can be in different shots]")
             elif r.startswith("shot scale:") and ((m.get("attributes") or {}).get("shot_scale_source") == "detector" or is_screen(m)):
                 supp.append(f"{r} [{'resolved: detector value used' if not is_screen(m) else 'screen content: framing detector not applicable'}]")
+            elif r.startswith("shot scale:") and _shot_detector_state(m, c):
+                supp.append(f"{r} [{_shot_detector_state(m, c)}]")
             else:
                 keep.append(r)
         keep += m.pop("_review_add", [])
@@ -648,7 +737,7 @@ def set_location(doc, ctx):
 
 
 RULES = [("merge", merge_duplicates), ("ocr", clean_ocr), ("entities", fix_entities), ("names", fix_names),
-         ("appearance", fix_appearance), ("vocab", fix_vocab), ("tags", fix_tags), ("shot", fix_shot),
+         ("appearance", fix_appearance), ("shared", restore_shared_names), ("vocab", fix_vocab), ("tags", fix_tags), ("shot", fix_shot),
          ("speakers", fix_speakers), ("location", set_location), ("segments", mark_segments),
          ("bindings", name_bindings), ("review", recompute_review)]
 

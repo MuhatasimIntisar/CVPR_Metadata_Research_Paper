@@ -4,13 +4,13 @@ import copy
 from video_metadata.cleanup import geo
 from video_metadata.cleanup.rules import Ctx, OcrCleaner, apply_all
 
-CFG = {"version": "clean-v1",
+CFG = {"version": "clean-v2",
        "merge": {"min_description_sim": 0.75, "min_tag_jaccard": 0.5, "max_speech_share": 0.3, "max_merged_s": 180.0},
        "ocr": {"fuzzy": 0.85},
        "names": {"fuzzy": 0.8, "min_profile_mentions": 3, "conflict_score": 2.0, "conflict_margin": 1.0},
-       "shot": {"min_person_share": 0.5, "min_dominant_share": 0.7, "max_model_share": 0.2, "max_people": 2},
+       "shot": {"min_person_share": 0.5, "min_dominant_share": 0.7, "max_model_share": 0.2, "max_people": 4},
        "speakers": {"min_s": 3.0, "min_share": 0.1},
-       "review": {"crowd_min_people": 8}}
+       "review": {"crowd_min_people": 8, "shot_min_person_share": 0.5, "shot_min_dominant": 0.5}}
 SRC = {"title": "Interview with Zoe Royer, Member of Parliament", "description": "she told interviewer Sher Sultani",
        "creator": "Skyrise Media Society", "subjects": ["British Columbia", "Coquitlam", "Skyrise Media Society"]}
 TRANSCRIPT = {"segments": [{"text": "welcome zoe royer follow us for more"}]}
@@ -136,3 +136,27 @@ def test_location_needs_a_state_tag():
     assert geo.location({"subjects": ["Community Media", "PEG"]}) is None
     loc = geo.location({"subjects": ["Connecticut", "Newington", "NCTV"], "creator": "NCTV"})
     assert (loc["country"], loc["region"], loc["place"]) == ("US", "CT", "Newington")
+
+
+def test_shared_name_restored_and_review_noise():
+    shared = ["name removed: entity person_1 name 'Zoe Royer' was given to 2 entities",
+              "name removed: entity person_2 name 'Zoe Royer' was given to 2 entities"]
+    other = ["name removed: entity person_1 name 'EMS team' was given to 2 entities",
+             "name removed: entity person_2 name 'EMS team' was given to 2 entities"]
+    ms = [moment(k, [("Zoe Royer", ZOE)]) for k in range(3)]
+    ms.append(moment(3, [(None, ZOE), (None, SHERRY)], annotation={"review_reasons": list(shared), "normalisation_repairs": [],
+                                                                     "evidence_provenance": {}}))
+    ms.append(moment(4, [(None, "firefighter"), (None, "firefighter")], annotation={"review_reasons": list(other),
+                     "normalisation_repairs": [], "evidence_provenance": {}}))
+    ms.append(moment(5, [(None, "a"), (None, "b"), (None, "c")],
+                     observed={"speech_share": 0.9, "speakers": [], "on_screen_text": [], "shot_cuts": 2,
+                               "shot_scale_detector": [{"label": "wide", "share": 0.3}, {"label": "close_up", "share": 0.25},
+                                                       {"label": "medium", "share": 0.15}, {"label": "no_person", "share": 0.3}]},
+                     annotation={"review_reasons": ["people: metadata describes 3, detector saw at most 1",
+                                                    "shot scale: metadata medium, detector mostly wide"],
+                                 "normalisation_repairs": [], "evidence_provenance": {}}))
+    d, _ = run(doc(ms))
+    m3, m4, m5 = d["moments"][3], d["moments"][4], d["moments"][5]
+    assert [e.get("name") for e in m3["entities"]] == ["Zoe Royer", None] and not m3["annotation"]["needs_review"]
+    assert m4["annotation"]["review_reasons"] == ["name 'EMS team' was given to 2 people; removed from all"]
+    assert m5["annotation"]["review_reasons"] == [] and len(m5["annotation"]["review_reasons_suppressed"]) == 2
