@@ -14,4 +14,7 @@ L2_ENV=${VMP_L2_ENV:-$HOME/.conda/envs/vmp-vllm}
 nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv || true
 echo "env: $L2_ENV"
 "$L2_ENV/bin/python" scripts/patch_vllm_mig.py || true
+# vLLM compiles some kernels at start-up and needs nvcc: use the one installed in the vLLM env
+[ -x "$L2_ENV/bin/nvcc" ] && export CUDA_HOME="$L2_ENV" PATH="$L2_ENV/bin:$PATH"
+[ -n "${VMP_CUDA_MODULE:-}" ] && module load "$VMP_CUDA_MODULE"
 "$L2_ENV/bin/python" -m video_metadata.cli check-vlm --config configs/cluster.yaml

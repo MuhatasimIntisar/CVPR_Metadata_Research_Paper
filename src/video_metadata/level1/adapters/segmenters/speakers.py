@@ -138,9 +138,14 @@ def run(video: Path, out_dir: Path, info: dict, wav: Path, device: str = "cpu",
     if asr is None:
         raise RuntimeError("speakers needs asr.json; run the asr step first")
     audio, sr = load_audio(wav)
-    windows = make_windows(asr["sentences"], audio_s=len(audio) / sr)
-    if not windows:
-        raise RuntimeError("no speech windows found in asr.json")
+    windows = make_windows(asr.get("sentences") or [], audio_s=len(audio) / sr)
+    if not windows:  # no transcript speech (e.g. a concert without captions): nothing to diarise, not an error
+        return write_result(out_dir, NAME, f"{MODEL} + agglomerative clustering",
+                            {"window_s": 1.5, "hop_s": 0.75, "distance_threshold": threshold,
+                             "min_cluster_share": min_cluster_share}, t0,
+                            stats={"n_speakers": 0, "n_windows": 0, "n_turns": 0, "talk_time_s": {},
+                                   "note": "no transcript speech windows; diarisation skipped"},
+                            boundaries=[], runs=[], word_speakers=[])
     emb = embed(audio, sr, windows, device, cache_dir=out_dir.parent / "_models" / "spkrec-ecapa-voxceleb")
     labels = cluster(emb, threshold, min_cluster_share)
     cents = {k: emb[labels == k].mean(0) for k in set(labels.tolist())}
