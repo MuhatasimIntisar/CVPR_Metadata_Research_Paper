@@ -39,12 +39,12 @@ def decode(video: Path, fps: float, short_side: int = 480):
     cap = cv2.VideoCapture(str(video))
     vfps = cap.get(cv2.CAP_PROP_FPS) or 25.0
     k, idx = 0, 0
-    while True:
-        ok, frame = cap.read()
-        if not ok:
-            break
+    while cap.grab():  # decode every frame, but convert/resize only the sampled ones
         t = idx / vfps
         if t + 0.5 / vfps >= (k + 0.5) / fps:
+            ok, frame = cap.retrieve()
+            if not ok:
+                break
             h, w = frame.shape[:2]
             s = short_side / min(h, w)
             if s < 1:

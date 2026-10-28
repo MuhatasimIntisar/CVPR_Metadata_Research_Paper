@@ -11,7 +11,9 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from ..utils.io import read_json, write_json
@@ -22,6 +24,9 @@ SEGMENTER_FILES = {"silence": "silence.json", "shots": "shots.json", "camera_mot
 L1_FILES = {"yolo": ["yolo_track.json", "yolo_pose.json"], "vad": ["vad.json"],
             "vision_language": ["v2/xclip_v2.npz", "v2/clip_v2.npz", "v2/frame_stats.npz", "v2/overlay_mask.npy",
                                 "v2/detect_v2_meta.json"]}
+
+
+CPU_STEPS = ("shots", "camera_motion")  # OpenCV-only steps, run alongside the GPU steps (camera_motion needs shots)
 
 
 def outputs_of(step):
@@ -70,29 +75,34 @@ def run(cfg, manifest, entry, vdir: Path, log):
     prov = read_json(raw / "provenance.json", {})
     device = device_of(cfg)
     wav = vdir / "level1" / "_cache" / "audio_16k.wav"
-    info = None
-    for step in cfg["level1"]["steps"]:
+    from .adapters.segmenters.common import probe
+    info = probe(video)
+    lock = threading.Lock()
+
+    def save(step, rec):
+        with lock:  # both branches update provenance.json
+            prov[step] = rec
+            write_json(raw / "provenance.json", prov)
+
+    def do_step(step):
         outs = outputs_of(step)
         if all((raw / o).exists() for o in outs):
             log.info(f"{step}: cached")
-            continue
+            return
         leg = legacy_sources(cfg, vid, step)
         if leg and all(p.exists() for p in leg):
             for p in leg:
                 shutil.copy2(p, raw / p.name)
-            prov[step] = {"source": "reused earlier output", "files": [str(p) for p in leg]}
             log.info(f"{step}: reused earlier output ({leg[0].parent})")
-            write_json(raw / "provenance.json", prov)
-            continue
+            save(step, {"source": "reused earlier output", "files": [str(p) for p in leg]})
+            return
         t0 = time.time()
         if step in ("silence", "audio_events", "speakers", "vad") and not wav.exists():
             wav.parent.mkdir(parents=True, exist_ok=True)
             subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(video), "-vn", "-ac", "1", "-ar", "16000",
                             "-c:a", "pcm_s16le", str(wav)], check=True)
-        if info is None:
-            from .adapters.segmenters.common import probe
-            info = probe(video)
-        log.info(f"{step}: running on {device}")
+        dev = "cpu" if step in CPU_STEPS else device
+        log.info(f"{step}: running on {dev}")
         if step == "transcript_words":
             from .adapters.visual import transcript_words
             meta = transcript_words(raw, transcript)
@@ -115,14 +125,26 @@ def run(cfg, manifest, entry, vdir: Path, log):
             if langs == "auto":
                 code = (read_json(vdir / "source" / "source_metadata.json") or {}).get("language_code") or "en"
                 langs = "en" if code == "en" else f"{code},en"
-            kw = {"wav": wav, "device": device}
+            kw = {"wav": wav, "device": dev}
             if step == "ocr":
                 kw.update(langs=langs, every_s=cfg["level1"]["ocr"]["every_s"])
             mod.run(video, raw, info, **kw)
             meta = {"runtime_s": round(time.time() - t0, 1)}
-        prov[step] = {"source": "computed", "device": device, **(meta or {})}
-        write_json(raw / "provenance.json", prov)
+        save(step, {"source": "computed", "device": dev, **(meta or {})})
         log.info(f"{step}: done in {time.time() - t0:.0f} s")
+
+    steps = list(cfg["level1"]["steps"])
+    # the CPU-only video steps (shot cuts, then optical flow, which needs the cuts) run in a background thread while
+    # the GPU/audio steps run here; OpenCV releases the GIL, so the two branches overlap
+    cpu = [s for s in steps if s in CPU_STEPS]
+    rest = [s for s in steps if s not in CPU_STEPS]
+    t_all = time.time()
+    with ThreadPoolExecutor(1) as ex:
+        fut = ex.submit(lambda: [do_step(s) for s in cpu])
+        for step in rest:
+            do_step(step)
+        fut.result()
+    log.info(f"detectors done in {time.time() - t_all:.0f} s")
     t0 = time.time()
     n_obs, n_win = build(cfg, vdir, transcript)
     prov["observations"] = {"n_steps": n_obs, "n_windows": n_win, "runtime_s": round(time.time() - t0, 1)}

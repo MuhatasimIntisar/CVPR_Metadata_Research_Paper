@@ -38,9 +38,12 @@ def run(video: Path, out_dir: Path, info: dict, adaptive_threshold: float = 3.0,
         min_scene_len_frames: int = 8, fade_threshold: int = 12, **_) -> Path:
     from scenedetect import AdaptiveDetector, ThresholdDetector
     t0 = time.time()
-    cuts = _cuts(video, AdaptiveDetector(adaptive_threshold=adaptive_threshold,
-                                         min_scene_len=min_scene_len_frames))
-    fades = _cuts(video, ThresholdDetector(threshold=fade_threshold, min_scene_len=min_scene_len_frames))
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(2) as ex:  # two independent decodes; OpenCV releases the GIL
+        fc = ex.submit(_cuts, video, AdaptiveDetector(adaptive_threshold=adaptive_threshold,
+                                                      min_scene_len=min_scene_len_frames))
+        ff = ex.submit(_cuts, video, ThresholdDetector(threshold=fade_threshold, min_scene_len=min_scene_len_frames))
+        cuts, fades = fc.result(), ff.result()
 
     bounds = [{"t": r3(t), "kind": "cut", "conf": r3(_hist_change(video, t))} for t in cuts]
     bounds += [{"t": r3(t), "kind": "fade", "conf": 1.0} for t in fades

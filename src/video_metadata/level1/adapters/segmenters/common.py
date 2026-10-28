@@ -59,24 +59,27 @@ def load_audio(wav: Path) -> tuple[np.ndarray, int]:
 
 def iter_frames(video: Path, every_s: float, max_side: int | None = None, with_prev: bool = False):
     """Sequential decode; yields (t, frame_bgr[, prev_frame_bgr]) roughly every `every_s` seconds.
-    with_prev=True also yields the frame immediately before (for optical flow)."""
+    with_prev=True also yields the frame immediately before (for optical flow).
+    Every frame is grabbed (demuxed + decoded) but only the frames that are used are converted and resized."""
     import cv2
     cap = cv2.VideoCapture(str(video))
     fps = cap.get(cv2.CAP_PROP_FPS) or 25.0
     step = max(1, int(round(every_s * fps)))
     idx, prev = 0, None
-    while True:
-        ok, frame = cap.read()
-        if not ok:
-            break
-        if max_side:
-            h, w = frame.shape[:2]
-            s = max_side / max(h, w)
-            if s < 1:
-                frame = cv2.resize(frame, (int(w * s), int(h * s)), interpolation=cv2.INTER_AREA)
-        if idx % step == 0 and (not with_prev or prev is not None):
-            yield (idx / fps, frame, prev) if with_prev else (idx / fps, frame)
-        prev = frame
+    while cap.grab():
+        use = idx % step == 0
+        if use or (with_prev and (idx + 1) % step == 0):
+            ok, frame = cap.retrieve()
+            if not ok:
+                break
+            if max_side:
+                h, w = frame.shape[:2]
+                s = max_side / max(h, w)
+                if s < 1:
+                    frame = cv2.resize(frame, (int(w * s), int(h * s)), interpolation=cv2.INTER_AREA)
+            if use and (not with_prev or prev is not None):
+                yield (idx / fps, frame, prev) if with_prev else (idx / fps, frame)
+            prev = frame
         idx += 1
     cap.release()
 
