@@ -19,6 +19,18 @@ MAIN_ENV=$HOME/.conda/envs/vmp
 L2_ENV=${VMP_L2_ENV:-$HOME/.conda/envs/vmp-vllm}
 [ -x "$L2_ENV/bin/python" ] || L2_ENV=$MAIN_ENV
 nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv || true
+# ffmpeg (audio extraction): the env's own, else a module, else the binary bundled with imageio-ffmpeg.
+# Do not rely on whatever the submitting shell had on PATH.
+export PATH="$MAIN_ENV/bin:$PATH"
+if ! command -v ffmpeg >/dev/null && type module >/dev/null 2>&1; then
+  module load "${VMP_FFMPEG_MODULE:-ffmpeg}" >/dev/null 2>&1 || true
+fi
+if ! command -v ffmpeg >/dev/null; then
+  FF=$("$MAIN_ENV/bin/python" -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())" 2>/dev/null || true)
+  if [ -n "$FF" ]; then mkdir -p ../outputs/.bin && ln -sf "$FF" ../outputs/.bin/ffmpeg && export PATH="$(cd ../outputs/.bin && pwd):$PATH"; fi
+fi
+command -v ffmpeg >/dev/null || { echo "ffmpeg not found. Install it once: conda install -y -p $MAIN_ENV -c conda-forge ffmpeg"; exit 1; }
+echo "ffmpeg: $(command -v ffmpeg)"
 STAGES=${*:-ingest level1 correction level2}
 PRE=$(for s in $STAGES; do [ "$s" != level2 ] && echo -n "$s "; done || true)
 run() {  # run <env> <stages...>
