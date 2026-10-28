@@ -21,7 +21,8 @@ def download(cfg: dict, include_vlm: bool = False, ocr_langs=("en", "es")) -> li
     os.environ["TRANSFORMERS_OFFLINE"] = "0"
     done = []
     from huggingface_hub import snapshot_download
-    for repo in HF_MODELS["level1"] + (HF_MODELS["vlm"] if include_vlm else []):
+    vlm = [(cfg.get("level2") or {}).get("model_id") or HF_MODELS["vlm"][0]]  # the configured Level-2 model (VMP_LEVEL2__MODEL_ID)
+    for repo in HF_MODELS["level1"] + (vlm if include_vlm else []):
         snapshot_download(repo)  # HF_HOME is set from paths.model_cache by config.apply_runtime
         done.append(repo)
     ydir = cache / "ultralytics"
