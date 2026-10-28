@@ -85,6 +85,8 @@ level2:
     max_num_seqs: 32              # sequences decoded together
     enable_prefix_caching: true   # shared prompt prefixes (rules/schema); turned off automatically if the engine fails to start
     max_images_per_prompt: 24
+  vllm_env:                       # environment for the vLLM engine (set only if not already set)
+    VLLM_USE_FLASHINFER_SAMPLER: "0"   # PyTorch sampler: FlashInfer's needs nvcc JIT compilation; greedy decoding is unaffected
   prompt_version: l2-v2           # boundary (merge/keep) prompt
   metadata_prompt_version: meta-v4  # moment metadata prompt (schema v2.1: names, relation direction, camera vocab)
   frame_max_side: 448

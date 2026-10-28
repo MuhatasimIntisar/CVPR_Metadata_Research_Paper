@@ -75,8 +75,13 @@ class VLLMBackend:
     name = "vllm"
 
     def __init__(self, cfg: dict, device: str):
-        from vllm import LLM, SamplingParams
+        import os
         c = cfg["level2"]
+        # set before vLLM is imported so its engine process inherits them. Default: no FlashInfer sampler - it
+        # JIT-compiles CUDA code at start-up (fails on Kelvin) and greedy decoding does not need it
+        for k_, v_ in (c.get("vllm_env") or {}).items():
+            os.environ.setdefault(str(k_), str(v_))
+        from vllm import LLM, SamplingParams
         v = dict(c.get("vllm") or {})
         self.model_id = c["model_id"]
         self.max_images = int(v.pop("max_images_per_prompt", 24))

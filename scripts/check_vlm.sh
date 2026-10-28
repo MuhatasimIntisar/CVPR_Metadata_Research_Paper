@@ -15,6 +15,7 @@ nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv || true
 echo "env: $L2_ENV"
 "$L2_ENV/bin/python" scripts/patch_vllm_mig.py || true
 # vLLM compiles some kernels at start-up and needs nvcc: use the one installed in the vLLM env
+export VLLM_USE_FLASHINFER_SAMPLER="${VLLM_USE_FLASHINFER_SAMPLER:-0}"  # no FlashInfer JIT sampler
 [ -x "$L2_ENV/bin/nvcc" ] && export CUDA_HOME="$L2_ENV" PATH="$L2_ENV/bin:$PATH"
 [ -n "${VMP_CUDA_MODULE:-}" ] && module load "$VMP_CUDA_MODULE"
 "$L2_ENV/bin/python" -m video_metadata.cli check-vlm --config configs/cluster.yaml
