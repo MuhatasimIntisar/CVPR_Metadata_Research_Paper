@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TVM annotation viewer</title>
+<style>
+:root{--bg:#f6f5f2;--panel:#fff;--ink:#1d1d1b;--muted:#6b6a65;--line:#dedcd5;--accent:#2f5bd3;--warn:#c4362c;--chip:#eeede8;--sel:#ffd54a}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--panel:#1f1f1d;--ink:#ecebe6;--muted:#9c9a92;--line:#3a3935;--accent:#7ea2ff;--warn:#ff7a6e;--chip:#2c2b28;--sel:#e0b100}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:5}
+header h1{font-size:15px;font-weight:600;margin:0 12px 0 0}
+button,select,input[type=search]{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:5px 9px}
+button{cursor:pointer} button:hover{border-color:var(--muted)}
+label.file{border:1px solid var(--line);border-radius:6px;padding:5px 9px;cursor:pointer;background:var(--panel)} label.file input{display:none}
+.muted{color:var(--muted)} .warn{color:var(--warn)}
+main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,1fr);gap:12px;padding:12px 16px}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+video{width:100%;max-height:52vh;background:#000;border-radius:8px;display:block}
+#now{margin-top:10px;font-size:13px}
+#now .row{margin:3px 0}
+#details{max-height:calc(52vh + 180px);overflow:auto}
+#details h2{font-size:15px;margin:0 0 6px}
+#details h3{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:12px 0 4px}
+.chips span{display:inline-block;background:var(--chip);border-radius:10px;padding:1px 8px;margin:2px 4px 2px 0;font-size:12px}
+table{border-collapse:collapse;width:100%;font-size:12.5px} td,th{border-bottom:1px solid var(--line);padding:4px 6px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:500}
+pre{white-space:pre-wrap;word-break:break-word;font-size:11.5px;background:var(--chip);padding:8px;border-radius:6px;max-height:320px;overflow:auto}
+#tlwrap{margin:0 16px 12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 0 0}
+#tlbar{display:flex;gap:8px;align-items:center;padding:0 12px 8px;flex-wrap:wrap;font-size:13px}
+#tl{display:grid;grid-template-columns:150px minmax(0,1fr)}
+#labels div{height:20px;line-height:20px;font-size:11.5px;color:var(--muted);padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-bottom:1px solid transparent}
+#canvaswrap{position:relative;overflow:hidden}
+#cv{display:block;width:100%;cursor:crosshair}
+#hscroll{overflow-x:auto;overflow-y:hidden;height:14px} #hscroll div{height:1px}
+#tip{position:fixed;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-size:12px;max-width:360px;box-shadow:0 2px 10px rgba(0,0,0,.15);display:none;z-index:10}
+#list{margin:0 16px 24px}
+#list .tools{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+#list tr{cursor:pointer} #list tr:hover td{background:var(--chip)} #list tr.on td{background:color-mix(in srgb,var(--sel) 30%,transparent)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warn);margin-right:4px}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+kbd{border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:11px}
+</style>
+</head>
+<body>
+<header>
+  <h1>TVM annotation viewer</h1>
+  <label class="file">Load bundles…<input id="fBundles" type="file" accept=".json" multiple></label>
+  <label class="file">Bundle folder…<input id="fBundleDir" type="file" webkitdirectory multiple></label>
+  <label class="file">Video file…<input id="fVideo" type="file" accept="video/*"></label>
+  <label class="file">Corpus folder…<input id="fCorpus" type="file" webkitdirectory multiple></label>
+  <select id="selVideo" title="video"></select>
+  <select id="selCompare" title="compare with another run of the same video"><option value="">compare: none</option></select>
+  <span id="info" class="muted"></span>
+</header>
+
+<div id="app"><div class="empty">Load one or more bundle JSON files (made by <code>scripts/viewer_bundle.py</code>), then the video file or the corpus folder.<br>
+<span class="muted">Keys: <kbd>space</kbd> play/pause · <kbd>←</kbd>/<kbd>→</kbd> 5 s · <kbd>[</kbd>/<kbd>]</kbd> previous/next moment · <kbd>+</kbd>/<kbd>−</kbd> zoom</span></div></div>
+
+<div id="tip"></div>
+
+<script>
+"use strict";
+const S = {bundles: {}, cur: null, cmp: null, corpus: [], pps: 2, off: 0, sel: null, follow: true, rowH: 20, lanes: [], vidUrl: null};
+const $ = s => document.querySelector(s);
+const fmt = t => { if (t == null || isNaN(t)) return "-"; t = Math.max(0, t); const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = Math.floor(t % 60);
+  return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(s).padStart(2, "0"); };
+const esc = x => String(x ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const PAL = ["#4e79a7","#f28e2b","#59a14f","#e15759","#76b7b2","#edc948","#b07aa1","#ff9da7","#9c755f","#86bcb6","#d37295","#a0cbe8"];
+const colorMap = {}; function col(label) { if (label == null) return null; if (!(label in colorMap)) { let h = 0; for (const ch of String(label)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; colorMap[label] = PAL[h % PAL.length]; } return colorMap[label]; }
+const STATUS = {moment: "#59a14f", ambiguous: "#edc948", unobservable: "#9c9a92"};
+const DEC = {keep: "#1d1d1b", merge: "#7ea2ff", uncertain: "#e15759"};
+const SHOT = {extreme_close_up: "#08306b", close_up: "#2171b5", medium: "#6baed6", medium_wide: "#bdd7e7", wide: "#fdae6b", extreme_wide: "#e6550d", no_person: null};
+const EVT = {topic: "#b07aa1", activity: "#59a14f", activity_short: "#8cd17d", activity_family: "#b6dfa8", environment: "#f28e2b", visual_transition: "#4e79a7", people: "#e15759", audio: "#76b7b2", observability: "#9c9a92", human: "#000"};
+
+/* ---------- loading ---------- */
+async function loadFiles(files) {
+  for (const f of files) {
+    if (!f.name.endsWith(".json") || f.name === "index.json") continue;
+    try { const b = JSON.parse(await f.text()); if (b.bundle !== "tvm-viewer-1") continue;
+      const key = b.video_id + " · " + (b.model || b.metadata_stage) + (b.cleanup_version ? " · " + b.cleanup_version : "") + (S.bundles[b.video_id + " · " + (b.model || b.metadata_stage)] ? " · " + f.webkitRelativePath : "");
+      b._key = key; S.bundles[key] = b; } catch (e) { console.warn("skip", f.name, e); }
+  }
+  fillSelect();
+}
+function fillSelect() {
+  const keys = Object.keys(S.bundles).sort();
+  $("#selVideo").innerHTML = keys.map(k => `<option value="${esc(k)}">${esc((S.bundles[k].title || k).slice(0, 60))} — ${esc(k.split(" · ").slice(1).join(" · "))}</option>`).join("");
+  if (keys.length && !S.cur) choose(keys[0]); else if (S.cur) $("#selVideo").value = S.cur._key;
+}
+function choose(key) {
+  S.cur = S.bundles[key]; S.cmp = null; S.sel = null; $("#selVideo").value = key;
+  const others = Object.keys(S.bundles).filter(k => k !== key && S.bundles[k].video_id === S.cur.video_id);
+  $("#selCompare").innerHTML = `<option value="">compare: none</option>` + others.map(k => `<option value="${esc(k)}">compare: ${esc(k.split(" · ").slice(1).join(" · "))}</option>`).join("");
+  build(); matchVideo();
+}
+function matchVideo() {
+  if (!S.cur || !S.corpus.length) return;
+  const inItem = S.corpus.filter(f => (f.webkitRelativePath || f.name).split("/").includes(S.cur.video_id));
+  const f = inItem.find(f => [S.cur.video_file, S.cur.original_name].includes(f.name)) || inItem[0];
+  if (f) setVideo(f);
+}
+function setVideo(file) { if (S.vidUrl) URL.revokeObjectURL(S.vidUrl); S.vidUrl = URL.createObjectURL(file); const v = $("#vid"); if (v) { v.src = S.vidUrl; } }
+$("#fBundles").onchange = e => loadFiles(e.target.files);
+$("#fBundleDir").onchange = e => loadFiles(e.target.files);
+$("#fVideo").onchange = e => { if (e.target.files[0]) setVideo(e.target.files[0]); };
+$("#fCorpus").onchange = e => { S.corpus = [...e.target.files].filter(f => /\.(mp4|mkv|webm|mov)$/i.test(f.name)); matchVideo(); };
+$("#selVideo").onchange = e => choose(e.target.value);
+$("#selCompare").onchange = e => { S.cmp = e.target.value ? S.bundles[e.target.value] : null; buildLanes(); renderLabels(); resize(); draw(); renderList(); };
+
+/* ---------- layout ---------- */
+function build() {
+  const b = S.cur;
+  $("#info").textContent = `${b.channel || ""} · ${b.date || ""} · ${fmt(b.duration)} · ${b.model || ""} · ${b.metadata_stage}${b.cleanup_version ? " " + b.cleanup_version : ""}`;
+  $("#app").innerHTML = `
+  <main>
+    <div class="card"><video id="vid" controls preload="metadata"></video>
+      <div id="now"></div></div>
+    <div class="card" id="details"><div class="muted">Click anything on the timeline or in the moment list.</div></div>
+  </main>
+  <div id="tlwrap">
+    <div id="tlbar"><span class="muted">Zoom</span>
+      <button id="zout">−</button><button id="zfit">fit</button><button id="zin">+</button>
+      <span id="zval" class="muted"></span>
+      <label><input type="checkbox" id="follow" checked> follow playhead</label>
+      <span class="muted">Click a lane to inspect it · <kbd>Ctrl</kbd>+wheel zooms · wheel scrolls</span></div>
+    <div id="tl"><div id="labels"></div><div id="canvaswrap"><canvas id="cv"></canvas><div id="hscroll"><div></div></div></div></div>
+  </div>
+  <div id="list"><div class="tools"><strong>Moments</strong>
+    <input type="search" id="q" placeholder="search descriptions, tags, names…">
+    <label><input type="checkbox" id="onlyReview"> needs review only</label><span id="count" class="muted"></span></div>
+    <table><thead><tr><th>time</th><th></th><th>description</th><th>tags</th><th>camera</th></tr></thead><tbody id="rows"></tbody></table></div>`;
+  if (S.vidUrl) $("#vid").src = S.vidUrl;
+  const v = $("#vid");
+  v.addEventListener("timeupdate", tick); v.addEventListener("seeked", tick);
+  $("#zin").onclick = () => zoom(2); $("#zout").onclick = () => zoom(.5); $("#zfit").onclick = fit;
+  $("#follow").onchange = e => S.follow = e.target.checked;
+  $("#hscroll").onscroll = e => { S.off = e.target.scrollLeft; draw(); };
+  $("#q").oninput = renderList; $("#onlyReview").onchange = renderList;
+  const cv = $("#cv");
+  cv.onclick = onClick; cv.onmousemove = onHover; cv.onmouseleave = () => $("#tip").style.display = "none";
+  cv.addEventListener("wheel", e => { if (e.ctrlKey || e.metaKey) { e.preventDefault(); const r = cv.getBoundingClientRect(); zoom(e.deltaY < 0 ? 1.25 : .8, e.clientX - r.left); }
+    else if (Math.abs(e.deltaX) > 0 || e.shiftKey || Math.abs(e.deltaY) > 0) { e.preventDefault(); $("#hscroll").scrollLeft += (e.deltaX || e.deltaY); } }, {passive: false});
+  buildLanes(); renderLabels(); fit(); renderList(); requestAnimationFrame(loop);
+}
+window.addEventListener("resize", () => { resize(); draw(); });
+document.addEventListener("keydown", e => {
+  if (!S.cur || e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
+  const v = $("#vid");
+  if (e.key === " ") { e.preventDefault(); v.paused ? v.play() : v.pause(); }
+  else if (e.key === "ArrowLeft") v.currentTime -= 5; else if (e.key === "ArrowRight") v.currentTime += 5;
+  else if (e.key === "+" || e.key === "=") zoom(2); else if (e.key === "-") zoom(.5);
+  else if (e.key === "]" || e.key === "[") { const M = S.cur.moments, t = v.currentTime; const i = Math.max(0, M.findIndex(m => m.start_s <= t && t < m.end_s));
+    let j = i + 1; if (e.key === "[") j = t - (M[i]?.start_s ?? 0) > 2 ? i : i - 1;
+    j = Math.max(0, Math.min(M.length - 1, j)); if (M[j]) select("moment", M[j], S.cur, true); }
+});
+
+/* ---------- lanes ---------- */
+function buildLanes() {
+  const b = S.cur, L = [];
+  const spans = (name, items, color, kind, src) => L.push({name, type: "span", items, color, kind, src});
+  const points = (name, items, color, kind, src, h) => L.push({name, type: "point", items, color, kind, src, h});
+  const bars = (name, items, val, max, color, kind) => L.push({name, type: "bar", items, val, max, color, kind});
+  spans("Transcript", b.transcript.map(x => ({t0: x[0], t1: x[1], text: x[2]})), () => "#b9b7ae", "transcript");
+  points("Evidence (all)", b.evidence, e => EVT[e.type] || "#888", "evidence", null, e => Math.min(1, (e.weight || .3)));
+  points("Pooled changes", b.pooled, g => g.accepted ? "#1d1d1b" : "#c9c7bf", "pooled", null, g => Math.min(1, (g.score || 0) / 1.5));
+  spans("Candidate intervals", b.candidates, c => STATUS[c.status] || "#888", "candidate");
+  points("L2 decisions", b.decisions, d => DEC[d.decision] || "#888", "decision", null, d => d.decision === "merge" ? .45 : 1);
+  const segs = b.segments.map((s, i) => ({...s, t0: s.start_s, t1: s.end_s, _i: i}));
+  spans("Segments", segs, s => s._i % 2 ? "#8da0cb" : "#b3c1e0", "segment", b);
+  const moms = b.moments.map((m, i) => ({...m, t0: m.start_s, t1: m.end_s, _i: i}));
+  spans("Moments", moms, m => m.annotation?.needs_review ? "#e15759" : (m._i % 2 ? "#66a182" : "#9cc5a8"), "moment", b);
+  if (S.cmp) {
+    spans("Segments (compare)", S.cmp.segments.map((s, i) => ({...s, t0: s.start_s, t1: s.end_s, _i: i})), s => s._i % 2 ? "#b07aa1" : "#d4b5cb", "segment", S.cmp);
+    spans("Moments (compare)", S.cmp.moments.map((m, i) => ({...m, t0: m.start_s, t1: m.end_s, _i: i})), m => m.annotation?.needs_review ? "#e15759" : (m._i % 2 ? "#a27c47" : "#d3b88c"), "moment", S.cmp);
+    points("L2 decisions (compare)", S.cmp.decisions, d => DEC[d.decision] || "#888", "decision", S.cmp, d => d.decision === "merge" ? .45 : 1);
+  }
+  const st = b.steps;
+  spans("Activity (corrected)", st, s => col(s.act), "step:act");
+  spans("Activity (raw X-CLIP)", st, s => col(s.act_raw), "step:act_raw");
+  spans("Setting (CLIP)", st, s => s.black ? "#222" : col(s.set), "step:set");
+  bars("People (median)", st, s => s.ppl || 0, Math.max(3, ...st.map(s => s.ppl || 0)), "#e15759", "step:ppl");
+  bars("Speech share", st, s => s.speech || 0, 1, "#4e79a7", "step:speech");
+  bars("Music share", st, s => s.music || 0, 1, "#f28e2b", "step:music");
+  spans("Speaker (main)", st, s => s.spk && s.spk[0] ? col("spk" + s.spk[0]) : null, "step:spk");
+  spans("Shot scale (pose)", st, s => SHOT[s.shot] ?? null, "step:shot");
+  spans("Camera motion", st, s => s.cam && s.cam !== "static" ? col("cam" + s.cam) : (s.cam ? "#dcdcd6" : null), "step:cam");
+  points("Shot cuts", st.flatMap(s => (s.cuts || []).map(t => ({t, s}))), () => "#4e79a7", "cut", null, () => 1);
+  spans("On-screen text", st.filter(s => s.ocr && s.ocr.length), () => "#9c755f", "step:ocr");
+  bars("Topic change", st, s => s.topic || 0, Math.max(.3, ...st.map(s => s.topic || 0)), "#b07aa1", "step:topic");
+  S.lanes = L;
+}
+function renderLabels() { $("#labels").innerHTML = S.lanes.map(l => `<div title="${esc(l.name)}">${esc(l.name)}</div>`).join(""); }
+function resize() {
+  const cv = $("#cv"); if (!cv) return; const w = cv.parentElement.clientWidth, h = S.lanes.length * S.rowH, d = devicePixelRatio || 1;
+  cv.width = w * d; cv.height = h * d; cv.style.height = h + "px"; cv.getContext("2d").setTransform(d, 0, 0, d, 0, 0);
+  $("#hscroll div").style.width = Math.max(w, (S.cur.duration || 1) * S.pps) + "px";
+}
+function fit() { const w = $("#cv").parentElement.clientWidth; setZoom(w / (S.cur.duration || 1)); }
+function setZoom(p, anchorX) {
+  const w = $("#cv").parentElement.clientWidth, tAnchor = S.off / S.pps + (anchorX ?? w / 2) / S.pps;
+  S.pps = Math.max(w / (S.cur.duration || 1), Math.min(80, p)); resize();
+  const hs = $("#hscroll"); hs.scrollLeft = Math.max(0, tAnchor * S.pps - (anchorX ?? w / 2)); S.off = hs.scrollLeft;
+  $("#zval").textContent = S.pps >= 1 ? S.pps.toFixed(1) + " px/s" : (1 / S.pps).toFixed(1) + " s/px"; draw();
+}
+function zoom(f, ax) { setZoom(S.pps * f, ax); }
+const X = t => t * S.pps - S.off;
+
+function draw() {
+  const cv = $("#cv"); if (!cv || !S.cur) return; const g = cv.getContext("2d"), w = cv.clientWidth, H = S.rowH;
+  const css = getComputedStyle(document.documentElement);
+  g.clearRect(0, 0, w, S.lanes.length * H);
+  const t0 = S.off / S.pps, t1 = t0 + w / S.pps;
+  S.lanes.forEach((l, i) => {
+    const y = i * H;
+    g.fillStyle = i % 2 ? "rgba(127,127,127,.05)" : "transparent"; g.fillRect(0, y, w, H);
+    for (const it of l.items) {
+      if (l.type === "point") { const t = it.t; if (t < t0 - 1 || t > t1 + 1) continue; const c = l.color(it); if (!c) continue;
+        const hh = (H - 4) * (l.h ? l.h(it) : 1); g.fillStyle = c; g.fillRect(Math.round(X(t)) - 1, y + H - 2 - hh, 2, hh); continue; }
+      const a = it.t0, b = it.t1; if (b < t0 || a > t1) continue; const c = typeof l.color === "function" ? l.color(it) : l.color; if (!c) continue;
+      const x0 = X(a), x1 = Math.max(x0 + 1, X(b));
+      if (l.type === "bar") { const v = Math.max(0, Math.min(1, l.val(it) / l.max)); g.fillStyle = c; g.globalAlpha = .85; g.fillRect(x0, y + H - 2 - (H - 4) * v, x1 - x0, (H - 4) * v); g.globalAlpha = 1; }
+      else { g.fillStyle = c; g.fillRect(x0, y + 2, x1 - x0 - (l.kind === "segment" || l.kind === "moment" || l.kind === "candidate" ? 1 : 0), H - 4);
+        if ((l.kind === "moment" || l.kind === "segment") && x1 - x0 > 50) { g.fillStyle = "#fff"; g.font = "10.5px system-ui"; g.fillText(fmt(a), x0 + 3, y + H - 6); } }
+    }
+    if (S.sel && S.sel.lane === i) { const it = S.sel.item; g.strokeStyle = css.getPropertyValue("--sel").trim(); g.lineWidth = 2;
+      if (it.t0 != null) g.strokeRect(X(it.t0) + 1, y + 1, Math.max(3, X(it.t1) - X(it.t0)) - 2, H - 2); else if (it.t != null) g.strokeRect(X(it.t) - 4, y + 1, 8, H - 2); }
+  });
+  const v = $("#vid"); if (v) { const x = X(v.currentTime || 0); g.fillStyle = css.getPropertyValue("--warn").trim(); g.fillRect(x - 1, 0, 2, S.lanes.length * H); }
+}
+function loop() { const v = $("#vid"); if (v && !v.paused) { if (S.follow) { const w = $("#cv").clientWidth, x = X(v.currentTime); if (x < 40 || x > w - 40) { const hs = $("#hscroll"); hs.scrollLeft = Math.max(0, v.currentTime * S.pps - w * .25); S.off = hs.scrollLeft; } } draw(); } requestAnimationFrame(loop); }
+
+/* ---------- picking ---------- */
+function pick(ev) {
+  const r = $("#cv").getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, li = Math.floor(y / S.rowH), l = S.lanes[li]; if (!l) return null;
+  const t = (x + S.off) / S.pps;
+  if (l.type === "point") { let best = null, bd = 6; for (const it of l.items) { const d = Math.abs(X(it.t) - x); if (d < bd) { bd = d; best = it; } } return best ? {lane: li, l, item: best, t} : {lane: li, l, item: null, t}; }
+  const it = l.items.find(it => it.t0 <= t && t < it.t1); return {lane: li, l, item: it || null, t};
+}
+function onHover(ev) {
+  const p = pick(ev), tip = $("#tip"); if (!p) { tip.style.display = "none"; return; }
+  tip.innerHTML = `<b>${esc(p.l.name)}</b> · ${fmt(p.t)}<br>` + (p.item ? esc(short(p.l.kind, p.item)) : '<span class="muted">—</span>');
+  tip.style.display = "block"; tip.style.left = Math.min(innerWidth - 370, ev.clientX + 14) + "px"; tip.style.top = (ev.clientY + 14) + "px";
+}
+function short(kind, it) {
+  switch (kind) {
+    case "transcript": return it.text;
+    case "evidence": return `${it.type} (w ${it.weight}) ${it.from ? it.from + " → " + it.to : ""} ${it.note || ""}`;
+    case "pooled": return `${it.accepted ? "ACCEPTED" : "rejected"} · score ${it.score} · ${(it.types || []).join(", ")}`;
+    case "candidate": return `${it.id} · ${it.status} · ${fmt(it.t0)}–${fmt(it.t1)} · ${(it.activities || []).slice(0, 2).map(a => a.state).join(", ")}`;
+    case "decision": return `${it.id} ${it.decision.toUpperCase()} (${it.decided_by}) — ${it.explanation || ""}`;
+    case "segment": return `${fmt(it.t0)}–${fmt(it.t1)} · ${(it.children || []).length} moment(s) · ${it.description || ""}`;
+    case "moment": return `${fmt(it.t0)}–${fmt(it.t1)} · ${it.description || ""}`;
+    case "cut": return "shot cut at " + fmt(it.t);
+    default: { const s = it; const k = kind.split(":")[1];
+      const m = {act: `${s.act}${s.act_changed ? " (corrected from " + s.act_raw + ")" : ""} · rel ${s.act_rel}`, act_raw: `${s.act_raw} · rel ${s.act_rel}`,
+        set: `${s.black ? "BLACK · " : ""}${s.set} · ${s.pres || ""}`, ppl: `${s.ppl} people (max ${s.ppl_max}) · ${(s.obj || []).join(", ")}`,
+        speech: "speech " + s.speech, music: "music " + s.music, spk: (s.spk || []).join(", "), shot: s.shot, cam: s.cam, ocr: (s.ocr || []).join(" / "), topic: "topic change " + s.topic};
+      return `${fmt(s.t0)}–${fmt(s.t1)} · ${m[k] ?? ""}`; }
+  }
+}
+function onClick(ev) { const p = pick(ev); if (!p) return; const v = $("#vid");
+  if (!p.item) { if (v) v.currentTime = p.t; return; }
+  select(p.l.kind, p.item, p.l.src || S.cur, true, p.lane); }
+function select(kind, item, src, seek, lane) {
+  if (lane == null) lane = S.lanes.findIndex(l => l.kind === kind && (l.src || S.cur) === src);
+  const it = item.t0 == null && item.start_s != null ? {...item, t0: item.start_s, t1: item.end_s} : item;
+  S.sel = {kind, item: it, lane}; const v = $("#vid");
+  if (seek && v) v.currentTime = it.t0 ?? it.t ?? v.currentTime;
+  renderDetails(kind, it, src); draw(); markRow();
+}
+
+/* ---------- details ---------- */
+const chips = a => `<div class="chips">${(a || []).map(x => `<span>${esc(x)}</span>`).join("") || '<span class="muted">—</span>'}</div>`;
+const kv = o => `<table>${Object.entries(o || {}).filter(([, v]) => v != null && v !== "" && !(Array.isArray(v) && !v.length)).map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(typeof v === "object" ? JSON.stringify(v) : v)}</td></tr>`).join("")}</table>`;
+const list = (a, empty = "—") => a && a.length ? `<ul>${a.map(x => `<li>${esc(typeof x === "object" ? JSON.stringify(x) : x)}</li>`).join("")}</ul>` : `<div class="muted">${empty}</div>`;
+function bnd(b) { if (!b) return "-"; return `${esc(b.decision || "")}${b.decided_by ? " (" + esc(b.decided_by) + ")" : ""}${b.t != null ? " at " + fmt(b.t) : ""}${b.explanation ? "<br><span class='muted'>" + esc(b.explanation) + "</span>" : ""}${b.automatic_evidence?.reason ? "<br><span class='muted'>rules: " + esc(b.automatic_evidence.reason) + "</span>" : ""}`; }
+function renderDetails(kind, it, src) {
+  const d = $("#details"); let h = "";
+  const tag = src && src !== S.cur ? ` <span class="muted">(compare: ${esc(src.model || "")})</span>` : "";
+  if (kind === "moment") {
+    const a = it.annotation || {}, ob = it.observed || {};
+    h += `<h2>Moment ${fmt(it.t0)}–${fmt(it.t1)}${tag}</h2><div class="muted">${esc(it.moment_id)} · ${(it.t1 - it.t0).toFixed(0)} s${it.merged_from ? " · merged from " + it.merged_from.length : ""}</div>`;
+      if (a.needs_review) h += `<h3 class="warn">Needs review</h3>${list(a.review_reasons)}`;
+    h += `<h3>Description</h3><div>${esc(it.description || "(none)")}</div><h3>Tags</h3>${chips(it.tags)}`;
+    h += `<h3>Entities</h3><table><tr><th>id</th><th>type</th><th>name</th><th>binding</th><th>description</th></tr>${(it.entities || []).map(e => `<tr><td>${esc(e.id)}</td><td>${esc(e.type)}${e.count ? " ×" + esc(e.count) : ""}</td><td>${esc(e.name || "")}${e.name_source ? "<br><span class='muted'>" + esc(e.name_source) + "</span>" : ""}</td><td>${esc(e.name_binding || "")}</td><td>${esc(e.description || "")}${e.evidence === "transcript" ? " <span class='muted'>[mentioned]</span>" : ""}</td></tr>`).join("")}</table>`;
+    h += `<h3>Actions</h3>${list((it.actions || []).map(x => `${x.type}: ${(x.participants || []).join(", ")}${x.description ? " — " + x.description : ""}`))}`;
+    h += `<h3>Relationships</h3>${list((it.relationships || []).map(r => `${r.subject} ${r.predicate} ${r.object}${r.restored_from ? " (restored from " + r.restored_from + ")" : ""}`))}`;
+    h += `<h3>Context</h3>${kv(it.context)}<h3>Camera &amp; attributes</h3>${kv(it.attributes)}`;
+    h += `<h3>Detected</h3>${kv({people: ob.people_count_median, people_max: ob.people_count_max, speech: ob.speech_share, music: ob.music_share, speakers: (ob.speakers || []).join(", "), shot_cuts: ob.shot_cuts,
+      shot_scale_detector: (ob.shot_scale_detector || []).map(x => x.label + " " + Math.round(x.share * 100) + "%").join(", "), camera_detector: (ob.camera_motion_detector || []).map(x => x.label + " " + Math.round(x.share * 100) + "%").join(", "),
+      setting_detector: (ob.setting_detector || []).map(x => x.label + " " + Math.round(x.share * 100) + "%").join(", "), activity_detector: (ob.activity_detector || []).map(x => x.state + " " + Math.round(x.share * 100) + "%").join(", "),
+      on_screen_text: (ob.on_screen_text || []).join(" / ")})}`;
+    h += `<h3>Boundaries</h3><table><tr><th>start</th><td>${bnd(it.boundary?.start)}</td></tr><tr><th>end</th><td>${bnd(it.boundary?.end)}</td></tr></table><div class="muted">intervals: ${esc((it.source_intervals || []).join(", "))}</div>`;
+    h += `<h3>Cleanup changes</h3>${list(a.cleanup_changes, "none")}<h3>Suppressed review reasons</h3>${list(a.review_reasons_suppressed, "none")}<h3>Level-2 repairs</h3>${list(a.normalisation_repairs, "none")}`;
+    h += `<h3>Generation</h3>${kv({status: a.generation_status, errors: a.generation_errors, attempts: a.attempts, model: a.model, prompt: a.metadata_prompt_version, frames_s: (a.evidence_provenance?.frames_s || []).join(", ")})}`;
+    const seg = (src || S.cur).segments.find(s => s.segment_id === it.segment_id);
+    if (seg && (seg.children || []).length > 1) h += `<h3>Parent segment</h3><div>${esc(seg.description || "")}</div>`;
+    h += `<details><summary class="muted">raw JSON</summary><pre>${esc(JSON.stringify(strip(it), null, 1))}</pre></details>`;
+  } else if (kind === "segment") {
+    h += `<h2>Segment ${fmt(it.t0)}–${fmt(it.t1)}${tag}</h2><div class="muted">${esc(it.segment_id)} · ${(it.children || []).length} moment(s)${it.single_moment ? " · single moment" : ""}${it.long_unsplit ? " · long, not split" : ""}</div>
+      <h3>Description</h3><div>${esc(it.description || "")}</div>
+      <h3>Boundaries</h3><table><tr><th>start</th><td>${bnd(it.boundary?.start)}</td></tr><tr><th>end</th><td>${bnd(it.boundary?.end)}</td></tr></table>
+      <h3>Merged boundaries</h3>${chips(it.merged_boundaries)}<h3>Candidate intervals</h3>${chips(it.source_intervals)}
+      <h3>Moments</h3>${list((src || S.cur).moments.filter(m => m.segment_id === it.segment_id).map(m => fmt(m.start_s) + " " + (m.description || "").slice(0, 90)))}`;
+  } else if (kind === "candidate") {
+    h += `<h2>Candidate ${esc(it.id)} · ${fmt(it.t0)}–${fmt(it.t1)}</h2><div class="muted">status ${esc(it.status)} · ${(it.t1 - it.t0).toFixed(0)} s</div>
+      <h3>Start boundary (rules)</h3><div>${esc(it.start_reason || "video start")}</div>
+      <h3>Activities</h3>${list((it.activities || []).map(a => a.state + " " + Math.round(a.share_of_steps * 100) + "%"))}
+      <h3>Sub-events</h3>${list((it.sub_events || []).map(s => `${s.state} ${fmt(s.start_s)}–${fmt(s.end_s)}`), "none")}
+      <h3>Setting</h3>${list((it.environment || []).map(e => e.label + " " + Math.round(e.share_of_steps * 100) + "%"))}
+      <h3>Audio / people</h3>${kv({...(it.audio || {}), people: it.people})}`;
+    const dec = S.cur.decisions.find(d => Math.abs(d.t - it.t0) < .01); if (dec) h += `<h3>Level-2 decision at its start</h3><div>${bnd(dec)}</div>`;
+  } else if (kind === "decision") {
+    h += `<h2>Boundary ${esc(it.id)} at ${fmt(it.t)}${tag}</h2><div><b>${esc(it.decision)}</b> by ${esc(it.decided_by)}${it.needs_review ? ' · <span class="warn">needs review</span>' : ""}</div>
+      <h3>Model explanation</h3><div>${esc(it.explanation || "")}</div><h3>Rule evidence</h3><div>${esc(it.evidence || "")}</div>`;
+  } else if (kind === "pooled") {
+    h += `<h2>Pooled change at ${fmt(it.t)}</h2><div><b>${it.accepted ? "accepted as boundary" : "rejected"}</b> · score ${esc(it.score)} · ${esc(it.decided_by)}</div><h3>Reason</h3><div>${esc(it.reason)}</div>
+      <h3>Evidence within 2 s</h3>${list(S.cur.evidence.filter(e => Math.abs(e.t - it.t) <= 2).map(e => `${fmt(e.t)} ${e.type} w${e.weight} ${e.from ? e.from + " → " + e.to : ""}`))}`;
+  } else if (kind === "evidence") {
+    h += `<h2>Evidence: ${esc(it.type)} at ${fmt(it.t)}</h2>${kv(it)}`;
+  } else if (kind === "transcript") {
+    h += `<h2>Transcript ${fmt(it.t0)}–${fmt(it.t1)}</h2><div>${esc(it.text)}</div>`;
+  } else {
+    h += `<h2>${esc(kind.replace("step:", "Step "))} ${fmt(it.t0 ?? it.t)}</h2>${kv(it.s || it)}`;
+  }
+  d.innerHTML = h; d.scrollTop = 0;
+}
+function strip(o) { const c = {...o}; delete c.t0; delete c.t1; delete c._i; return c; }
+
+/* ---------- now panel + list ---------- */
+function tick() {
+  const v = $("#vid"), t = v.currentTime, b = S.cur; if (!b) return;
+  const m = b.moments.find(m => m.start_s <= t && t < m.end_s), s = b.steps.find(s => s.t0 <= t && t < s.t1), tr = b.transcript.find(x => x[0] <= t && t < x[1]);
+  const mc = S.cmp ? S.cmp.moments.find(m => m.start_s <= t && t < m.end_s) : null;
+  $("#now").innerHTML = `<div class="row"><b>${fmt(t)}</b> ${m ? `· moment ${fmt(m.start_s)}–${fmt(m.end_s)}${m.annotation?.needs_review ? ' <span class="warn">needs review</span>' : ""}` : ""}</div>
+    ${m ? `<div class="row">${esc(m.description || "")}</div>` : ""}
+    ${mc ? `<div class="row muted">compare: ${esc(mc.description || "")}</div>` : ""}
+    ${tr ? `<div class="row muted">“${esc(tr[2])}”</div>` : ""}
+    ${s ? `<div class="row muted">detectors: ${esc(s.act)} · ${esc(s.set)} · ${s.ppl ?? "-"} people · shot ${esc(s.shot || "-")} · cam ${esc(s.cam || "-")} · speech ${s.speech} · music ${s.music}${s.ocr?.length ? " · text: " + esc(s.ocr.join(" / ")) : ""}</div>` : ""}`;
+  if (!S.cur || v.paused) draw();
+}
+function renderList() {
+  const b = S.cur, q = ($("#q").value || "").toLowerCase(), only = $("#onlyReview").checked;
+  const rows = b.moments.filter(m => (!only || m.annotation?.needs_review) && (!q || JSON.stringify([m.description, m.tags, (m.entities || []).map(e => e.name)]).toLowerCase().includes(q)));
+  $("#count").textContent = `${rows.length} of ${b.moments.length} · ${b.moments.filter(m => m.annotation?.needs_review).length} need review`;
+  $("#rows").innerHTML = rows.map(m => `<tr data-id="${esc(m.moment_id)}"><td>${fmt(m.start_s)}–${fmt(m.end_s)}</td><td>${m.annotation?.needs_review ? '<span class="dot" title="needs review"></span>' : ""}</td><td>${esc((m.description || "").slice(0, 160))}</td><td>${esc((m.tags || []).slice(0, 5).join(", "))}</td><td>${esc([m.attributes?.shot_scale, m.attributes?.camera_motion].filter(Boolean).join(", "))}</td></tr>`).join("");
+  $("#rows").querySelectorAll("tr").forEach(tr => tr.onclick = () => select("moment", b.moments.find(m => m.moment_id === tr.dataset.id), b, true));
+  markRow();
+}
+function markRow() { document.querySelectorAll("#rows tr").forEach(tr => tr.classList.toggle("on", S.sel?.kind === "moment" && S.sel.item.moment_id === tr.dataset.id)); }
+</script>
+</body>
+</html>
